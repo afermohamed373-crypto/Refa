@@ -167,7 +167,7 @@ button.row{cursor:pointer}
     <div class="sm" data-i="noacc"></div>
     <button class="btn ghost" data-g="sgp" data-i="create"></button>
     <div class="sep" data-i="or"></div>
-    <div class="soc"><button data-go><i>◎</i>Instagram</button><button data-go><i>f</i>Facebook</button><button data-go><i>G</i>Gmail</button></div>
+    <div class="soc"><button data-go><i>◎</i>Instagram</button><button data-go><i>f</i>Facebook</button><button data-go="google"><i>G</i>Gmail</button></div>
   </div>
   <div class="glass hide" id="sgp"><div class="ttl" data-i="create"></div>
     <input id="se" type="email" autocomplete="email" data-p="email"><input id="sp" type="password" autocomplete="new-password" data-p="pass"><input id="sq" type="password" autocomplete="new-password" data-p="confirm">
@@ -390,7 +390,7 @@ if(!c('.lang'))$('#lm').classList.add('hide');
 if(c('#gl'))$('#lm').classList.toggle('hide');
 else if(b=c('[data-lg]')){setLang(b.dataset.lg);$('#lm').classList.add('hide')}
 else if(c('#go'))login();
-else if(c('[data-go]'))toast(t('soon'));
+else if(b=c('[data-go]')){if(b.dataset.go==='google'){const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0].split('?')[0]}});if(error)toast(error.message)}else toast(t('soon'))}
 else if(b=c('[data-g]'))showG(b.dataset.g);
 else if(c('#doSign'))signup();
 else if(c('#doReset')){const em=$('#fe').value.trim();if(!em)toast(t('errFill'));else{const r=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.href.split('#')[0]});toast(r.error?r.error.message:t('resetSent'));if(!r.error)showG('lgp')}}
