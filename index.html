@@ -95,7 +95,7 @@ button.row{cursor:pointer}
 .cover{height:110px;background:linear-gradient(120deg,var(--cy),var(--mid),var(--navy));position:relative}
 .cover button{position:absolute;top:10px;inset-inline-end:10px;background:rgba(0,0,0,.25);color:#fff;border-radius:50%;width:36px;height:36px;padding:0}
 .pf{padding:0 18px 14px;background:var(--card)}
-.pf .big{width:96px;height:96px;margin-top:-48px;border-radius:50%;border:4px solid var(--card);background:var(--ln) center/cover;display:grid;place-items:center;font-size:28.5px;font-weight:700;color:var(--mu);cursor:pointer}
+.pf .big{width:96px;height:96px;margin-top:-48px;border-radius:50%;border:4px solid var(--card);background:var(--ln) center/cover;display:grid;place-items:center;font-size:28.5px;font-weight:700;color:var(--mu);cursor:pointer;position:relative;z-index:2}
 .pf h2{font-size:18.5px;margin-top:8px}.pf p{color:var(--mu);font-size:12px;margin-top:2px}
 .stats{display:flex;gap:26px;margin:14px 0}.stats b{display:block;font-size:15px}.stats span{color:var(--mu);font-size:11px}
 .pbtn{width:100%;padding:12px;border-radius:12px;border:0;background:linear-gradient(135deg,var(--mid),var(--navy));color:#fff;font-weight:600;cursor:pointer}
@@ -330,8 +330,8 @@ $('#ptabs').innerHTML=[['post','▦','tPosts'],['clip','▶','tClips'],['repost'
 const g=items.filter(x=>x.ty===pt);
 $('#grid').innerHTML=g.map(x=>`<div style="${x.img?`background-image:url(${x.img})`:`background:${grad(x.g)}`}">${x.img?'':x.e}${x.ty==='clip'?'<i>▶</i>':x.ty==='repost'?'<i>⟲</i>':x.ty==='private'?'<i>🔒</i>':''}</div>`).join('');
 $('#pnote').textContent=!g.length?t('empty'):pt==='private'?t('onlyYou'):'';
-$('#pName').textContent=(P.fn+' '+P.ln).trim()||'—';$('#pName').insertAdjacentHTML('beforeend',vb('me'));$('#pNick').textContent=[P.un&&'@'+P.un,P.nk].filter(Boolean).join(' · ');$('#pBio').textContent=P.bi;
-$('#pMeta').textContent=[P.ct,P.wb,P.bd&&new Date(P.bd).toLocaleDateString(L)].filter(Boolean).join(' · ');paintAv($('#pAv'))}
+$('#pName').textContent=(P.fn+' '+P.ln).trim()||'—';$('#pName').insertAdjacentHTML('beforeend',vb('me'));$('#pNick').innerHTML=[P.un&&'<bdi>@'+esc(P.un)+'</bdi>',P.nk&&'<bdi>'+esc(P.nk)+'</bdi>'].filter(Boolean).join(' · ');$('#pBio').textContent=P.bi;
+$('#pMeta').innerHTML=[P.ct,P.wb,P.bd&&P.bd.split('-').reverse().join('/')].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');paintAv($('#pAv'))}
 function sel(k,opts){return `<select data-s="${k}">${opts.map(o=>`<option value="${o[0]}" ${S[k]===o[0]?'selected':''}>${t(o[1])}</option>`).join('')}</select>`}
 function tg(k,lbl){return `<div class="sr"><span>${t(lbl)}</span><input type="checkbox" class="sw" role="switch" data-s="${k}" ${S[k]?'checked':''}></div>`}
 function renderSet(){$('#setBody').innerHTML=`<div class="sec">${t('language')}</div><div class="sr"><span>${t('language')}</span><select data-s="lang"><option value="en" ${L==='en'?'selected':''}>English</option><option value="ar" ${L==='ar'?'selected':''}>العربية</option><option value="fr" ${L==='fr'?'selected':''}>Français</option></select></div>
