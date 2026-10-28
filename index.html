@@ -173,7 +173,7 @@ button.row{cursor:pointer}
 #sed{background:#000;color:#fff;overflow:hidden}
 .sedtop{padding:10px 14px;display:flex}
 .sedtop button{background:rgba(255,255,255,.18);border:0;color:#fff;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer}
-.sedmain{flex:1;min-height:0;display:grid;place-items:center;padding:4px 8px;touch-action:none}
+.sedmain{flex:1;min-height:0;display:grid;place-items:center;padding:4px 8px;touch-action:none;overflow:hidden}
 .stools{position:absolute;left:10px;top:70px;display:flex;flex-direction:column;gap:10px;z-index:3}
 .stools button{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);color:#fff;font-size:17px;font-weight:700;cursor:pointer}
 .stools button.on{background:var(--mid)}
@@ -307,9 +307,9 @@ button.row{cursor:pointer}
   <div class="ov" id="sed">
     <div class="sedtop"><button id="sedx" aria-label="Close">✕</button></div>
     <div class="sedmain" id="sedmain"></div>
-    <div class="stools"><button data-edt="text" aria-label="Text">Aa</button><button data-edt="emoji" aria-label="Stickers">😀</button><button data-edt="music" aria-label="Music">♪</button><button data-edt="filter" aria-label="Filters">✨</button><button data-edt="adjust" aria-label="Adjust">☀</button></div>
+    <div class="stools"><button data-edt="text" aria-label="Text">Aa</button><button data-edt="emoji" aria-label="Stickers"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.5 2.5 2.2 4 2.2s3-.7 4-2.2"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></svg></button><button data-edt="music" aria-label="Music">♪</button><button data-edt="filter" aria-label="Filters"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/></svg></button><button data-edt="adjust" aria-label="Adjust">☀</button></div>
     <div class="sedbot">
-      <div id="sibar" class="sibar hide"><button data-sz="-1">A−</button><button data-sz="1">A+</button><button id="sicol" class="hide">🎨</button><button id="sidel">🗑</button></div>
+      <div id="sibar" class="sibar hide"><button data-sz="-1">A−</button><button data-sz="1">A+</button><button id="sicol" class="hide" aria-label="Color"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></button><button id="sidel" aria-label="Delete"><svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>
       <div id="spanel" class="spanel hide"></div>
       <div id="sedbar" class="sedbtns"><button class="pbtn" id="sedShare" data-i="share"></button><button class="pbtn star" id="sedFav" data-i="publishFav"></button></div>
     </div>
@@ -356,7 +356,7 @@ changePw:"Change password|تغيير كلمة المرور|Changer le mot de pas
 saved:"Saved posts|المنشورات المحفوظة|Publications enregistrées",about:"About|حول التطبيق|À propos",saveToast:"Saved|تم الحفظ|Enregistré",
 noPosts:"No posts yet. Tap ⊕ to share.|لا توجد منشورات بعد. اضغط ⊕ للنشر.|Aucune publication. Touchez ⊕ pour partager.",pickImg:"Choose a photo first|اختر صورة أولًا|Choisissez d’abord une photo",uploading:"Uploading…|جارٍ الرفع…|Envoi en cours…",posted:"Posted|تم النشر|Publié",delAsk:"Delete this post?|حذف هذا المنشور؟|Supprimer cette publication ?",soonMsg:"Messages are coming soon|الرسائل قريبًا|Messages bientôt disponibles",noChats:"No conversations yet. Search for someone and tap ✉.|لا توجد محادثات بعد. ابحث عن شخص واضغط ✉.|Aucune conversation. Cherchez quelqu’un et touchez ✉.",sayHi:"Say hello 👋|ابدأ بالتحية 👋|Dites bonjour 👋",cantMsg:"You can’t message this person|لا يمكنك مراسلة هذا الشخص|Vous ne pouvez pas écrire à cette personne",noCm:"No comments yet|لا توجد تعليقات بعد|Aucun commentaire",now:"now|الآن|à l’instant",requested:"Requested|تم الطلب|Demandé",requestSent:"Follow request sent|أُرسل طلب المتابعة|Demande envoyée",accepted:"accepted your follow request|قَبِل طلب متابعتك|a accepté votre demande",privAcct:"This account is private. Follow to see posts.|هذا الحساب خاص. تابعه لترى منشوراته.|Ce compte est privé. Suivez-le pour voir ses publications.",block:"Block|حظر|Bloquer",unblock:"Unblock|إلغاء الحظر|Débloquer",blockAsk:"Block this account?|حظر هذا الحساب؟|Bloquer ce compte ?",blockedDone:"Account blocked|تم حظر الحساب|Compte bloqué",unblocked:"Block removed|أُلغي الحظر|Blocage retiré",report:"Report|إبلاغ|Signaler",reportedDone:"Report sent. Thank you.|أُرسل البلاغ. شكرًا لك.|Signalement envoyé. Merci.",reason:"Reason|السبب|Motif",details:"Details (optional)|تفاصيل (اختياري)|Détails (facultatif)",sendReport:"Send report|إرسال البلاغ|Envoyer",reports:"Reports|البلاغات|Signalements",noReports:"No open reports|لا توجد بلاغات مفتوحة|Aucun signalement ouvert",r_spam:"Spam|مزعج أو احتيالي|Spam",r_harassment:"Harassment or hate|مضايقة أو كراهية|Harcèlement ou haine",r_sexual:"Sexual content|محتوى جنسي|Contenu sexuel",r_violence:"Violence|عنف|Violence",r_fake:"Fake account|حساب مزيف|Faux compte",r_other:"Other|أخرى|Autre",username:"Username|اسم المستخدم|Nom d’utilisateur",taken:"This username is taken|اسم المستخدم مستخدم|Ce nom d’utilisateur est pris",checkMail:"Check your email to confirm your account|تحقق من بريدك لتأكيد الحساب|Vérifiez votre e-mail pour confirmer",soon:"Coming soon. Use email for now.|قريبًا. استخدم البريد حاليًا.|Bientôt. Utilisez l’e-mail pour l’instant.",myVerified:"Your account is verified|حسابك موثّق|Votre compte est vérifié",admT:"Verification panel (owner only)|لوحة التوثيق (للمالك فقط)|Panneau de vérification (propriétaire)",addU:"Username to verify|اسم المستخدم للتوثيق|Nom d’utilisateur à vérifier",verify:"Verify|توثيق|Vérifier",unverify:"Remove|إزالة|Retirer",you:"You (owner)|أنت (المالك)|Vous (propriétaire)",vDone:"Account verified|تم توثيق الحساب|Compte vérifié",vGone:"Verification removed|أُزيل التوثيق|Vérification retirée",admNote:"Only you can verify accounts. Tap Verify to give the blue badge.|أنت فقط من يوثّق الحسابات. اضغط توثيق لمنح العلامة الزرقاء.|Vous seul pouvez vérifier les comptes. Touchez Vérifier pour le badge bleu."
 ,storyDel:"Delete this story?|حذف هذه القصة؟|Supprimer cette story ?"
-,typeText:"Type text…|اكتب نصًا…|Saisissez du texte…"
+,badMedia:"This file can’t be displayed. Try a JPG, PNG or MP4.|لا يمكن عرض هذا الملف. جرّب JPG أو PNG أو MP4.|Ce fichier ne peut pas être affiché. Essayez JPG, PNG ou MP4.",typeText:"Type text…|اكتب نصًا…|Saisissez du texte…"
 ,add:"Add|إضافة|Ajouter"
 ,pickAudio:"Choose audio from phone|اختر ملفًا صوتيًا من هاتفك|Choisir un audio"
 ,favs:"Favorites|المفضلة|Favoris"
@@ -490,7 +490,9 @@ const EM=['😀','😂','😍','🥰','😎','🤩','😭','😡','🔥','💯',
 const CL=['#ffffff','#000000','#ffd166','#ff4d6d','#00d1ff','#7cfc00'];
 const itSize=o=>(o.t==='e'?.17:.075)*o.k;
 const itHTML=(o,i,ed)=>`<div class="it${ed?' ed':''}" data-oi="${i}" style="left:${o.x*100}%;top:${o.y*100}%;font-size:calc(var(--w)*${itSize(o)});${o.t==='t'?`color:${esc(o.c||'#fff')};`:''}">${esc(o.v)}</div>`;
-function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const media=isVid(url)?`<video src="${esc(url)}" autoplay ${ed?'loop muted':(m.mu?'muted':'')} playsinline style="filter:${f}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f}">`;return `<div class="stage">${media}${(m.o||[]).map((o,i)=>itHTML(o,i,ed)).join('')}${m.mu&&!ed?`<div class="mus">${m.mu.a?`<span class="mic" style="background-image:url(${esc(m.mu.a)})"></span>`:'♪ '}${esc(m.mu.t||'')}</div>`:''}</div>`}
+function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const media=(m.v!=null?!!m.v:isVid(url))?`<video src="${esc(url)}" autoplay ${ed?'loop muted':(m.mu?'muted':'')} playsinline style="filter:${f}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f}">`;return `<div class="stage">${media}${(m.o||[]).map((o,i)=>itHTML(o,i,ed)).join('')}${m.mu&&!ed?`<div class="mus">${m.mu.a?`<span class="mic" style="background-image:url(${esc(m.mu.a)})"></span>`:'♪ '}${esc(m.mu.t||'')}</div>`:''}</div>`}
+function edFit(){const m=$('#sedmain');if(ED&&m&&m.querySelector('.stage'))fitStage(m)}
+window.addEventListener('resize',()=>{edFit();const b=$('#svi');if(b&&b.querySelector('.stage'))fitStage(b)});
 function fitStage(c){const st=c.querySelector('.stage');if(!st)return;const w=Math.max(120,Math.min(c.clientWidth-8,(c.clientHeight-8)*9/16));st.style.width=w+'px';st.style.height=(w*16/9)+'px';st.style.setProperty('--w',w+'px')}
 
 async function loadStories(){if(!me)return;
@@ -503,7 +505,7 @@ const mine=m.get(me.id)||{uid:me.id,u:{},items:[]};m.delete(me.id);
 const others=[...m.values()];const un=g=>g.items.some(x=>!seenSt.has(x.id));
 others.sort((x,y)=>un(y)-un(x));
 stGroups=[mine,...others];renderStories()}
-async function loadFavStrip(uid,sel){const el=$(sel);if(!el)return;const {data,error}=await sb.from('stories').select(SCOLS).eq('user_id',uid).eq('is_fav',true).order('created_at',{ascending:true});if(error||!data||!data.length){favRows[uid]=[];el.innerHTML='';return}favRows[uid]=data;const last=data[data.length-1];const bg=isVid(last.media_url)?grad(1):`url(${esc(last.media_url)}) center/cover`;el.innerHTML=`<button class="st" data-fav="${esc(uid)}"><div class="ring"><div class="av" style="background:${bg}"></div><span class="plus" style="background:#f5a623">★</span></div><span class="lb">${t('favs')}</span></button>`}
+async function loadFavStrip(uid,sel){const el=$(sel);if(!el)return;const {data,error}=await sb.from('stories').select(SCOLS).eq('user_id',uid).eq('is_fav',true).order('created_at',{ascending:true});if(error||!data||!data.length){favRows[uid]=[];el.innerHTML='';return}favRows[uid]=data;const last=data[data.length-1];const bg=((last.meta&&last.meta.v!=null)?!!last.meta.v:isVid(last.media_url))?grad(1):`url(${esc(last.media_url)}) center/cover`;el.innerHTML=`<button class="st" data-fav="${esc(uid)}"><div class="ring"><div class="av" style="background:${bg}"></div><span class="plus" style="background:#f5a623">★</span></div><span class="lb">${t('favs')}</span></button>`}
 
 /* ---------- viewer ---------- */
 function svg(){return SV.fg||stGroups[SV.gi]}
@@ -518,7 +520,7 @@ $('#svb').innerHTML=g.items.map((_,j)=>`<i><b style="width:${j<SV.i?'100%':'0'}"
 $('#svd').classList.toggle('hide',!own);$('#svf').classList.toggle('hide',!own);$('#svf').textContent=s.is_fav?'★':'☆';$('#svc').textContent='';$('#sv .send').classList.toggle('hide',own);
 const m=s.meta||{},body=$('#svi');body.innerHTML=stageHTML(s.media_url,m,false);fitStage(body);
 if(m.mu&&m.mu.u){SV.au=new Audio(m.mu.u);SV.au.loop=true;SV.au.play().catch(()=>{})}
-if(isVid(s.media_url)){const v=body.querySelector('video');v.onloadedmetadata=()=>svRun(Math.min((v.duration||10)*1000,30000));v.onended=svNext;v.onerror=()=>svRun(STD)}else svRun(STD);
+if(m.v!=null?!!m.v:isVid(s.media_url)){const v=body.querySelector('video');v.onloadedmetadata=()=>svRun(Math.min((v.duration||10)*1000,30000));v.onended=svNext;v.onerror=()=>svRun(STD)}else svRun(STD);
 if(!own&&!seenSt.has(s.id)){seenSt.add(s.id);sb.from('story_views').upsert({story_id:s.id,viewer_id:me.id},{onConflict:'story_id,viewer_id',ignoreDuplicates:true}).then(()=>{})}
 if(own){const id=s.id;sb.from('story_views').select('*',{count:'exact',head:true}).eq('story_id',id).then(r=>{const c=svg()&&svg().items[SV.i];if(c&&c.id===id&&!r.error)$('#svc').textContent='👁 '+(r.count||0)})}}
 function svNext(){const g=svg();if(!g)return;if(SV.i<g.items.length-1){SV.i++;svShow()}else if(!SV.fg&&stGroups[SV.gi+1]&&stGroups[SV.gi+1].items.length){SV.gi++;SV.i=0;svShow()}else svClose()}
@@ -531,11 +533,11 @@ async function svReply(){const v=$('#svr').value.trim(),g=svg();if(!v||!g||!me)r
 
 /* ---------- editor ---------- */
 function stopAud(){if(ED&&ED.au){ED.au.pause();ED.au=null}}
-function openEditor(f){stopAud();ED={f,url:URL.createObjectURL(f),fl:'none',b:1,c:1,s:1,o:[],mf:null,mu:null,mr:[],mq:'',mt:'',sel:-1,mode:'',busy:false,au:null};$$('#sedbar button').forEach(b=>b.disabled=false);$('#sed').classList.add('on');edRender();edPanel('')}
-function edClose(){stopAud();$('#sed').classList.remove('on');$('#sedmain').innerHTML='';ED=null}
-function edRender(){const m=$('#sedmain');m.innerHTML=stageHTML(ED.url,{fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o},true);fitStage(m);edSel(ED.sel<ED.o.length?ED.sel:-1)}
+function openEditor(f){stopAud();ED={f,vid:/^video\//.test(f.type)||/\.(mp4|webm|mov|m4v|3gp)$/i.test(f.name||''),url:URL.createObjectURL(f),fl:'none',b:1,c:1,s:1,o:[],mf:null,mu:null,mr:[],mq:'',mt:'',sel:-1,mode:'',busy:false,au:null};$$('#sedbar button').forEach(b=>b.disabled=false);$('#sed').classList.add('on');edRender();edPanel('')}
+function edClose(){stopAud();if(ED&&ED.url)URL.revokeObjectURL(ED.url);$('#sed').classList.remove('on');$('#sedmain').innerHTML='';ED=null}
+function edRender(){const m=$('#sedmain');m.innerHTML=stageHTML(ED.url,{fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,v:ED.vid},true);fitStage(m);edSel(ED.sel<ED.o.length?ED.sel:-1)}
 function edFilter(){const m=$('#sedmain .stage img,#sedmain .stage video');if(m)m.style.filter=fcss({fl:ED.fl,b:ED.b,c:ED.c,s:ED.s})}
-function edSel(i){ED.sel=i;$$('#sedmain .it').forEach(e=>e.classList.toggle('sel',+e.dataset.oi===i));$('#sibar').classList.toggle('hide',i<0);$('#sicol').classList.toggle('hide',i<0||!ED.o[i]||ED.o[i].t!=='t')}
+function edSel(i){ED.sel=i;$$('#sedmain .it').forEach(e=>e.classList.toggle('sel',+e.dataset.oi===i));$('#sibar').classList.toggle('hide',i<0);$('#sicol').classList.toggle('hide',i<0||!ED.o[i]||ED.o[i].t!=='t');edFit()}
 function edUpd(i){const o=ED.o[i],e=$(`#sedmain .it[data-oi="${i}"]`);if(!o||!e)return;e.style.left=o.x*100+'%';e.style.top=o.y*100+'%';e.style.fontSize=`calc(var(--w)*${itSize(o)})`;if(o.t==='t')e.style.color=o.c}
 function edAdd(o){ED.o.push(o);$('#sedmain .stage').insertAdjacentHTML('beforeend',itHTML(o,ED.o.length-1,true));edSel(ED.o.length-1)}
 function edText(){const v=$('#stxt').value.trim();if(!v)return;edAdd({t:'t',v,x:.5,y:.5,k:1,c:'#ffffff'});$('#stxt').value=''}
@@ -549,13 +551,13 @@ else if(m==='emoji')h=`<div class="emg">${EM.map(e=>`<button data-em="${e}">${e}
 else if(m==='music')h=`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>${ED.mt?`<div class="mrow" style="padding:4px 0"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div>`:''}<div id="mres">${ED.mr.length?mRows():''}</div><button class="fb o" id="mpick" style="margin-top:8px">${t('pickAudio')}</button><small class="mcr">${t('musicCredit')}</small>`;
 else if(m==='filter')h=`<div class="chips fchips">${Object.keys(FP).map(k=>`<button class="chip ${ED.fl===k?'on':''}" data-flt="${k}">${fnm(k)}</button>`).join('')}</div>`;
 else if(m==='adjust')h=[['b','bright',.5,1.5],['c','contrast',.5,1.5],['s','saturation',0,2]].map(a=>`<label class="slr"><span>${t(a[1])}</span><input type="range" min="${a[2]}" max="${a[3]}" step=".05" value="${ED[a[0]]}" data-adj="${a[0]}"></label>`).join('');
-p.innerHTML=h}
+p.innerHTML=h;edFit();requestAnimationFrame(edFit)}
 async function edPublish(fav){if(!ED||ED.busy)return;ED.busy=true;$$('#sedbar button').forEach(b=>b.disabled=true);toast(t('uploading'));
 try{const f=ED.f,ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin',base=`${me.id}/story-${Date.now()}`,pth=`${base}.${ex(f.name)}`;
 const up=await sb.storage.from('media').upload(pth,f,{contentType:f.type});if(up.error)throw up.error;
 const url=sb.storage.from('media').getPublicUrl(pth).data.publicUrl;
 let mu=ED.mu||null;if(!mu&&ED.mf){const p2=`${base}-music.${ex(ED.mf.name)}`;const u2=await sb.storage.from('media').upload(p2,ED.mf,{contentType:ED.mf.type||'audio/mpeg'});if(u2.error)throw u2.error;mu={u:sb.storage.from('media').getPublicUrl(p2).data.publicUrl,t:ED.mt}}
-const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu};
+const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu,v:ED.vid?1:0};
 const {error}=await sb.from('stories').insert({user_id:me.id,media_url:url,meta,is_fav:!!fav});if(error)throw error;
 edClose();await loadStories();loadFavStrip(me.id,'#favs');toast(t('posted'))}
 catch(err){toast((err&&err.message)||String(err));if(ED){ED.busy=false;$$('#sedbar button').forEach(b=>b.disabled=false)}}}
@@ -566,6 +568,7 @@ function edPickSong(i){const r=ED.mr[i];if(!r)return;ED.mu={u:r.previewUrl,t:`${
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='mq'&&ED)edMusicSearch(e.target.value)});
 let edDrag=null;
 (()=>{const m=$('#sedmain');
+m.addEventListener('error',e=>{if(ED&&e.target&&/^(IMG|VIDEO)$/.test(e.target.tagName)){toast(t('badMedia'));edClose()}},true);
 m.addEventListener('pointerdown',e=>{if(!ED)return;const it=e.target.closest('.it.ed');if(!it){edSel(-1);return}const i=+it.dataset.oi;edSel(i);const r=m.querySelector('.stage').getBoundingClientRect(),o=ED.o[i];edDrag={i,r,dx:e.clientX-(r.left+o.x*r.width),dy:e.clientY-(r.top+o.y*r.height)};try{it.setPointerCapture(e.pointerId)}catch(_){}});
 m.addEventListener('pointermove',e=>{if(!edDrag||!ED)return;const o=ED.o[edDrag.i],r=edDrag.r;o.x=Math.min(1,Math.max(0,(e.clientX-edDrag.dx-r.left)/r.width));o.y=Math.min(1,Math.max(0,(e.clientY-edDrag.dy-r.top)/r.height));edUpd(edDrag.i)});
 ['pointerup','pointercancel'].forEach(n=>m.addEventListener(n,()=>{edDrag=null}));
