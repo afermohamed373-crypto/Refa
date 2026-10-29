@@ -207,7 +207,24 @@ button.row{cursor:pointer}
 .mcr{display:block;text-align:center;opacity:.5;font-size:10px;margin-top:6px}
 .spanel select{background:#262626;color:#fff;border:1px solid #333;border-radius:10px;padding:8px 10px;margin-bottom:8px;width:100%}
 .mrw2{display:flex;align-items:center;gap:6px}.mrw2 .mrw{flex:1;min-width:0}.mstar{font-size:16px;padding:6px 10px;flex:none}.mcur{border-bottom:1px solid #2a2a2a;margin-bottom:8px}
-.spanel.mp{display:flex;flex-direction:column;overflow:hidden;height:46vh;max-height:46vh}.spanel.mp #mres{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.spanel.mp .mhead,.spanel.mp .mfoot{flex:none}
+.spanel.mp{display:flex;flex-direction:column;overflow:hidden;height:46vh;max-height:46vh}.spanel.mp #mres{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.spanel.mp .mhead,.spanel.mp .mfoot{flex:none;background:#161616}
+.mprev{position:absolute;inset:0;background:rgba(0,0,0,.85);z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.mprev.on{display:flex}
+.mprev-card{background:#1c1c1e;border-radius:20px;padding:20px;width:min(320px,90%);text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.mprev-art{width:140px;height:140px;border-radius:12px;background:#333 center/cover;margin:0 auto 14px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.mprev-title{font-size:16px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mprev-artist{font-size:13px;opacity:.7;margin-bottom:14px}
+.mprev-prog{height:4px;background:#333;border-radius:2px;margin:12px 0;overflow:hidden}
+.mprev-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#00d1ff,#1478c8)}
+.mprev-btns{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.mprev-btns button{border:0;border-radius:12px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:13px}
+.mprev-play{background:#fff;color:#000;min-width:48px}
+.mprev-add{background:linear-gradient(135deg,#00d1ff,#1478c8);color:#fff;flex:1}
+.mprev-fav{background:#333;color:#fff;min-width:48px}
+.mprev-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.15);border:0;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer}
+.madd{font-size:18px;padding:6px 12px;flex:none;background:rgba(0,209,255,.2);border-radius:10px;border:0;color:#fff;cursor:pointer;line-height:1}
+.mrw2 .mstar{opacity:.6;font-size:14px}
+
 </style>
 </head>
 <body>
@@ -585,11 +602,11 @@ function curCC(){try{const v=localStorage.getItem('refa_cc');if(v&&CC.includes(v
 const norm=rs=>(rs||[]).filter(r=>r.previewUrl).map(r=>({id:String(r.trackId),t:r.trackName,ar:r.artistName,art:r.artworkUrl60||r.artworkUrl100||'',u:r.previewUrl}));
 function clipAudio(url,start,len,onMeta){const a=new Audio();a.preload='auto';const seek=()=>{try{a.currentTime=start}catch(_){}};a.addEventListener('loadedmetadata',()=>{seek();if(onMeta)onMeta(a)},{once:true});a.addEventListener('timeupdate',()=>{if(a.currentTime>=start+len)seek()});a.addEventListener('ended',()=>{seek();a.play().catch(()=>{})});a.src=url;return a}
 function edPlay(){stopAud();if(!ED)return;edVidPlay();const url=ED.mu?ED.mu.u:ED.mfUrl;if(!url)return;ED.au=clipAudio(url,ED.ms||0,CLIP_LEN,a=>{if(ED&&isFinite(a.duration)&&a.duration>0){ED.md=a.duration;const r=$('#mclip');if(r)r.max=Math.max(0,Math.floor(a.duration-5))}});ED.au.play().catch(()=>{})}
-function mRows(){return ED.mr.map((r,i)=>`<div class="mrw2"><button class="mrw ${ED.mu&&ED.mu.u===r.u?'on':''}" data-mi="${i}"><span class="mic" style="background-image:url(${esc(r.art||'')})"></span><span class="mt2"><b>${esc(r.t)}</b><small>${esc(r.ar)}</small></span></button><button class="fb o mstar" data-mfav="${i}" aria-label="Favorite">${favSongs.some(x=>x.id===r.id)?'★':'☆'}</button></div>`).join('')}
+function mRows(){return ED.mr.map((r,i)=>`<div class="mrw2"><button class="mrw ${ED.mu&&ED.mu.u===r.u?'on':''}" data-mi="${i}"><span class="mic" style="background-image:url(${esc(r.art||'')})"></span><span class="mt2"><b>${esc(r.t)}</b><small>${esc(r.ar)}</small></span></button><button class="madd" data-mi="${i}" title="إضافة">＋</button><button class="fb o mstar" data-mfav="${i}" aria-label="Favorite">${favSongs.some(x=>x.id===r.id)?'★':'☆'}</button></div>`).join('')}
 function mList(){return ED.mr.length?mRows():(ED.mtab==='fav'?`<div class="note">${t('noFavSongs')}</div>`:'')}
 function musicPanel(){const tab=ED.mtab||'trend';ED.mtab=tab;ED.mr=tab==='trend'?(ED.trend||[]):tab==='fav'?favSongs:(ED.srch||[]);
 const tabs=['trend','fav','search'].map(k=>`<button class="chip ${tab===k?'on':''}" data-mtab="${k}">${t({trend:'mTrend',fav:'mFavs',search:'search'}[k])}</button>`).join('');
-const top=tab==='trend'?`<select id="mcc" aria-label="Country">${CC.map(c=>`<option value="${c}" ${c===ED.cc?'selected':''}>${ccName(c)}</option>`).join('')}</select>`:tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
+const top=tab==='trend'?`<div style="opacity:.75;font-size:12px;margin-bottom:6px">♪ ${ccName(ED.cc||'us')}</div>`:tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
 const cur=(ED.mu||ED.mf)?`<div class="mcur"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><label class="slr"><span>${t('clipStart')}</span><input type="range" id="mclip" min="0" max="${Math.max(0,Math.floor((ED.md||30)-5))}" step="1" value="${ED.ms||0}"><b id="mclipv">${fmt(ED.ms||0)}</b></label><small class="mcr" style="opacity:.7;margin:0 0 8px">${t('clipHint')}</small></div>`:'';
 return `<div class="mhead"><div class="chips fchips" style="padding:0 0 8px">${tabs}</div>${top}${cur}</div><div id="mres">${mList()}</div><div class="mfoot"><button class="fb o" id="mpick" style="margin-top:8px">${t('pickAudio')}</button><small class="mcr">${t('musicCredit')}</small></div>`}
 function musicLoad(){if(!ED)return;if(ED.mtab==='trend'&&!(ED.trend&&ED.trendCc===ED.cc))edTrend();if(ED.mtab==='fav'&&!favLoaded)loadFavSongs().then(()=>{if(ED&&ED.mtab==='fav'&&ED.mode==='music'){ED.mr=favSongs;const b=$('#mres');if(b)b.innerHTML=mList()}})}
@@ -599,10 +616,29 @@ async function edTrend(){if(!ED)return;const cc=ED.cc;const box=$('#mres');if(bo
 async function loadFavSongs(){if(!me)return;const {data,error}=await sb.from('fav_songs').select('track_id,title,artist,art,url').eq('user_id',me.id).order('created_at',{ascending:false}).limit(100);if(error){toast(error.message);return}favSongs=(data||[]).map(r=>({id:r.track_id,t:r.title,ar:r.artist||'',art:r.art||'',u:r.url}));favLoaded=true}
 async function edFavSong(i){const r=ED&&ED.mr[i];if(!r||!me)return;const has=favSongs.some(x=>x.id===r.id);if(has){const {error}=await sb.from('fav_songs').delete().match({user_id:me.id,track_id:r.id});if(error){toast(error.message);return}favSongs=favSongs.filter(x=>x.id!==r.id);toast(t('favSongOff'))}else{const {error}=await sb.from('fav_songs').insert({user_id:me.id,track_id:r.id,title:r.t,artist:r.ar,art:r.art,url:r.u});if(error){toast(error.message);return}favSongs.unshift({...r});toast(t('favSongOn'))}if(ED&&ED.mtab==='fav')ED.mr=favSongs;const b=$('#mres');if(b)b.innerHTML=mList()}
 async function edMusicSearch(q){q=(q||'').trim();if(!q||!ED)return;ED.mq=q;ED.mtab='search';const box=$('#mres');if(box)box.innerHTML='<div class="note">…</div>';let rows=[];try{const d=await itunes(q,ED.cc);rows=norm(d.results)}catch(e){toast(e.message)}if(!ED)return;ED.srch=rows;if(ED.mtab==='search'){ED.mr=rows;const b2=$('#mres');if(b2)b2.innerHTML=rows.length?mRows():`<div class="note">${t('noRes')}</div>`}}
-function edPickSong(i){const r=ED.mr[i];if(!r)return;ED.mu={u:r.u,t:`${r.t} — ${r.ar}`,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;edPlay();edPanel('music')}
+function edPickSong(i){const r=ED.mr[i];if(!r)return;openMusicPrev(r,i)}
+function openMusicPrev(r,i){if(!ED)return;ED.prevSong=r;ED.prevIdx=i;stopAud();
+let prev=document.getElementById('mprev');
+if(!prev){prev=document.createElement('div');prev.id='mprev';prev.className='mprev';prev.innerHTML=`<button class="mprev-close" id="mprevx">✕</button><div class="mprev-card"><div class="mprev-art" id="mprevart"></div><div class="mprev-title" id="mprevt"></div><div class="mprev-artist" id="mpreva"></div><div class="mprev-prog"><i id="mprevpi"></i></div><div class="mprev-btns"><button class="mprev-play" id="mprevplay">▶</button><button class="mprev-add" id="mprevadd">إضافة للقصة</button><button class="mprev-fav" id="mprevfav">☆</button></div></div>`;
+document.getElementById('sed').appendChild(prev)}
+document.getElementById('mprevart').style.backgroundImage=r.art?`url(${r.art})`:'';
+document.getElementById('mprevt').textContent=r.t;
+document.getElementById('mpreva').textContent=r.ar;
+document.getElementById('mprevfav').textContent=favSongs.some(x=>x.id===r.id)?'★':'☆';
+document.getElementById('mprevpi').style.width='0';
+prev.classList.add('on');
+ED.au=clipAudio(r.u,0,15,a=>{if(ED)ED.md=a.duration||30});
+ED.au.play().catch(()=>{});
+const pi=document.getElementById('mprevpi');
+const onTU=()=>{if(!ED||!ED.au)return;const p=Math.min(100,(ED.au.currentTime/15)*100);if(pi)pi.style.width=p+'%'};
+ED.au.addEventListener('timeupdate',onTU);
+}
+function closeMusicPrev(){const prev=document.getElementById('mprev');if(prev)prev.classList.remove('on');stopAud()}
+function confirmMusicPrev(){const r=ED&&ED.prevSong;if(!r)return;ED.mu={u:r.u,t:`${r.t} — ${r.ar}`,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;closeMusicPrev();edPlay();edPanel('music')}
+
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='mq'&&ED)edMusicSearch(e.target.value)});
 document.addEventListener('input',e=>{const x=e.target;if(x.id==='susq'){clearTimeout(deb2);deb2=setTimeout(loadSus,300)}if(ED&&x.id==='mclip'){ED.ms=+x.value;if(ED.mu)ED.mu.s=ED.ms;const v=$('#mclipv');if(v)v.textContent=fmt(ED.ms)}});
-document.addEventListener('change',e=>{const x=e.target;if(!ED)return;if(x.id==='mclip')edPlay();else if(x.id==='mcc'){ED.cc=x.value;try{localStorage.setItem('refa_cc',x.value)}catch(_){}ED.trend=null;ED.trendCc=null;edTrend()}});
+document.addEventListener('change',e=>{const x=e.target;if(!ED)return;if(x.id==='mclip')edPlay();});
 let edDrag=null;
 (()=>{const m=$('#sedmain');
 m.addEventListener('error',e=>{if(ED&&e.target&&/^(IMG|VIDEO)$/.test(e.target.tagName)){toast(t('badMedia'));edClose()}},true);
@@ -666,6 +702,10 @@ else if(b=c('[data-mq]')){if(ED){$('#mq').value=b.dataset.mq;edMusicSearch(b.dat
 else if(b=c('[data-mtab]')){if(ED){ED.mtab=b.dataset.mtab;edPanel('music')}}
 else if(b=c('[data-mfav]')){if(ED)edFavSong(+b.dataset.mfav)}
 else if(b=c('[data-mi]')){if(ED)edPickSong(+b.dataset.mi)}
+else if(c('#mprevx')||c('.mprev')&&!c('.mprev-card')){closeMusicPrev()}
+else if(c('#mprevadd')){confirmMusicPrev()}
+else if(c('#mprevplay')){if(ED&&ED.au){if(ED.au.paused){ED.au.play().catch(()=>{});document.getElementById('mprevplay').textContent='⏸'}else{ED.au.pause();document.getElementById('mprevplay').textContent='▶'}}}
+else if(c('#mprevfav')){if(ED&&ED.prevIdx!=null)edFavSong(ED.prevIdx);const btn=document.getElementById('mprevfav');if(btn&&ED.prevSong)btn.textContent=favSongs.some(x=>x.id===ED.prevSong.id)?'★':'☆'}
 else if(c('#svi')){const r=$('#sv').getBoundingClientRect(),x=(e.clientX-r.left)/r.width,rtl=document.documentElement.dir==='rtl';(rtl?x>.67:x<.33)?svPrev():svNext()}
 else if(c('#svs')){const v=$('#svi video');if(v){v.muted=!v.muted;if(!v.muted&&v.paused)v.play().catch(()=>{});svSpk()}}
 else if(c('#edvol')){if(ED){ED.vmute=!effMute();edVidPlay()}}
