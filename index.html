@@ -194,7 +194,7 @@ button.row{cursor:pointer}
 #sed .send input{color:#fff;background:#1a1a1a;border-color:#333}
 .sedbtns{display:flex;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
 .sedbtns .pbtn{flex:1}
-.sedbtns .star{background:linear-gradient(135deg,#f5a623,#e8590c)}
+.sedbtns .star{background:linear-gradient(135deg,#10b981,#059669)}
 .sedbtns button:disabled{opacity:.5}
 .favs{display:flex;gap:14px;padding:10px 18px;background:var(--card);border-bottom:1px solid var(--ln)}
 .favs:empty{display:none}
@@ -211,7 +211,7 @@ button.row{cursor:pointer}
 .mprev{position:absolute;inset:0;background:rgba(0,0,0,.85);z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
 .mprev.on{display:flex}
 .mprev-card{background:#1c1c1e;border-radius:20px;padding:20px;width:min(320px,90%);text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.5)}
-.mprev-art{width:200px;height:200px;border-radius:12px;background:#333 center/cover;margin:0 auto 14px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.mprev-art{width:140px;height:140px;border-radius:12px;background:#333 center/cover;margin:0 auto 14px;box-shadow:0 8px 20px rgba(0,0,0,.4)}
 .mprev-title{font-size:16px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mprev-artist{font-size:13px;opacity:.7;margin-bottom:14px}
 .mprev-prog{height:4px;background:#333;border-radius:2px;margin:12px 0;overflow:hidden}
@@ -222,8 +222,20 @@ button.row{cursor:pointer}
 .mprev-add{background:linear-gradient(135deg,#00d1ff,#1478c8);color:#fff;flex:1}
 .mprev-fav{background:#333;color:#fff;min-width:48px}
 .mprev-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.15);border:0;color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer}
-.mprog{height:4px;background:#333;border-radius:2px;margin:6px 0;overflow:hidden}.mprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#00d1ff,#1478c8)}
 .mhandle{width:40px;height:5px;background:rgba(255,255,255,.35);border-radius:3px;margin:8px auto 4px;cursor:pointer}
+.cfmodal{position:absolute;inset:0;background:rgba(0,0,0,.7);z-index:25;display:none;align-items:flex-end;justify-content:center}
+.cfmodal.on{display:flex}
+.cfcard{background:#1c1c1e;border-radius:20px 20px 0 0;width:100%;max-height:60vh;padding:16px;overflow:auto}
+.cfcard h3{text-align:center;margin-bottom:12px;font-size:16px}
+.cfrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a2a}
+.cfrow .av{width:40px;height:40px;border-radius:50%;background:#333 center/cover;flex:none}
+.cfrow label{flex:1;font-size:14px}
+.cfrow input{width:20px;height:20px}
+.cfactions{display:flex;gap:10px;margin-top:14px}
+.cfactions button{flex:1;padding:12px;border:0;border-radius:12px;font-weight:600;cursor:pointer}
+.cfok{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+.cfcancel{background:#333;color:#fff}
+
 
 .madd{font-size:18px;padding:6px 12px;flex:none;background:rgba(0,209,255,.2);border-radius:10px;border:0;color:#fff;cursor:pointer;line-height:1}
 .mrw2 .mstar{opacity:.6;font-size:14px}
@@ -381,7 +393,7 @@ changePw:"Change password|تغيير كلمة المرور|Changer le mot de pas
 saved:"Saved posts|المنشورات المحفوظة|Publications enregistrées",about:"About|حول التطبيق|À propos",saveToast:"Saved|تم الحفظ|Enregistré",
 noPosts:"No posts yet. Tap ⊕ to share.|لا توجد منشورات بعد. اضغط ⊕ للنشر.|Aucune publication. Touchez ⊕ pour partager.",pickImg:"Choose a photo first|اختر صورة أولًا|Choisissez d’abord une photo",uploading:"Uploading…|جارٍ الرفع…|Envoi en cours…",posted:"Posted|تم النشر|Publié",delAsk:"Delete this post?|حذف هذا المنشور؟|Supprimer cette publication ?",soonMsg:"Messages are coming soon|الرسائل قريبًا|Messages bientôt disponibles",noChats:"No conversations yet. Search for someone and tap ✉.|لا توجد محادثات بعد. ابحث عن شخص واضغط ✉.|Aucune conversation. Cherchez quelqu’un et touchez ✉.",sayHi:"Say hello 👋|ابدأ بالتحية 👋|Dites bonjour 👋",cantMsg:"You can’t message this person|لا يمكنك مراسلة هذا الشخص|Vous ne pouvez pas écrire à cette personne",noCm:"No comments yet|لا توجد تعليقات بعد|Aucun commentaire",now:"now|الآن|à l’instant",requested:"Requested|تم الطلب|Demandé",requestSent:"Follow request sent|أُرسل طلب المتابعة|Demande envoyée",accepted:"accepted your follow request|قَبِل طلب متابعتك|a accepté votre demande",privAcct:"This account is private. Follow to see posts.|هذا الحساب خاص. تابعه لترى منشوراته.|Ce compte est privé. Suivez-le pour voir ses publications.",block:"Block|حظر|Bloquer",unblock:"Unblock|إلغاء الحظر|Débloquer",blockAsk:"Block this account?|حظر هذا الحساب؟|Bloquer ce compte ?",blockedDone:"Account blocked|تم حظر الحساب|Compte bloqué",unblocked:"Block removed|أُلغي الحظر|Blocage retiré",report:"Report|إبلاغ|Signaler",reportedDone:"Report sent. Thank you.|أُرسل البلاغ. شكرًا لك.|Signalement envoyé. Merci.",reason:"Reason|السبب|Motif",details:"Details (optional)|تفاصيل (اختياري)|Détails (facultatif)",sendReport:"Send report|إرسال البلاغ|Envoyer",reports:"Reports|البلاغات|Signalements",noReports:"No open reports|لا توجد بلاغات مفتوحة|Aucun signalement ouvert",r_spam:"Spam|مزعج أو احتيالي|Spam",r_harassment:"Harassment or hate|مضايقة أو كراهية|Harcèlement ou haine",r_sexual:"Sexual content|محتوى جنسي|Contenu sexuel",r_violence:"Violence|عنف|Violence",r_fake:"Fake account|حساب مزيف|Faux compte",r_other:"Other|أخرى|Autre",username:"Username|اسم المستخدم|Nom d’utilisateur",taken:"This username is taken|اسم المستخدم مستخدم|Ce nom d’utilisateur est pris",checkMail:"Check your email to confirm your account|تحقق من بريدك لتأكيد الحساب|Vérifiez votre e-mail pour confirmer",soon:"Coming soon. Use email for now.|قريبًا. استخدم البريد حاليًا.|Bientôt. Utilisez l’e-mail pour l’instant.",myVerified:"Your account is verified|حسابك موثّق|Votre compte est vérifié",admT:"Verification panel (owner only)|لوحة التوثيق (للمالك فقط)|Panneau de vérification (propriétaire)",addU:"Username to verify|اسم المستخدم للتوثيق|Nom d’utilisateur à vérifier",verify:"Verify|توثيق|Vérifier",unverify:"Remove|إزالة|Retirer",you:"You (owner)|أنت (المالك)|Vous (propriétaire)",vDone:"Account verified|تم توثيق الحساب|Compte vérifié",vGone:"Verification removed|أُزيل التوثيق|Vérification retirée",admNote:"Only you can verify accounts. Tap Verify to give the blue badge.|أنت فقط من يوثّق الحسابات. اضغط توثيق لمنح العلامة الزرقاء.|Vous seul pouvez vérifier les comptes. Touchez Vérifier pour le badge bleu."
 ,storyDel:"Delete this story?|حذف هذه القصة؟|Supprimer cette story ?"
-,susT:"Suspicious or unwanted accounts|الحسابات المشبوهة أو غير المرغوب فيها|Comptes suspects ou indésirables",fReported:"Reported|مُبلَّغ عنها|Signalés",fNew:"New (7 days)|جديدة (7 أيام)|Récents (7 j)",delAcct:"Delete account|حذف الحساب|Supprimer le compte",delAcctAsk:"Permanently delete this account with all its posts, comments and messages? This cannot be undone.|حذف هذا الحساب نهائيًا مع كل منشوراته وتعليقاته ورسائله؟ لا يمكن التراجع عن ذلك.|Supprimer définitivement ce compte avec ses publications, commentaires et messages ? Action irréversible.",delBan:"Delete and ban email|حذف الحساب ومنع بريده من التسجيل|Supprimer et bannir l’e-mail",deleting:"Deleting…|جارٍ الحذف…|Suppression…",acctDeleted:"Account deleted|تم حذف الحساب|Compte supprimé",joined:"Joined|انضم|Inscrit",trendFb:"No official chart for this country yet. Showing popular local artists.|لا يوجد ترتيب رسمي لهذا البلد بعد. نعرض أشهر الفنانين المحليين.|Pas de classement officiel pour ce pays. Artistes locaux populaires.",mTrend:"Trending|الرائج|Tendances",mFavs:"Favorites|المفضلة|Favoris",clipStart:"Clip start|بداية المقطع|Début de l’extrait",clipHint:"Slide to pick your favorite part. The story music starts here.|حرّك لاختيار جزئك المفضل. ستبدأ موسيقى القصة من هنا.|Faites glisser pour choisir le passage. La musique démarre ici.",noFavSongs:"No favorite songs yet. Tap ☆ on a song.|لا توجد أغانٍ مفضلة بعد. اضغط ☆ على أي أغنية.|Aucun favori. Touchez ☆ sur un titre.",favSongOn:"Added to favorites|أُضيفت إلى المفضلة|Ajouté aux favoris",favSongOff:"Removed from favorites|أُزيلت من المفضلة|Retiré des favoris",badMedia:"This file can’t be displayed. Try a JPG, PNG or MP4.|لا يمكن عرض هذا الملف. جرّب JPG أو PNG أو MP4.|Ce fichier ne peut pas être affiché. Essayez JPG, PNG ou MP4.",typeText:"Type text…|اكتب نصًا…|Saisissez du texte…"
+,susT:"Suspicious or unwanted accounts|الحسابات المشبوهة أو غير المرغوب فيها|Comptes suspects ou indésirables",fReported:"Reported|مُبلَّغ عنها|Signalés",fNew:"New (7 days)|جديدة (7 أيام)|Récents (7 j)",delAcct:"Delete account|حذف الحساب|Supprimer le compte",delAcctAsk:"Permanently delete this account with all its posts, comments and messages? This cannot be undone.|حذف هذا الحساب نهائيًا مع كل منشوراته وتعليقاته ورسائله؟ لا يمكن التراجع عن ذلك.|Supprimer définitivement ce compte avec ses publications, commentaires et messages ? Action irréversible.",delBan:"Delete and ban email|حذف الحساب ومنع بريده من التسجيل|Supprimer et bannir l’e-mail",deleting:"Deleting…|جارٍ الحذف…|Suppression…",acctDeleted:"Account deleted|تم حذف الحساب|Compte supprimé",joined:"Joined|انضم|Inscrit",mTrend:"Trending|الرائج|Tendances",mFavs:"Favorites|المفضلة|Favoris",clipStart:"Clip start|بداية المقطع|Début de l’extrait",clipHint:"Slide to pick your favorite part. The story music starts here.|حرّك لاختيار جزئك المفضل. ستبدأ موسيقى القصة من هنا.|Faites glisser pour choisir le passage. La musique démarre ici.",noFavSongs:"No favorite songs yet. Tap ☆ on a song.|لا توجد أغانٍ مفضلة بعد. اضغط ☆ على أي أغنية.|Aucun favori. Touchez ☆ sur un titre.",favSongOn:"Added to favorites|أُضيفت إلى المفضلة|Ajouté aux favoris",favSongOff:"Removed from favorites|أُزيلت من المفضلة|Retiré des favoris",badMedia:"This file can’t be displayed. Try a JPG, PNG or MP4.|لا يمكن عرض هذا الملف. جرّب JPG أو PNG أو MP4.|Ce fichier ne peut pas être affiché. Essayez JPG, PNG ou MP4.",typeText:"Type text…|اكتب نصًا…|Saisissez du texte…"
 ,add:"Add|إضافة|Ajouter"
 ,pickAudio:"Choose audio from phone|اختر ملفًا صوتيًا من هاتفك|Choisir un audio"
 ,favs:"Favorites|المفضلة|Favoris"
@@ -470,7 +482,7 @@ $('#pName').textContent=(P.fn+' '+P.ln).trim()||'—';$('#pName').insertAdjacent
 $('#pMeta').innerHTML=[P.ct,P.wb,P.bd&&P.bd.split('-').reverse().join('/')].filter(Boolean).map(x=>'<bdi>'+esc(x)+'</bdi>').join(' · ');paintAv($('#pAv'))}
 function sel(k,opts){return `<select data-s="${k}">${opts.map(o=>`<option value="${o[0]}" ${S[k]===o[0]?'selected':''}>${t(o[1])}</option>`).join('')}</select>`}
 function tg(k,lbl){return `<div class="sr"><span>${t(lbl)}</span><input type="checkbox" class="sw" role="switch" data-s="${k}" ${S[k]?'checked':''}></div>`}
-function renderSet(){$('#setBody').innerHTML=`<div class="sec">${t('language')}</div><div class="sr"><span>${t('language')}</span><select data-s="lang"><option value="en" ${L==='en'?'selected':''}>English</option><option value="ar" ${L==='ar'?'selected':''}>العربية</option><option value="fr" ${L==='fr'?'selected':''}>Français</option></select></div>
+function renderSet(){$('#setBody').innerHTML=`<div class="sec">${t('language')}</div><div class="sr" id="cfSettings" style="cursor:pointer"><span>الأصدقاء المفضلين</span><small style="color:var(--mu)">${(typeof closeFriends!=='undefined'?closeFriends.length:0)} صديق</small></div><div class="sr"><span>${t('language')}</span><select data-s="lang"><option value="en" ${L==='en'?'selected':''}>English</option><option value="ar" ${L==='ar'?'selected':''}>العربية</option><option value="fr" ${L==='fr'?'selected':''}>Français</option></select></div>
 <div class="sr"><span>${t('appearance')}</span>${sel('theme',[['auto','auto'],['light','light'],['dark','dark']])}</div>
 <div class="sec">${t('privacy')}</div>
 <div class="sr"><div>${t('acct')}<small>${t({public:'nPublic',private:'nPrivate',creator:'nCreator',business:'nBusiness'}[S.acct])}</small></div>${sel('acct',[['public','public'],['private','private'],['creator','creator'],['business','business']])}</div>
@@ -602,49 +614,46 @@ let favSongs=[],favLoaded=false;
 const fmt=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
 function ccName(c){try{return new Intl.DisplayNames([L],{type:'region'}).of(c.toUpperCase())}catch(_){return c.toUpperCase()}}
 function curCC(){try{const v=localStorage.getItem('refa_cc');if(v&&CC.includes(v))return v}catch(_){}const c=((navigator.language||'').split('-')[1]||'').toLowerCase();return CC.includes(c)?c:'us'}
-const artSz=(u,n)=>u?u.replace(/\/\d+x\d+[a-z0-9-]*\.(jpg|png|webp)$/i,`/${n}x${n}bb.jpg`):'';
-const norm=rs=>(rs||[]).filter(r=>r.previewUrl).map(r=>({id:String(r.trackId),t:r.trackName,ar:r.artistName,art:artSz(r.artworkUrl100||r.artworkUrl60||'',600),u:r.previewUrl}));
-function clipAudio(url,start,len,onMeta){const a=new Audio();a.preload='auto';a._st=start;a._ln=len;const seek=()=>{try{a.currentTime=start}catch(_){}};a.addEventListener('loadedmetadata',()=>{seek();if(onMeta)onMeta(a)},{once:true});a.addEventListener('timeupdate',()=>{if(a.currentTime>=start+len)seek()});a.addEventListener('ended',()=>{seek();a.play().catch(()=>{})});a.src=url;return a}
-setInterval(()=>{if(typeof ED==='undefined'||!ED||!ED.au)return;const a=ED.au,st=a._st||0,ln=a._ln||15,cur=Math.min(ln,Math.max(0,a.currentTime-st)),pct=Math.min(100,cur/Math.max(ln,1)*100),txt=fmt(cur)+' / '+fmt(ln);[['mprogi','mprevpi'],['mtime','mprevtime']].forEach((p,k)=>p.forEach(id=>{const el=document.getElementById(id);if(!el)return;if(k===0)el.style.width=pct+'%';else el.textContent=txt}))},200);
+const norm=rs=>(rs||[]).filter(r=>r.previewUrl).map(r=>({id:String(r.trackId),t:r.trackName,ar:r.artistName,art:(r.artworkUrl100||r.artworkUrl60||'').replace('100x100','300x300').replace('60x60','300x300'),u:r.previewUrl}));
+function clipAudio(url,start,len,onMeta){const a=new Audio();a.preload='auto';const seek=()=>{try{a.currentTime=start}catch(_){}};a.addEventListener('loadedmetadata',()=>{seek();if(onMeta)onMeta(a)},{once:true});a.addEventListener('timeupdate',()=>{if(a.currentTime>=start+len){seek();return}const pi=document.getElementById('mprogi');if(pi&&len>0){pi.style.width=Math.min(100,((a.currentTime-start)/len)*100)+'%'}const ppi=document.getElementById('mprevpi');if(ppi)ppi.style.width=Math.min(100,(a.currentTime/Math.max(len,1))*100)+'%';const tv=document.getElementById('mclipv');if(tv)tv.textContent=fmt(a.currentTime)});a.addEventListener('ended',()=>{seek();a.play().catch(()=>{})});a.src=url;return a}
 function edPlay(){stopAud();if(!ED)return;edVidPlay();const url=ED.mu?ED.mu.u:ED.mfUrl;if(!url)return;ED.au=clipAudio(url,ED.ms||0,CLIP_LEN,a=>{if(ED&&isFinite(a.duration)&&a.duration>0){ED.md=a.duration;const r=$('#mclip');if(r)r.max=Math.max(0,Math.floor(a.duration-5))}});ED.au.play().catch(()=>{})}
-function mRows(){return ED.mr.map((r,i)=>`<div class="mrw2"><button class="mrw ${ED.mu&&ED.mu.u===r.u?'on':''}" data-mi="${i}"><span class="mic" style="background-image:url(${esc(artSz(r.art,160))})"></span><span class="mt2"><b>${esc(r.t)}</b><small>${esc(r.ar)}</small></span></button><button class="madd" data-mi="${i}" title="تشغيل">▶</button><button class="fb o mstar" data-mfav="${i}" aria-label="Favorite">${favSongs.some(x=>x.id===r.id)?'★':'☆'}</button></div>`).join('')}
+function mRows(){return ED.mr.map((r,i)=>`<div class="mrw2"><button class="mrw ${ED.mu&&ED.mu.u===r.u?'on':''}" data-mi="${i}"><span class="mic" style="background-image:url(${esc(r.art||'')})"></span><span class="mt2"><b>${esc(r.t)}</b><small>${esc(r.ar)}</small></span></button><button class="madd" data-mi="${i}" title="تشغيل">▶</button><button class="fb o mstar" data-mfav="${i}" aria-label="Favorite">${favSongs.some(x=>x.id===r.id)?'★':'☆'}</button></div>`).join('')}
 function mList(){return ED.mr.length?mRows():(ED.mtab==='fav'?`<div class="note">${t('noFavSongs')}</div>`:'')}
 function musicPanel(){const tab=ED.mtab||'trend';ED.mtab=tab;ED.mr=tab==='trend'?(ED.trend||[]):tab==='fav'?favSongs:(ED.srch||[]);
 const tabs=['trend','fav','search'].map(k=>`<button class="chip ${tab===k?'on':''}" data-mtab="${k}">${t({trend:'mTrend',fav:'mFavs',search:'search'}[k])}</button>`).join('');
-const top=tab==='trend'?`<select id="mcc" aria-label="Country">${CC.map(c=>`<option value="${c}" ${c===ED.cc?'selected':''}>${ccName(c)}</option>`).join('')}</select><small class="mcr ${ED.trendFb?'':'hide'}" id="mtfb" style="margin:0 0 6px">${t('trendFb')}</small>`:tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
-const cur=(ED.mu||ED.mf)?`<div class="mcur"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><label class="slr"><span>${t('clipStart')}</span><input type="range" id="mclip" min="0" max="${Math.max(0,Math.floor((ED.md||30)-5))}" step="1" value="${ED.ms||0}"><b id="mclipv">${fmt(ED.ms||0)}</b></label><div class="mprog"><i id="mprogi"></i></div><small class="mcr" id="mtime" style="opacity:.85;margin:0 0 4px">0:00 / ${fmt(CLIP_LEN)}</small><small class="mcr" style="opacity:.7;margin:0 0 8px">${t('clipHint')}</small></div>`:'';
+const top=tab==='trend'?'':tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
+const cur=(ED.mu||ED.mf)?`<div class="mcur"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><label class="slr"><span>${t('clipStart')}</span><input type="range" id="mclip" min="0" max="${Math.max(0,Math.floor((ED.md||30)-5))}" step="1" value="${ED.ms||0}"><b id="mclipv">${fmt(ED.ms||0)}</b></label><small class="mcr" style="opacity:.7;margin:0 0 8px">${t('clipHint')}</small></div>`:'';
 return `<div class="mhandle" id="mhandle"></div><div class="mhead"><div class="chips fchips" style="padding:0 0 8px">${tabs}</div>${top}${cur}</div><div id="mres">${mList()}</div><div class="mfoot"><button class="fb o" id="mpick" style="margin-top:8px">${t('pickAudio')}</button><small class="mcr">${t('musicCredit')}</small></div>`}
 function musicLoad(){if(!ED)return;if(ED.mtab==='trend'&&!(ED.trend&&ED.trendCc===ED.cc))edTrend();if(ED.mtab==='fav'&&!favLoaded)loadFavSongs().then(()=>{if(ED&&ED.mtab==='fav'&&ED.mode==='music'){ED.mr=favSongs;const b=$('#mres');if(b)b.innerHTML=mList()}})}
-let trendFb=false;
-const STORE={dz:'fr',ma:'fr',tn:'fr',lb:'fr'},LOCAL={dz:['Soolking','Cheb Khaled','Cheb Mami',"Rim'K",'Raï','Algérie rap'],ma:['Saad Lamjarred','Douzi','Draganov','ElGrandeToto','Raï'],tn:['Balti','Klay BBJ','Emel Mathlouthi','Raï']};
-async function mLocal(cc){const store=STORE[cc]||cc,terms=LOCAL[cc]||['pop','hip hop'];const res=await Promise.all(terms.map(q=>jsonp(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=song&limit=8&country=${store}`).then(d=>norm(d.results)).catch(()=>[])));const seen=new Set(),out=[];for(let i=0;i<8;i++)for(const r of res){const x=r[i];if(x&&!seen.has(x.id)){seen.add(x.id);out.push(x)}}return out.slice(0,25)}
-async function mTrending(cc){trendFb=false;try{const r=await fetch(`https://itunes.apple.com/${cc}/rss/topsongs/limit=25/json`);if(!r.ok)throw new Error('feed');const d=await r.json();const songs=((d.feed&&d.feed.entry)||[]).map(e=>{const l=[].concat(e.link||[]).find(x=>x.attributes&&(x.attributes['im:assetType']==='preview'||/audio/.test(x.attributes.type||'')));const im=e['im:image']||[];return{id:String(e.id&&e.id.attributes&&e.id.attributes['im:id']),t:e['im:name']&&e['im:name'].label,ar:e['im:artist']&&e['im:artist'].label,art:artSz(im.length?(im[im.length-1].label||im[0].label):'',600),u:l&&l.attributes&&l.attributes.href}}).filter(x=>x.id&&x.t);const need=songs.filter(x=>!x.u);if(need.length){const d2=await jsonp(`https://itunes.apple.com/lookup?id=${need.map(x=>x.id).join(',')}&country=${cc}`);const mp=new Map((d2.results||[]).map(r=>[String(r.trackId),r]));need.forEach(x=>{const r=mp.get(x.id);if(r){x.u=r.previewUrl;if(!x.art)x.art=artSz(r.artworkUrl60||'',600)}})}const out=songs.filter(x=>x.u);if(out.length)return out}catch(_){}
-trendFb=true;return await mLocal(cc)}
-async function edTrend(){if(!ED)return;const cc=ED.cc;const box=$('#mres');if(box)box.innerHTML='<div class="note">…</div>';let rows=[];try{rows=await mTrending(cc)}catch(e){toast(e.message)}if(!ED||ED.cc!==cc)return;ED.trend=rows;ED.trendFb=trendFb;{const nb=$('#mtfb');if(nb)nb.classList.toggle('hide',!trendFb)}ED.trendCc=cc;if(ED.mtab==='trend'){ED.mr=rows;const b=$('#mres');if(b)b.innerHTML=rows.length?mRows():`<div class="note">${t('noRes')}</div>`}}
+async function mTrending(cc){try{const r=await fetch(`https://itunes.apple.com/${cc}/rss/topsongs/limit=25/json`);if(!r.ok)throw new Error('feed');const d=await r.json();const songs=((d.feed&&d.feed.entry)||[]).map(e=>{const l=[].concat(e.link||[]).find(x=>x.attributes&&(x.attributes['im:assetType']==='preview'||/audio/.test(x.attributes.type||'')));const im=e['im:image']||[];return{id:String(e.id&&e.id.attributes&&e.id.attributes['im:id']),t:e['im:name']&&e['im:name'].label,ar:e['im:artist']&&e['im:artist'].label,art:im.length?(im[im.length-1].label||im[0].label):'',u:l&&l.attributes&&l.attributes.href}}).filter(x=>x.id&&x.t);const need=songs.filter(x=>!x.u);if(need.length){const d2=await jsonp(`https://itunes.apple.com/lookup?id=${need.map(x=>x.id).join(',')}&country=${cc}`);const mp=new Map((d2.results||[]).map(r=>[String(r.trackId),r]));need.forEach(x=>{const r=mp.get(x.id);if(r){x.u=r.previewUrl;if(!x.art)x.art=r.artworkUrl60||''}})}const out=songs.filter(x=>x.u);if(out.length)return out}catch(_){}
+const d=await jsonp(`https://itunes.apple.com/search?term=${encodeURIComponent('top hits')}&media=music&entity=song&country=${cc}&limit=25`);return norm(d.results)}
+async function edTrend(){if(!ED)return;const cc=ED.cc;const box=$('#mres');if(box)box.innerHTML='<div class="note">…</div>';let rows=[];try{rows=await mTrending(cc)}catch(e){toast(e.message)}if(!ED||ED.cc!==cc)return;ED.trend=rows;ED.trendCc=cc;if(ED.mtab==='trend'){ED.mr=rows;const b=$('#mres');if(b)b.innerHTML=rows.length?mRows():`<div class="note">${t('noRes')}</div>`}}
 async function loadFavSongs(){if(!me)return;const {data,error}=await sb.from('fav_songs').select('track_id,title,artist,art,url').eq('user_id',me.id).order('created_at',{ascending:false}).limit(100);if(error){toast(error.message);return}favSongs=(data||[]).map(r=>({id:r.track_id,t:r.title,ar:r.artist||'',art:r.art||'',u:r.url}));favLoaded=true}
 async function edFavSong(i){const r=ED&&ED.mr[i];if(!r||!me)return;const has=favSongs.some(x=>x.id===r.id);if(has){const {error}=await sb.from('fav_songs').delete().match({user_id:me.id,track_id:r.id});if(error){toast(error.message);return}favSongs=favSongs.filter(x=>x.id!==r.id);toast(t('favSongOff'))}else{const {error}=await sb.from('fav_songs').insert({user_id:me.id,track_id:r.id,title:r.t,artist:r.ar,art:r.art,url:r.u});if(error){toast(error.message);return}favSongs.unshift({...r});toast(t('favSongOn'))}if(ED&&ED.mtab==='fav')ED.mr=favSongs;const b=$('#mres');if(b)b.innerHTML=mList()}
-async function edMusicSearch(q){q=(q||'').trim();if(!q||!ED)return;ED.mq=q;ED.mtab='search';const box=$('#mres');if(box)box.innerHTML='<div class="note">…</div>';let rows=[];try{const d=await itunes(q,STORE[ED.cc]||ED.cc);rows=norm(d.results)}catch(e){toast(e.message)}if(!ED)return;ED.srch=rows;if(ED.mtab==='search'){ED.mr=rows;const b2=$('#mres');if(b2)b2.innerHTML=rows.length?mRows():`<div class="note">${t('noRes')}</div>`}}
+async function edMusicSearch(q){q=(q||'').trim();if(!q||!ED)return;ED.mq=q;ED.mtab='search';const box=$('#mres');if(box)box.innerHTML='<div class="note">…</div>';let rows=[];try{const d=await itunes(q,ED.cc);rows=norm(d.results)}catch(e){toast(e.message)}if(!ED)return;ED.srch=rows;if(ED.mtab==='search'){ED.mr=rows;const b2=$('#mres');if(b2)b2.innerHTML=rows.length?mRows():`<div class="note">${t('noRes')}</div>`}}
 function edPickSong(i){const r=ED.mr[i];if(!r)return;openMusicPrev(r,i)}
 function openMusicPrev(r,i){if(!ED)return;ED.prevSong=r;ED.prevIdx=i;stopAud();
 let prev=document.getElementById('mprev');
-if(!prev){prev=document.createElement('div');prev.id='mprev';prev.className='mprev';prev.innerHTML=`<button class="mprev-close" id="mprevx">✕</button><div class="mprev-card"><div class="mprev-art" id="mprevart"></div><div class="mprev-title" id="mprevt"></div><div class="mprev-artist" id="mpreva"></div><div class="mprev-prog"><i id="mprevpi"></i></div><small class="mcr" id="mprevtime" style="margin:0">0:00 / 0:30</small><div class="mprev-btns"><button class="mprev-play" id="mprevplay">▶</button><button class="mprev-add" id="mprevadd">إضافة للقصة</button><button class="mprev-fav" id="mprevfav">☆</button></div></div>`;
+if(!prev){prev=document.createElement('div');prev.id='mprev';prev.className='mprev';prev.innerHTML=`<button class="mprev-close" id="mprevx">✕</button><div class="mprev-card"><div class="mprev-art" id="mprevart"></div><div class="mprev-title" id="mprevt"></div><div class="mprev-artist" id="mpreva"></div><div class="mprev-prog"><i id="mprevpi"></i></div><div class="mprev-btns"><button class="mprev-play" id="mprevplay">▶</button><button class="mprev-add" id="mprevadd">إضافة للقصة</button><button class="mprev-fav" id="mprevfav">☆</button></div></div>`;
 document.getElementById('sed').appendChild(prev)}
-document.getElementById('mprevart').style.backgroundImage=r.art?`url(${artSz(r.art,600)})`:'';
+document.getElementById('mprevart').style.backgroundImage=r.art?`url(${r.art})`:'';
 document.getElementById('mprevt').textContent=r.t;
 document.getElementById('mpreva').textContent=r.ar;
 document.getElementById('mprevfav').textContent=favSongs.some(x=>x.id===r.id)?'★':'☆';
 document.getElementById('mprevpi').style.width='0';
 prev.classList.add('on');
-ED.au=clipAudio(r.u,0,30,a=>{if(ED)ED.md=a.duration||30});
+ED.au=clipAudio(r.u,0,15,a=>{if(ED)ED.md=a.duration||30});
 ED.au.play().catch(()=>{});
-
+const pi=document.getElementById('mprevpi');
+const onTU=()=>{if(!ED||!ED.au)return;const p=Math.min(100,(ED.au.currentTime/15)*100);if(pi)pi.style.width=p+'%'};
+ED.au.addEventListener('timeupdate',onTU);
 }
 function closeMusicPrev(){const prev=document.getElementById('mprev');if(prev)prev.classList.remove('on');stopAud()}
-function confirmMusicPrev(){const r=ED&&ED.prevSong;if(!r)return;ED.mu={u:r.u,t:`${r.t} — ${r.ar}`,a:artSz(r.art,160),s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;closeMusicPrev();edPlay();edPanel('music')}
+function confirmMusicPrev(){const r=ED&&ED.prevSong;if(!r)return;ED.mu={u:r.u,t:`${r.t} — ${r.ar}`,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;closeMusicPrev();edPlay();edPanel('music')}
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='mq'&&ED)edMusicSearch(e.target.value)});
 document.addEventListener('input',e=>{const x=e.target;if(x.id==='susq'){clearTimeout(deb2);deb2=setTimeout(loadSus,300)}if(ED&&x.id==='mclip'){ED.ms=+x.value;if(ED.mu)ED.mu.s=ED.ms;const v=$('#mclipv');if(v)v.textContent=fmt(ED.ms)}});
-document.addEventListener('change',e=>{const x=e.target;if(!ED)return;if(x.id==='mclip')edPlay();else if(x.id==='mcc'){ED.cc=x.value;try{localStorage.setItem('refa_cc',x.value)}catch(_){}ED.trend=null;ED.trendCc=null;edTrend()}});
+document.addEventListener('change',e=>{const x=e.target;if(!ED)return;if(x.id==='mclip')edPlay();});
 let edDrag=null;
 (()=>{const m=$('#sedmain');
 m.addEventListener('error',e=>{if(ED&&e.target&&/^(IMG|VIDEO)$/.test(e.target.tagName)){toast(t('badMedia'));edClose()}},true);
@@ -656,6 +665,40 @@ $('#mfile').addEventListener('change',e=>{const f=e.target.files[0];e.target.val
 function openEdit(){$('#fn').value=P.fn;$('#ln').value=P.ln;$('#nk').value=P.nk;$('#bd2').value=P.bd;$('#ct').value=P.ct;$('#un').value=P.un;$('#bi').value=P.bi;$('#wb').value=P.wb;$('#gd').value=P.gd;paintAv($('#eAv'));$('#edit').classList.add('on')}
 let nImg='';
 let ED=null,favRows={},stGroups=[],seenSt=new Set(),SV={gi:0,i:0,fg:null,au:null,dirty:false},svT=null;
+
+let closeFriends = JSON.parse(localStorage.getItem('refa_cf')||'[]');
+let lpTimer=null;
+function saveCF(){try{localStorage.setItem('refa_cf',JSON.stringify(closeFriends))}catch(_){}}
+function openCFModal(forPublish){
+  let m=document.getElementById('cfmodal');
+  if(!m){
+    m=document.createElement('div');m.id='cfmodal';m.className='cfmodal';
+    m.innerHTML=`<div class="cfcard"><h3>الأصدقاء المفضلين</h3><div id="cflist"></div><div class="cfactions"><button class="cfcancel" id="cfcancel">إلغاء</button><button class="cfok" id="cfok">تم</button></div></div>`;
+    document.body.appendChild(m);
+  }
+  const list=document.getElementById('cflist');
+  const friends=[...following].map(id=>{
+    // try to find name from known data
+    return {id, name:id.slice(0,8)};
+  });
+  // Also include people from search/feed if available
+  list.innerHTML = friends.length ? friends.map(f=>`<div class="cfrow"><div class="av"></div><label>${f.name}</label><input type="checkbox" data-cfid="${f.id}" ${closeFriends.includes(f.id)?'checked':''}></div>`).join('') : '<div class="note" style="color:#aaa;padding:20px;text-align:center">أضف أصدقاء أولاً من البحث</div>';
+  m.classList.add('on');
+  m.dataset.publish = forPublish ? '1' : '0';
+}
+function closeCFModal(){const m=document.getElementById('cfmodal');if(m)m.classList.remove('on')}
+document.addEventListener('pointerdown',e=>{
+  if(e.target.closest('#sedFav')){
+    lpTimer=setTimeout(()=>{lpTimer=null;openCFModal(true)},500);
+  }
+});
+document.addEventListener('pointerup',e=>{
+  if(lpTimer){clearTimeout(lpTimer);lpTimer=null;
+    if(e.target.closest('#sedFav'))edPublish(true);
+  }
+});
+document.addEventListener('pointercancel',()=>{if(lpTimer){clearTimeout(lpTimer);lpTimer=null}});
+
 async function sendMsg(){const v=$('#mi').value.trim();if(!v||!curChat||!me)return;$('#mi').value='';const {data,error}=await sb.from('messages').insert({sender_id:me.id,receiver_id:curChat,body:v}).select().single();if(error){toast(error.code==='42501'?t('cantMsg'):error.message);$('#mi').value=v;return}if(!msgsAll.some(x=>x.id===data.id))msgsAll.unshift(data);buildConvs()}
 
 document.addEventListener('click',async e=>{const x=e.target,c=s=>x.closest(s);let b;
@@ -693,7 +736,8 @@ else if(c('#svd'))svDelete();
 else if(c('#svf'))svFavToggle();
 else if(c('#sedx'))edClose();
 else if(c('#sedShare'))edPublish(false);
-else if(c('#sedFav'))edPublish(true);
+else if(c('#sedFav')){ /* handled by longpress */ }
+
 else if(b=c('[data-edt]')){if(ED)edPanel(ED.mode===b.dataset.edt?'':b.dataset.edt)}
 else if(b=c('[data-flt]')){if(ED){ED.fl=b.dataset.flt;edFilter();edPanel('filter')}}
 else if(b=c('[data-em]')){if(ED)edEmoji(b.dataset.em)}
@@ -707,12 +751,23 @@ else if(c('#mgo')){if(ED)edMusicSearch($('#mq').value)}
 else if(b=c('[data-mq]')){if(ED){$('#mq').value=b.dataset.mq;edMusicSearch(b.dataset.mq)}}
 else if(b=c('[data-mtab]')){if(ED){ED.mtab=b.dataset.mtab;edPanel('music')}}
 else if(b=c('[data-mfav]')){if(ED)edFavSong(+b.dataset.mfav)}
-else if(b=c('[data-mi]')){if(ED){const i=+b.dataset.mi; if(b.classList.contains('madd')){ /* play only */ openMusicPrev(ED.mr[i],i) } else { /* select song */ const r=ED.mr[i]; if(r){ED.mu={u:r.u,t:r.t+' — '+r.ar,a:artSz(r.art,160),s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;edPlay();edPanel('music')} } }}
+else if(b=c('[data-mi]')){if(ED){const i=+b.dataset.mi; if(b.classList.contains('madd')){ /* play only */ openMusicPrev(ED.mr[i],i) } else { /* select song */ const r=ED.mr[i]; if(r){ED.mu={u:r.u,t:r.t+' — '+r.ar,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;edPlay();edPanel('music')} } }}
 else if(c('#mprevx')||c('.mprev')&&!c('.mprev-card')){closeMusicPrev()}
 else if(c('#mhandle')){edPanel('')}
+else if(c('#cfSettings')){openCFModal(false)}
+else if(c('#cfcancel')){closeCFModal()}
+else if(c('#cfok')){
+  const checked=[...document.querySelectorAll('#cflist input:checked')].map(x=>x.dataset.cfid);
+  closeFriends=checked;saveCF();
+  const forPub=document.getElementById('cfmodal')?.dataset.publish==='1';
+  closeCFModal();
+  if(forPub)edPublish(true);
+  else toast('تم الحفظ');
+}
+
 else if(c('#mprevadd')){confirmMusicPrev()}
 else if(c('#mprevplay')){if(ED&&ED.au){if(ED.au.paused){ED.au.play().catch(()=>{});document.getElementById('mprevplay').textContent='⏸'}else{ED.au.pause();document.getElementById('mprevplay').textContent='▶'}}}
-else if(c('#mprevfav')){if(ED&&ED.prevIdx!=null)await edFavSong(ED.prevIdx);const btn=document.getElementById('mprevfav');if(btn&&ED.prevSong)btn.textContent=favSongs.some(x=>x.id===ED.prevSong.id)?'★':'☆'}
+else if(c('#mprevfav')){if(ED&&ED.prevIdx!=null)edFavSong(ED.prevIdx);const btn=document.getElementById('mprevfav');if(btn&&ED.prevSong)btn.textContent=favSongs.some(x=>x.id===ED.prevSong.id)?'★':'☆'}
 else if(c('#svi')){const r=$('#sv').getBoundingClientRect(),x=(e.clientX-r.left)/r.width,rtl=document.documentElement.dir==='rtl';(rtl?x>.67:x<.33)?svPrev():svNext()}
 else if(c('#svs')){const v=$('#svi video');if(v){v.muted=!v.muted;if(!v.muted&&v.paused)v.play().catch(()=>{});svSpk()}}
 else if(c('#edvol')){if(ED){ED.vmute=!effMute();edVidPlay()}}
