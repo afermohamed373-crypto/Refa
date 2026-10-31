@@ -694,7 +694,7 @@ const um=new Map((pu.data||[]).map(u=>[u.id,u])),pm=new Map((pp.data||[]).map(p=
 $('#rl').innerHTML=rows.map(r=>{const u=um.get(r.target_user_id)||{},p=pm.get(r.post_id);return `<div class="row" style="align-items:flex-start"><div class="g"><b>${esc(t('r_'+r.reason))}</b> · ${ago(r.created_at)}<small>→ ${esc(dn(u))} (@${esc(u.username||'')})</small>${r.details?`<small>${esc(r.details)}</small>`:''}${p&&!isVid(p.image_url)?`<img src="${esc(p.image_url)}" alt="" style="max-width:120px;margin-top:6px;border-radius:8px">`:''}</div><div style="display:flex;gap:6px"><button class="fb" style="background:#d6264a" data-delacct="${esc(r.target_user_id||'')}" aria-label="Delete account">${IC.trash}</button><button class="fb o" data-uid="${esc(r.target_user_id||'')}">👤</button>${r.post_id?`<button class="fb" data-dp="${r.post_id}">${IC.trash}</button>`:''}<button class="fb o" data-rd="${r.id}">✓</button></div></div>`}).join('')||`<div class="note">${t('noReports')}</div>`}
 async function renderAdm(){renderReports();const q=($('#vu').value||'').trim().replace(/[%,()]/g,'');let r=sb.from('profiles').select('id,username,first_name,last_name,is_verified,avatar_url').order('created_at',{ascending:false}).limit(50);if(q)r=r.or(`username.ilike.%${q}%,first_name.ilike.%${q}%,last_name.ilike.%${q}%`);const {data,error}=await r;if(error){$('#vl').innerHTML=`<div class="note">${esc(error.message)}</div>`;return}$('#vl').innerHTML=(data||[]).map((u,i)=>`<div class="row">${av2(u,i)}<div class="g"><b>${esc(dn(u))}</b>${vbf(u.is_verified)}<small>@${esc(u.username||'')}</small></div><button class="fb ${u.is_verified?'o':''}" data-vid="${u.id}" data-vv="${u.is_verified?1:0}">${t(u.is_verified?'unverify':'verify')}</button></div>`).join('')||`<div class="note">${t('noRes')}</div>`}
 async function doSearch(){const q=($('#q').value||'').trim().replace(/[%,()]/g,'');let r=sb.from('profiles').select('id,username,first_name,last_name,is_verified,avatar_url').limit(20);if(q)r=r.or(`username.ilike.%${q}%,first_name.ilike.%${q}%,last_name.ilike.%${q}%`);const {data}=await r;peopleRes=(data||[]).filter(u=>(!me||u.id!==me.id)&&!blocked.has(u.id));renderSearch()}
-async function loadMe(u){me=u;const {data}=await sb.from('profiles').select('*').eq('id',u.id).single();const d=data||{};P={...P,un:d.username||'',fn:d.first_name||'',ln:d.last_name||'',nk:d.nickname||'',bd:d.birth_date||'',ct:d.city||'',bi:d.bio||'',wb:d.website||'',gd:d.gender||'',ph:d.avatar_url||''};S.acct=d.account_type||'public';S.msg=d.message_privacy||'everyone';S.rec=d.read_receipts!==false;S.admin=!!d.is_admin;d.is_verified?verified.add('me'):verified.delete('me');renderAll();loadMyPosts();loadCounts().then(()=>{loadFeed();loadMsgs();loadStories();loadFavStrip(me.id,'#favs')});loadNotes();subscribeNotes();if(S.admin)renderReports()}
+async function loadMe(u){me=u;const {data}=await sb.from('profiles').select('*').eq('id',u.id).single();const d=data||{};P={...P,un:d.username||'',fn:d.first_name||'',ln:d.last_name||'',nk:d.nickname||'',bd:d.birth_date||'',ct:d.city||'',bi:d.bio||'',wb:d.website||'',gd:d.gender||'',ph:d.avatar_url||''};S.acct=d.account_type||'public';S.msg=d.message_privacy||'everyone';S.rec=d.read_receipts!==false;S.admin=!!d.is_admin;d.is_verified?verified.add('me'):verified.delete('me');await loadCounts();await loadCloseFriends();renderAll();loadMyPosts();loadFeed();loadMsgs();loadStories();loadFavStrip(me.id,'#favs');loadNotes();subscribeNotes();if(S.admin)renderReports()}
 async function saveProfile(){const un=$('#un').value.trim().toLowerCase().replace(/[^a-z0-9_.]/g,'');const row={username:un||null,first_name:$('#fn').value.trim(),last_name:$('#ln').value.trim(),nickname:$('#nk').value.trim(),birth_date:$('#bd2').value||null,city:$('#ct').value.trim(),website:$('#wb').value.trim(),gender:$('#gd').value,bio:$('#bi').value.trim()};const {error}=await sb.from('profiles').update(row).eq('id',me.id);if(error){toast(error.code==='23505'?t('taken'):error.message);return}P={...P,un:row.username||'',fn:row.first_name,ln:row.last_name,nk:row.nickname,bd:row.birth_date||'',ct:row.city,bi:row.bio,wb:row.website,gd:row.gender};renderProfile();renderStories();tab('profile');toast(t('saveToast'))}
 function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2200)}
 function showG(id){['lgp','sgp','fgp'].forEach(g=>$('#'+g).classList.toggle('hide',g!==id))}
@@ -1031,7 +1031,7 @@ function openEdit(){$('#fn').value=P.fn;$('#ln').value=P.ln;$('#nk').value=P.nk;
 let nImg='';
 let ED=null,favRows={},stGroups=[],seenSt=new Set(),SV={gi:0,i:0,fg:null,au:null,dirty:false},svT=null;
 
-let closeFriends = JSON.parse(localStorage.getItem('refa_cf')||'[]');
+let closeFriends = [];
 
 (function(){
   let sy=0, dragging=false, startY=0;
@@ -1087,21 +1087,63 @@ let closeFriends = JSON.parse(localStorage.getItem('refa_cf')||'[]');
 })();
 
 let lpTimer=null;
-function saveCF(){try{localStorage.setItem('refa_cf',JSON.stringify(closeFriends))}catch(_){}}
-function openCFModal(forPublish){
+async function loadCloseFriends(){
+  if(!me){closeFriends=[];return}
+  closeFriends=[];
+  const {data,error}=await sb.from('close_friends').select('friend_id').eq('user_id',me.id);
+  if(error){toast('تعذر تحميل الأصدقاء المقرّبين: '+error.message);return}
+  closeFriends=(data||[]).map(r=>r.friend_id).filter(Boolean);
+
+  // Migrate an older device-only list once, but only when the cloud list is empty.
+  if(!closeFriends.length){
+    let old=[];
+    try{old=JSON.parse(localStorage.getItem('refa_cf')||'[]')}catch(_){}
+    old=[...new Set((Array.isArray(old)?old:[]).filter(id=>typeof id==='string'&&id&&id!==me.id))];
+    if(old.length){
+      const {error:insErr}=await sb.from('close_friends').insert(old.map(friend_id=>({user_id:me.id,friend_id})));
+      if(!insErr){closeFriends=old;try{localStorage.removeItem('refa_cf')}catch(_){}}
+      else toast('تعذر نقل القائمة القديمة إلى Supabase: '+insErr.message);
+    }
+  }
+}
+async function saveCF(){
+  if(!me){toast('يرجى تسجيل الدخول أولاً');return false}
+  const wanted=[...new Set(closeFriends.filter(id=>typeof id==='string'&&id&&id!==me.id))];
+  const {data:rows,error:readErr}=await sb.from('close_friends').select('friend_id').eq('user_id',me.id);
+  if(readErr){toast('تعذر قراءة القائمة: '+readErr.message);return false}
+  const current=(rows||[]).map(r=>r.friend_id).filter(Boolean);
+  const add=wanted.filter(id=>!current.includes(id));
+  const remove=current.filter(id=>!wanted.includes(id));
+  if(add.length){
+    const {error}=await sb.from('close_friends').insert(add.map(friend_id=>({user_id:me.id,friend_id})));
+    if(error){toast('تعذر حفظ الأصدقاء: '+error.message);return false}
+  }
+  if(remove.length){
+    const {error}=await sb.from('close_friends').delete().eq('user_id',me.id).in('friend_id',remove);
+    if(error){toast('تمت الإضافة لكن تعذر حذف بعض الأصدقاء: '+error.message);return false}
+  }
+  closeFriends=wanted;
+  renderSet();
+  return true;
+}
+async function openCFModal(forPublish){
+  if(!me){toast('يرجى تسجيل الدخول أولاً');return}
+  await loadCloseFriends();
   let m=document.getElementById('cfmodal');
   if(!m){
     m=document.createElement('div');m.id='cfmodal';m.className='cfmodal';
-    m.innerHTML=`<div class="cfcard"><h3>الأصدقاء المفضلين</h3><div id="cflist"></div><div class="cfactions"><button class="cfcancel" id="cfcancel">إلغاء</button><button class="cfok" id="cfok">تم</button></div></div>`;
+    m.innerHTML=`<div class="cfcard"><h3>الأصدقاء المقرّبون</h3><div id="cflist"></div><div class="cfactions"><button class="cfcancel" id="cfcancel">إلغاء</button><button class="cfok" id="cfok">حفظ</button></div></div>`;
     document.body.appendChild(m);
   }
   const list=document.getElementById('cflist');
-  const friends=[...following].map(id=>{
-    // try to find name from known data
-    return {id, name:id.slice(0,8)};
-  });
-  // Also include people from search/feed if available
-  list.innerHTML = friends.length ? friends.map(f=>`<div class="cfrow"><div class="av"></div><label>${f.name}</label><input type="checkbox" data-cfid="${f.id}" ${closeFriends.includes(f.id)?'checked':''}></div>`).join('') : '<div class="note" style="color:#aaa;padding:20px;text-align:center">أضف أصدقاء أولاً من البحث</div>';
+  const ids=[...following].filter(id=>!blocked.has(id));
+  let friends=[];
+  if(ids.length){
+    const {data,error}=await sb.from('profiles').select('id,username,first_name,last_name,avatar_url').in('id',ids);
+    if(error){toast('تعذر تحميل قائمة المتابعين: '+error.message)}
+    friends=(data||[]).map(u=>({id:u.id,name:dn(u)||u.username||u.id.slice(0,8),avatar:u.avatar_url||''}));
+  }
+  list.innerHTML = friends.length ? friends.map(f=>`<div class="cfrow"><div class="av" style="${f.avatar?`background-image:url('${esc(f.avatar)}')`:''}"></div><label>${esc(f.name)}</label><input type="checkbox" data-cfid="${esc(f.id)}" ${closeFriends.includes(f.id)?'checked':''}></div>`).join('') : '<div class="note" style="color:var(--mu);padding:20px;text-align:center">تابع أشخاصاً أولاً لتتمكن من إضافتهم هنا</div>';
   m.classList.add('on');
   m.dataset.publish = forPublish ? '1' : '0';
 }
@@ -1219,11 +1261,13 @@ else if(c('#cfSettings')){openCFModal(false)}
 else if(c('#cfcancel')){closeCFModal()}
 else if(c('#cfok')){
   const checked=[...document.querySelectorAll('#cflist input:checked')].map(x=>x.dataset.cfid);
-  closeFriends=checked;saveCF();
   const forPub=document.getElementById('cfmodal')?.dataset.publish==='1';
+  closeFriends=checked;
+  const saved=await saveCF();
+  if(!saved)return;
   closeCFModal();
   if(forPub)edPublish(true);
-  else toast('تم الحفظ');
+  else toast('تم حفظ الأصدقاء المقرّبين في حسابك');
 }
 
 else if(c('#mprevadd')){confirmMusicPrev()}
