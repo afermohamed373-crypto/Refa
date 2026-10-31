@@ -630,7 +630,7 @@ function mList(){return ED.mr.length?mRows():(ED.mtab==='fav'?`<div class="note"
 function musicPanel(){const tab=ED.mtab||'trend';ED.mtab=tab;ED.mr=tab==='trend'?(ED.trend||[]):tab==='fav'?favSongs:(ED.srch||[]);
 const tabs=['trend','fav','search'].map(k=>`<button class="chip ${tab===k?'on':''}" data-mtab="${k}">${t({trend:'mTrend',fav:'mFavs',search:'search'}[k])}</button>`).join('');
 const top=tab==='trend'?'':tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
-const cur=(ED.mu||ED.mf)?`<div class="mcur"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><div class="mprog"><i id="mprogi"></i></div><div class="mtime"><span id="mcurtime">0:00</span><b id="mclipv">${fmt(ED.ms||0)}</b></div><label class="slr"><span>${t('clipStart')}</span><input type="range" id="mclip" min="0" max="${Math.max(0,Math.floor((ED.md||30)-5))}" step="1" value="${ED.ms||0}"></label><small class="mcr" style="opacity:.65;margin:4px 0 0">${t('clipHint')}</small></div>`:'' ;
+const cur=(ED.mu||ED.mf)?`<div class="mcur" id="mcurbox"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><div class="mprog"><i id="mprogi"></i></div><div class="mtime"><span id="mcurtime">0:00</span><span>0:15</span></div></div>`:''  ;
 return `<div class="mhandle" id="mhandle"></div><div class="mhead"><div class="chips fchips" style="padding:0 0 8px">${tabs}</div>${top}${cur}</div><div id="mres">${mList()}</div><div class="mfoot"><button class="fb o" id="mpick" style="margin-top:8px">${t('pickAudio')}</button><small class="mcr">${t('musicCredit')}</small></div>`}
 function musicLoad(){if(!ED)return;if(ED.mtab==='trend'&&!(ED.trend&&ED.trendCc===ED.cc))edTrend();if(ED.mtab==='fav'&&!favLoaded)loadFavSongs().then(()=>{if(ED&&ED.mtab==='fav'&&ED.mode==='music'){ED.mr=favSongs;const b=$('#mres');if(b)b.innerHTML=mList()}})}
 async function mTrending(cc){try{const r=await fetch(`https://itunes.apple.com/${cc}/rss/topsongs/limit=25/json`);if(!r.ok)throw new Error('feed');const d=await r.json();const songs=((d.feed&&d.feed.entry)||[]).map(e=>{const l=[].concat(e.link||[]).find(x=>x.attributes&&(x.attributes['im:assetType']==='preview'||/audio/.test(x.attributes.type||'')));const im=e['im:image']||[];return{id:String(e.id&&e.id.attributes&&e.id.attributes['im:id']),t:e['im:name']&&e['im:name'].label,ar:e['im:artist']&&e['im:artist'].label,art:im.length?(im[im.length-1].label||im[0].label):'',u:l&&l.attributes&&l.attributes.href}}).filter(x=>x.id&&x.t);const need=songs.filter(x=>!x.u);if(need.length){const d2=await jsonp(`https://itunes.apple.com/lookup?id=${need.map(x=>x.id).join(',')}&country=${cc}`);const mp=new Map((d2.results||[]).map(r=>[String(r.trackId),r]));need.forEach(x=>{const r=mp.get(x.id);if(r){x.u=r.previewUrl;if(!x.art)x.art=r.artworkUrl60||''}})}const out=songs.filter(x=>x.u);if(out.length)return out}catch(_){}
@@ -660,8 +660,8 @@ function closeMusicPrev(){const prev=document.getElementById('mprev');if(prev)pr
 function confirmMusicPrev(){const r=ED&&ED.prevSong;if(!r)return;ED.mu={u:r.u,t:`${r.t} — ${r.ar}`,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;closeMusicPrev();edPlay();edPanel('music')}
 
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='mq'&&ED)edMusicSearch(e.target.value)});
-document.addEventListener('input',e=>{const x=e.target;if(x.id==='susq'){clearTimeout(deb2);deb2=setTimeout(loadSus,300)}if(ED&&x.id==='mclip'){ED.ms=+x.value;if(ED.mu)ED.mu.s=ED.ms;const v=$('#mclipv');if(v)v.textContent=fmt(ED.ms)}});
-document.addEventListener('change',e=>{const x=e.target;if(!ED)return;if(x.id==='mclip')edPlay();});
+document.addEventListener('input',e=>{const x=e.target;if(x.id==='susq'){clearTimeout(deb2);deb2=setTimeout(loadSus,300)}});
+document.addEventListener('change',e=>{const x=e.target;if(!ED)return;});
 let edDrag=null;
 (()=>{const m=$('#sedmain');
 m.addEventListener('error',e=>{if(ED&&e.target&&/^(IMG|VIDEO)$/.test(e.target.tagName)){toast(t('badMedia'));edClose()}},true);
@@ -759,7 +759,27 @@ else if(c('#mgo')){if(ED)edMusicSearch($('#mq').value)}
 else if(b=c('[data-mq]')){if(ED){$('#mq').value=b.dataset.mq;edMusicSearch(b.dataset.mq)}}
 else if(b=c('[data-mtab]')){if(ED){ED.mtab=b.dataset.mtab;edPanel('music')}}
 else if(b=c('[data-mfav]')){if(ED)edFavSong(+b.dataset.mfav)}
-else if(b=c('[data-mi]')){if(ED){const i=+b.dataset.mi; if(b.classList.contains('madd')){ /* play only */ openMusicPrev(ED.mr[i],i) } else { /* select song */ const r=ED.mr[i]; if(r){ED.mu={u:r.u,t:r.t+' — '+r.ar,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;edPlay();edPanel('music')} } }}
+else if(b=c('[data-mi]')){if(ED){const i=+b.dataset.mi; const r=ED.mr[i]; if(!r)return;
+if(b.classList.contains('madd')){ openMusicPrev(r,i); return; }
+/* select song without full re-render to keep scroll */
+ED.mu={u:r.u,t:r.t+' — '+r.ar,a:r.art||'',s:0};ED.mf=null;ED.mfUrl=null;ED.mt=ED.mu.t;ED.ms=0;ED.md=30;ED.vmute=null;
+const box=document.getElementById('mres');
+const scrollPos=box?box.scrollTop:0;
+/* update current card only */
+let curBox=document.getElementById('mcurbox');
+const curHTML=`<div class="mcur" id="mcurbox"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><div class="mprog"><i id="mprogi"></i></div><div class="mtime"><span id="mcurtime">0:00</span><span>0:15</span></div></div>`;
+if(curBox){curBox.outerHTML=curHTML;}
+else{
+  const head=document.querySelector('.mhead');
+  if(head)head.insertAdjacentHTML('beforeend',curHTML);
+}
+/* highlight selected */
+document.querySelectorAll('.mrw').forEach(el=>el.classList.remove('on'));
+const row=b.closest('.mrw2')?.querySelector('.mrw')||b;
+if(row)row.classList.add('on');
+edPlay();
+if(box)box.scrollTop=scrollPos;
+}}
 else if(c('#mprevx')||c('.mprev')&&!c('.mprev-card')){closeMusicPrev()}
 else if(c('#mhandle')){edPanel('')}
 else if(c('#cfSettings')){openCFModal(false)}
