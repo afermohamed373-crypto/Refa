@@ -605,7 +605,17 @@ const EM=['😀','😂','😍','🥰','😎','🤩','😭','😡','🔥','💯',
 const CL=['#ffffff','#000000','#ffd166','#ff4d6d','#00d1ff','#7cfc00'];
 const itSize=o=>(o.t==='e'?.17:.075)*o.k;
 const itHTML=(o,i,ed)=>`<div class="it${ed?' ed':''}" data-oi="${i}" style="left:${o.x*100}%;top:${o.y*100}%;font-size:calc(var(--w)*${itSize(o)});${o.t==='t'?`color:${esc(o.c||'#fff')};`:''}">${esc(o.v)}</div>`;
-function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const media=(m.v!=null?!!m.v:isVid(url))?`<video src="${esc(url)}" autoplay ${ed?'loop':''} ${(m.vm!=null?!!m.vm:!!m.mu)?'muted':''} playsinline style="filter:${f}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f}">`;return `<div class="stage">${media}${(m.o||[]).map((o,i)=>itHTML(o,i,ed)).join('')}${m.mu&&!ed?`<div class="mus">${m.mu.a?`<span class="mic" style="background-image:url(${esc(m.mu.a)})"></span>`:'♪ '}${esc(m.mu.t||'')}</div>`:''}</div>`}
+function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const media=(m.v!=null?!!m.v:isVid(url))?`<video src="${esc(url)}" autoplay ${ed?'loop':''} ${(m.vm!=null?!!m.vm:!!m.mu)?'muted':''} playsinline style="filter:${f}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f}">`;
+let mus='';
+if(m.mu&&!ed){
+  const title=((m.mu.t||'Music')+'').split(' — ')[0];
+  const artist=((m.mu.t||'')+'').includes(' — ')?(m.mu.t||'').split(' — ')[1]:'';
+  const art=m.mu.a||'';
+  const x=(m.mx!=null?m.mx:0.5)*100, y=(m.my!=null?m.my:0.15)*100;
+  const sc=m.msc||1, rot=m.mrt||0;
+  mus=`<div class="mus-sticker" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) scale(${sc}) rotate(${rot}deg);pointer-events:none"><div class="ms-art" style="background-image:url(${esc(art)})"></div><div class="ms-info"><div class="ms-title"><span class="scroll">♪ ${esc(title)} &nbsp;&nbsp;&nbsp; ♪ ${esc(title)} &nbsp;&nbsp;&nbsp; </span></div><div class="ms-artist">${esc(artist)}</div></div></div>`;
+}
+return `<div class="stage">${media}${(m.o||[]).map((o,i)=>itHTML(o,i,ed)).join('')}${mus}</div>`}
 const SPK_ON='<svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>',SPK_OFF='<svg class="ico" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
 const effMute=()=>ED.vmute!=null?!!ED.vmute:!!(ED.mu||ED.mf);
 function edVidPlay(){const v=$('#sedmain .stage video'),b=$('#edvol');if(b)b.classList.toggle('hide',!(ED&&ED.vid));if(!v||!ED)return;const mute=effMute();v.muted=mute;if(b)b.innerHTML=mute?SPK_OFF:SPK_ON;const p=v.play();if(p&&p.catch)p.catch(()=>{v.muted=true;if(b)b.innerHTML=SPK_OFF;v.play().catch(()=>{})})}
@@ -626,11 +636,27 @@ st.style.borderRadius=isEditor?'0':'14px';
 }
 
 async function loadStories(){if(!me)return;
-const [a,b]=await Promise.all([sb.from('stories').select(SCOLS).gt('created_at',new Date(Date.now()-864e5).toISOString()).order('created_at',{ascending:true}),sb.from('story_views').select('story_id').eq('viewer_id',me.id)]);
-if(a.error)return;
-seenSt=new Set((b.data||[]).map(x=>x.story_id));
+let stories=[], views=[];
+try{
+  const [a,b]=await Promise.all([
+    sb.from('stories').select(SCOLS).gt('created_at',new Date(Date.now()-864e5).toISOString()).order('created_at',{ascending:true}),
+    sb.from('story_views').select('story_id').eq('viewer_id',me.id)
+  ]);
+  if(a.error){
+    /* fallback without profiles embed */
+    const a2=await sb.from('stories').select('id,user_id,media_url,meta,is_fav,created_at').gt('created_at',new Date(Date.now()-864e5).toISOString()).order('created_at',{ascending:true});
+    if(a2.error){console.error('stories',a2.error);toast(a2.error.message||'خطأ تحميل القصص');return}
+    stories=a2.data||[];
+  }else stories=a.data||[];
+  views=b.data||[];
+}catch(e){console.error(e);return}
+seenSt=new Set(views.map(x=>x.story_id));
 const m=new Map();
-(a.data||[]).forEach(r=>{if(!(r.user_id===me.id||(following.has(r.user_id)&&!blocked.has(r.user_id))))return;if(!m.has(r.user_id))m.set(r.user_id,{uid:r.user_id,u:r.profiles||{},items:[]});m.get(r.user_id).items.push(r)});
+stories.forEach(r=>{
+  if(!(r.user_id===me.id||(following.has(r.user_id)&&!blocked.has(r.user_id))))return;
+  if(!m.has(r.user_id))m.set(r.user_id,{uid:r.user_id,u:r.profiles||{},items:[]});
+  m.get(r.user_id).items.push(r);
+});
 const mine=m.get(me.id)||{uid:me.id,u:{},items:[]};m.delete(me.id);
 const others=[...m.values()];const un=g=>g.items.some(x=>!seenSt.has(x.id));
 others.sort((x,y)=>un(y)-un(x));
@@ -726,7 +752,7 @@ const url=sb.storage.from('media').getPublicUrl(pth).data.publicUrl;
 let mu=ED.mu||null;if(!mu&&ED.mf){const p2=`${base}-music.${ex(ED.mf.name)}`;const u2=await sb.storage.from('media').upload(p2,ED.mf,{contentType:ED.mf.type||'audio/mpeg'});if(u2.error)throw u2.error;mu={u:sb.storage.from('media').getPublicUrl(p2).data.publicUrl,t:ED.mt,s:ED.ms||0}}
 const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu,v:ED.vid?1:0,vm:effMute()?1:0,ms:'album',mx:ED.musX||.5,my:ED.musY||.15,marks:ED.marks||[],msc:ED.musScale||1,mrt:ED.musRot||0};
 const {error}=await sb.from('stories').insert({user_id:me.id,media_url:url,meta,is_fav:!!fav});if(error)throw error;
-edClose();await loadStories();loadFavStrip(me.id,'#favs');toast(t('posted'))}
+edClose();await loadStories();loadFavStrip(me.id,'#favs');toast(t('posted'));if(!stGroups[0]||!stGroups[0].items.length)toast('تم الحفظ — حدّث الصفحة إن لم تظهر');}
 catch(err){toast((err&&err.message)||String(err));if(ED){ED.busy=false;$$('#sedbar button').forEach(b=>b.disabled=false)}}}
 function jsonp(url){return new Promise((res,rej)=>{const cb='itcb'+Date.now()+Math.random().toString(36).slice(2,6),sc=document.createElement('script');const done=()=>{delete window[cb];sc.remove()};const tm=setTimeout(()=>{done();rej(new Error('timeout'))},10000);window[cb]=d=>{clearTimeout(tm);done();res(d)};sc.onerror=()=>{clearTimeout(tm);done();rej(new Error('network'))};sc.src=url+(url.includes('?')?'&':'?')+'callback='+cb;document.head.appendChild(sc)})}
 function itunes(q,cc){return jsonp(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=song&limit=25${cc?'&country='+cc:''}`)}
