@@ -180,7 +180,7 @@ button.row{cursor:pointer}
 .sedbot{background:#000}
 .sibar{display:flex;gap:8px;justify-content:center;padding:6px}
 .sibar button{border:0;border-radius:16px;padding:7px 14px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-weight:600}
-.spanel{background:#161616;padding:10px 12px;max-height:34vh;overflow:auto}
+.spanel{background:#161616;padding:10px 12px;max-height:34vh;overflow:auto;border-radius:18px 18px 0 0}
 .emg{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
 .emg button{background:none;border:0;font-size:24px;padding:4px;cursor:pointer}
 .mrow{display:flex;align-items:center;gap:10px}
@@ -207,7 +207,14 @@ button.row{cursor:pointer}
 .mcr{display:block;text-align:center;opacity:.5;font-size:10px;margin-top:6px}
 .spanel select{background:#262626;color:#fff;border:1px solid #333;border-radius:10px;padding:8px 10px;margin-bottom:8px;width:100%}
 .mrw2{display:flex;align-items:center;gap:6px}.mrw2 .mrw{flex:1;min-width:0}.mstar{font-size:16px;padding:6px 10px;flex:none}.mcur{border-bottom:1px solid #2a2a2a;margin-bottom:8px}
-.spanel.mp{display:flex;flex-direction:column;overflow:hidden;height:52vh;max-height:52vh}.spanel.mp #mres{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.spanel.mp .mhead,.spanel.mp .mfoot{flex:none;background:#161616}
+.spanel.mp{display:flex;flex-direction:column;overflow:hidden;height:48vh;max-height:48vh;border-radius:18px 18px 0 0;transition:transform .28s ease,height .28s ease}
+#sed.music-open .sedmain{transform:scale(0.72);transform-origin:center top;transition:transform .28s ease}
+#sed.music-open .stools{opacity:0;pointer-events:none;transition:opacity .2s}
+#sed .stools,#sed .sedmain{transition:transform .28s ease,opacity .2s}
+.spanel{transition:transform .28s ease}
+.spanel.hide{transform:translateY(110%)}
+.spanel:not(.hide){transform:translateY(0)}
+.spanel.mp #mres{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.spanel.mp .mhead,.spanel.mp .mfoot{flex:none;background:#161616}
 .mprev{position:absolute;inset:0;background:rgba(0,0,0,.85);z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
 .mprev.on{display:flex}
 .mprev-card{background:#1c1c1e;border-radius:20px;padding:20px;width:min(320px,90%);text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.5)}
@@ -413,7 +420,7 @@ changePw:"Change password|تغيير كلمة المرور|Changer le mot de pas
 saved:"Saved posts|المنشورات المحفوظة|Publications enregistrées",about:"About|حول التطبيق|À propos",saveToast:"Saved|تم الحفظ|Enregistré",
 noPosts:"No posts yet. Tap ⊕ to share.|لا توجد منشورات بعد. اضغط ⊕ للنشر.|Aucune publication. Touchez ⊕ pour partager.",pickImg:"Choose a photo first|اختر صورة أولًا|Choisissez d’abord une photo",uploading:"Uploading…|جارٍ الرفع…|Envoi en cours…",posted:"Posted|تم النشر|Publié",delAsk:"Delete this post?|حذف هذا المنشور؟|Supprimer cette publication ?",soonMsg:"Messages are coming soon|الرسائل قريبًا|Messages bientôt disponibles",noChats:"No conversations yet. Search for someone and tap ✉.|لا توجد محادثات بعد. ابحث عن شخص واضغط ✉.|Aucune conversation. Cherchez quelqu’un et touchez ✉.",sayHi:"Say hello 👋|ابدأ بالتحية 👋|Dites bonjour 👋",cantMsg:"You can’t message this person|لا يمكنك مراسلة هذا الشخص|Vous ne pouvez pas écrire à cette personne",noCm:"No comments yet|لا توجد تعليقات بعد|Aucun commentaire",now:"now|الآن|à l’instant",requested:"Requested|تم الطلب|Demandé",requestSent:"Follow request sent|أُرسل طلب المتابعة|Demande envoyée",accepted:"accepted your follow request|قَبِل طلب متابعتك|a accepté votre demande",privAcct:"This account is private. Follow to see posts.|هذا الحساب خاص. تابعه لترى منشوراته.|Ce compte est privé. Suivez-le pour voir ses publications.",block:"Block|حظر|Bloquer",unblock:"Unblock|إلغاء الحظر|Débloquer",blockAsk:"Block this account?|حظر هذا الحساب؟|Bloquer ce compte ?",blockedDone:"Account blocked|تم حظر الحساب|Compte bloqué",unblocked:"Block removed|أُلغي الحظر|Blocage retiré",report:"Report|إبلاغ|Signaler",reportedDone:"Report sent. Thank you.|أُرسل البلاغ. شكرًا لك.|Signalement envoyé. Merci.",reason:"Reason|السبب|Motif",details:"Details (optional)|تفاصيل (اختياري)|Détails (facultatif)",sendReport:"Send report|إرسال البلاغ|Envoyer",reports:"Reports|البلاغات|Signalements",noReports:"No open reports|لا توجد بلاغات مفتوحة|Aucun signalement ouvert",r_spam:"Spam|مزعج أو احتيالي|Spam",r_harassment:"Harassment or hate|مضايقة أو كراهية|Harcèlement ou haine",r_sexual:"Sexual content|محتوى جنسي|Contenu sexuel",r_violence:"Violence|عنف|Violence",r_fake:"Fake account|حساب مزيف|Faux compte",r_other:"Other|أخرى|Autre",username:"Username|اسم المستخدم|Nom d’utilisateur",taken:"This username is taken|اسم المستخدم مستخدم|Ce nom d’utilisateur est pris",checkMail:"Check your email to confirm your account|تحقق من بريدك لتأكيد الحساب|Vérifiez votre e-mail pour confirmer",soon:"Coming soon. Use email for now.|قريبًا. استخدم البريد حاليًا.|Bientôt. Utilisez l’e-mail pour l’instant.",myVerified:"Your account is verified|حسابك موثّق|Votre compte est vérifié",admT:"Verification panel (owner only)|لوحة التوثيق (للمالك فقط)|Panneau de vérification (propriétaire)",addU:"Username to verify|اسم المستخدم للتوثيق|Nom d’utilisateur à vérifier",verify:"Verify|توثيق|Vérifier",unverify:"Remove|إزالة|Retirer",you:"You (owner)|أنت (المالك)|Vous (propriétaire)",vDone:"Account verified|تم توثيق الحساب|Compte vérifié",vGone:"Verification removed|أُزيل التوثيق|Vérification retirée",admNote:"Only you can verify accounts. Tap Verify to give the blue badge.|أنت فقط من يوثّق الحسابات. اضغط توثيق لمنح العلامة الزرقاء.|Vous seul pouvez vérifier les comptes. Touchez Vérifier pour le badge bleu."
 ,storyDel:"Delete this story?|حذف هذه القصة؟|Supprimer cette story ?"
-,susT:"Suspicious or unwanted accounts|الحسابات المشبوهة أو غير المرغوب فيها|Comptes suspects ou indésirables",fReported:"Reported|مُبلَّغ عنها|Signalés",fNew:"New (7 days)|جديدة (7 أيام)|Récents (7 j)",delAcct:"Delete account|حذف الحساب|Supprimer le compte",delAcctAsk:"Permanently delete this account with all its posts, comments and messages? This cannot be undone.|حذف هذا الحساب نهائيًا مع كل منشوراته وتعليقاته ورسائله؟ لا يمكن التراجع عن ذلك.|Supprimer définitivement ce compte avec ses publications, commentaires et messages ? Action irréversible.",delBan:"Delete and ban email|حذف الحساب ومنع بريده من التسجيل|Supprimer et bannir l’e-mail",deleting:"Deleting…|جارٍ الحذف…|Suppression…",acctDeleted:"Account deleted|تم حذف الحساب|Compte supprimé",joined:"Joined|انضم|Inscrit",mTrend:"Trending|الرائج|Tendances",mFavs:"Favorites|المفضلة|Favoris",clipStart:"Clip start|بداية المقطع|Début de l’extrait",clipHint:"Slide to pick your favorite part. The story music starts here.|حرّك لاختيار جزئك المفضل. ستبدأ موسيقى القصة من هنا.|Faites glisser pour choisir le passage. La musique démarre ici.",noFavSongs:"No favorite songs yet. Tap ☆ on a song.|لا توجد أغانٍ مفضلة بعد. اضغط ☆ على أي أغنية.|Aucun favori. Touchez ☆ sur un titre.",favSongOn:"Added to favorites|أُضيفت إلى المفضلة|Ajouté aux favoris",favSongOff:"Removed from favorites|أُزيلت من المفضلة|Retiré des favoris",badMedia:"This file can’t be displayed. Try a JPG, PNG or MP4.|لا يمكن عرض هذا الملف. جرّب JPG أو PNG أو MP4.|Ce fichier ne peut pas être affiché. Essayez JPG, PNG ou MP4.",typeText:"Type text…|اكتب نصًا…|Saisissez du texte…"
+,susT:"Suspicious or unwanted accounts|الحسابات المشبوهة أو غير المرغوب فيها|Comptes suspects ou indésirables",fReported:"Reported|مُبلَّغ عنها|Signalés",fNew:"New (7 days)|جديدة (7 أيام)|Récents (7 j)",delAcct:"Delete account|حذف الحساب|Supprimer le compte",delAcctAsk:"Permanently delete this account with all its posts, comments and messages? This cannot be undone.|حذف هذا الحساب نهائيًا مع كل منشوراته وتعليقاته ورسائله؟ لا يمكن التراجع عن ذلك.|Supprimer définitivement ce compte avec ses publications, commentaires et messages ? Action irréversible.",delBan:"Delete and ban email|حذف الحساب ومنع بريده من التسجيل|Supprimer et bannir l’e-mail",deleting:"Deleting…|جارٍ الحذف…|Suppression…",acctDeleted:"Account deleted|تم حذف الحساب|Compte supprimé",joined:"Joined|انضم|Inscrit",mTrend:"Trending|الرائج|Tendances",mFavs:"Favorites|المفضلة|Favoris",clipStart:"Clip start||Début de l’extrait",clipHint:"Slide to pick your favorite part. The story music starts here.|حرّك لاختيار جزئك المفضل. ستبدأ موسيقى القصة من هنا.|Faites glisser pour choisir le passage. La musique démarre ici.",noFavSongs:"No favorite songs yet. Tap ☆ on a song.|لا توجد أغانٍ مفضلة بعد. اضغط ☆ على أي أغنية.|Aucun favori. Touchez ☆ sur un titre.",favSongOn:"Added to favorites|أُضيفت إلى المفضلة|Ajouté aux favoris",favSongOff:"Removed from favorites|أُزيلت من المفضلة|Retiré des favoris",badMedia:"This file can’t be displayed. Try a JPG, PNG or MP4.|لا يمكن عرض هذا الملف. جرّب JPG أو PNG أو MP4.|Ce fichier ne peut pas être affiché. Essayez JPG, PNG ou MP4.",typeText:"Type text…|اكتب نصًا…|Saisissez du texte…"
 ,add:"Add|إضافة|Ajouter"
 ,pickAudio:"Choose audio from phone|اختر ملفًا صوتيًا من هاتفك|Choisir un audio"
 ,favs:"Favorites|المفضلة|Favoris"
@@ -612,7 +619,8 @@ function edSize(d){const o=ED.o[ED.sel];if(!o)return;o.k=Math.min(4,Math.max(.4,
 function edColor(){const o=ED.o[ED.sel];if(!o||o.t!=='t')return;o.c=CL[(CL.indexOf(o.c)+1)%CL.length];edUpd(ED.sel)}
 function edDel(){if(ED.sel<0)return;ED.o.splice(ED.sel,1);ED.sel=-1;edRender()}
 function edPanel(m){ED.mode=m;$$('[data-edt]').forEach(b=>b.classList.toggle('on',b.dataset.edt===m));const p=$('#spanel');p.classList.toggle('hide',!m);
-/* hide side tools + volume when music panel open */
+const sed=$('#sed');
+if(sed)sed.classList.toggle('music-open', m==='music');
 const tools=document.querySelector('.stools');
 const vol=document.getElementById('edvol');
 if(tools)tools.style.display=(m==='music')?'none':'';
@@ -691,7 +699,7 @@ function mList(){return ED.mr.length?mRows():(ED.mtab==='fav'?`<div class="note"
 function musicPanel(){const tab=ED.mtab||'trend';ED.mtab=tab;ED.mr=tab==='trend'?(ED.trend||[]):tab==='fav'?favSongs:(ED.srch||[]);
 const tabs=['trend','fav','search'].map(k=>`<button class="chip ${tab===k?'on':''}" data-mtab="${k}">${t({trend:'mTrend',fav:'mFavs',search:'search'}[k])}</button>`).join('');
 const top=tab==='trend'?'':tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
-const cur=(ED.mu||ED.mf)?`<div class="mcur" id="mcurbox"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><div class="mprog"><i id="mprogi"></i></div><div class="mtime"><span id="mcurtime">0:00</span><span>0:15</span></div><div class="mstype"><button class="${ED.musStyle!=='text'?'on':''}" data-mstyle="album">ألبوم</button><button class="${ED.musStyle==='text'?'on':''}" data-mstyle="text">نص متحرك</button></div></div>`:''   ;
+const cur=(ED.mu||ED.mf)?`<div class="mcur" id="mcurbox"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><div class="mprog"><i id="mprogi"></i></div><div class="mtime"><span id="mcurtime">0:00</span><span>0:15</span></div><div class="mstype"><button class="${ED.musStyle!=='text'?'on':''}" data-mstyle="album">ألبوم</button><button class="${ED.musStyle==='text'?'on':''}" data-mstyle="text">نص متحرك</button></div></div>`:''    ;
 return `<div class="mhandle" id="mhandle"></div><div class="mhead"><div class="chips fchips" style="padding:0 0 8px">${tabs}</div>${top}${cur}</div><div id="mres">${mList()}</div><div class="mfoot"><button class="fb o" id="mpick" style="margin-top:8px">${t('pickAudio')}</button><small class="mcr">${t('musicCredit')}</small></div>`}
 function musicLoad(){if(!ED)return;if(ED.mtab==='trend'&&!(ED.trend&&ED.trendCc===ED.cc))edTrend();if(ED.mtab==='fav'&&!favLoaded)loadFavSongs().then(()=>{if(ED&&ED.mtab==='fav'&&ED.mode==='music'){ED.mr=favSongs;const b=$('#mres');if(b)b.innerHTML=mList()}})}
 async function mTrending(cc){try{const r=await fetch(`https://itunes.apple.com/${cc}/rss/topsongs/limit=25/json`);if(!r.ok)throw new Error('feed');const d=await r.json();const songs=((d.feed&&d.feed.entry)||[]).map(e=>{const l=[].concat(e.link||[]).find(x=>x.attributes&&(x.attributes['im:assetType']==='preview'||/audio/.test(x.attributes.type||'')));const im=e['im:image']||[];return{id:String(e.id&&e.id.attributes&&e.id.attributes['im:id']),t:e['im:name']&&e['im:name'].label,ar:e['im:artist']&&e['im:artist'].label,art:im.length?(im[im.length-1].label||im[0].label):'',u:l&&l.attributes&&l.attributes.href}}).filter(x=>x.id&&x.t);const need=songs.filter(x=>!x.u);if(need.length){const d2=await jsonp(`https://itunes.apple.com/lookup?id=${need.map(x=>x.id).join(',')}&country=${cc}`);const mp=new Map((d2.results||[]).map(r=>[String(r.trackId),r]));need.forEach(x=>{const r=mp.get(x.id);if(r){x.u=r.previewUrl;if(!x.art)x.art=r.artworkUrl60||''}})}const out=songs.filter(x=>x.u);if(out.length)return out}catch(_){}
@@ -738,19 +746,35 @@ let ED=null,favRows={},stGroups=[],seenSt=new Set(),SV={gi:0,i:0,fg:null,au:null
 let closeFriends = JSON.parse(localStorage.getItem('refa_cf')||'[]');
 
 (function(){
-  let sy=0, dragging=false;
+  let sy=0, dragging=false, startY=0;
   document.addEventListener('pointerdown',e=>{
-    if(e.target.id==='mhandle' || e.target.closest('#mhandle')){
-      sy=e.clientY; dragging=true;
+    const h=e.target.id==='mhandle'||e.target.closest('#mhandle')||e.target.closest('.mhead');
+    if(h && ED && ED.mode==='music'){
+      sy=e.clientY; startY=e.clientY; dragging=true;
     }
   });
   document.addEventListener('pointermove',e=>{
     if(!dragging)return;
     const dy=e.clientY-sy;
-    if(dy>60){dragging=false; edPanel('');}
+    const panel=document.getElementById('spanel');
+    if(panel && dy>0){
+      panel.style.transform='translateY('+dy+'px)';
+      panel.style.transition='none';
+    }
+    if(dy>80){dragging=false; if(panel){panel.style.transform='';panel.style.transition='';} edPanel('');}
   });
-  document.addEventListener('pointerup',()=>{dragging=false});
-  document.addEventListener('pointercancel',()=>{dragging=false});
+  document.addEventListener('pointerup',e=>{
+    if(!dragging)return;
+    dragging=false;
+    const panel=document.getElementById('spanel');
+    if(panel){panel.style.transform='';panel.style.transition='';}
+    if(e.clientY-startY>50 && ED && ED.mode==='music')edPanel('');
+  });
+  document.addEventListener('pointercancel',()=>{
+    dragging=false;
+    const panel=document.getElementById('spanel');
+    if(panel){panel.style.transform='';panel.style.transition='';}
+  });
 })();
 
 let lpTimer=null;
