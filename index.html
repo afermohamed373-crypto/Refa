@@ -11,7 +11,7 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#060d24;--card:#0e1a3d;--tx:#eaf1ff;--mu:#8fa0cc;--ln:#1c2b5a;--mk:brightness(0) invert(1)}}
 :root[data-theme="dark"]{--bg:#060d24;--card:#0e1a3d;--tx:#eaf1ff;--mu:#8fa0cc;--ln:#1c2b5a;--mk:brightness(0) invert(1)}
 *{box-sizing:border-box;margin:0}
-html,body{height:100%;overscroll-behavior:none}
+html,body{height:100%}
 body{font-size:13px;line-height:1.4;font-family:Outfit,Cairo,system-ui,sans-serif;background:var(--bg);color:var(--tx)}
 [lang=ar] body,[lang=ar] input,[lang=ar] button,[lang=ar] select,[lang=ar] textarea{font-family:Cairo,Outfit,sans-serif}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -147,7 +147,7 @@ button.row{cursor:pointer}
 .pa{display:flex}.pa .bk{margin-inline-start:auto}
 [dir=rtl] .back{transform:scaleX(-1)}
 [data-fl]{cursor:pointer}
-#cm,#fl,#cpw,#adm,#rpts{z-index:8}#sed{z-index:9}
+#cm,#fl,#cpw,#adm,#rpts{z-index:8}#sed{z-index:9;overscroll-behavior:none;touch-action:pan-x}
 #toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:12.5px;z-index:99;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
 #toast.on{opacity:1}
 #sv .send button{background:var(--mid);font-size:12.5px;border-radius:22px;padding:0 18px}
@@ -579,7 +579,18 @@ function edVidPlay(){const v=$('#sedmain .stage video'),b=$('#edvol');if(b)b.cla
 function svSpk(){const v=$('#svi video'),b=$('#svs');if(!b)return;b.classList.toggle('hide',!v);b.innerHTML=v&&!v.muted?SPK_ON:SPK_OFF}
 function edFit(){const m=$('#sedmain');if(ED&&m&&m.querySelector('.stage'))fitStage(m)}
 window.addEventListener('resize',()=>{edFit();const b=$('#svi');if(b&&b.querySelector('.stage'))fitStage(b)});
-function fitStage(c){const st=c.querySelector('.stage');if(!st)return;const w=Math.max(120,Math.min(c.clientWidth-8,(c.clientHeight-8)*9/16));st.style.width=w+'px';st.style.height=(w*16/9)+'px';st.style.setProperty('--w',w+'px')}
+function fitStage(c){const st=c.querySelector('.stage');if(!st)return;
+const isEditor=c.id==='sedmain'||c.closest&&c.closest('#sed');
+const pad=isEditor?0:8;
+const maxW=c.clientWidth-pad*2;
+const maxH=c.clientHeight-pad*2;
+/* fill available space while keeping 9:16 */
+let w=maxW, h=w*16/9;
+if(h>maxH){h=maxH;w=h*9/16}
+w=Math.max(120,w);h=Math.max(180,h);
+st.style.width=w+'px';st.style.height=h+'px';st.style.setProperty('--w',w+'px');
+st.style.borderRadius=isEditor?'0':'14px';
+}
 
 async function loadStories(){if(!me)return;
 const [a,b]=await Promise.all([sb.from('stories').select(SCOLS).gt('created_at',new Date(Date.now()-864e5).toISOString()).order('created_at',{ascending:true}),sb.from('story_views').select('story_id').eq('viewer_id',me.id)]);
@@ -650,7 +661,7 @@ try{const f=ED.f,ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0
 const up=await sb.storage.from('media').upload(pth,f,{contentType:f.type});if(up.error)throw up.error;
 const url=sb.storage.from('media').getPublicUrl(pth).data.publicUrl;
 let mu=ED.mu||null;if(!mu&&ED.mf){const p2=`${base}-music.${ex(ED.mf.name)}`;const u2=await sb.storage.from('media').upload(p2,ED.mf,{contentType:ED.mf.type||'audio/mpeg'});if(u2.error)throw u2.error;mu={u:sb.storage.from('media').getPublicUrl(p2).data.publicUrl,t:ED.mt,s:ED.ms||0}}
-const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu,v:ED.vid?1:0,vm:effMute()?1:0,ms:ED.musStyle||'album',mx:ED.musX||.5,my:ED.musY||.15,marks:ED.marks||[]};
+const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu,v:ED.vid?1:0,vm:effMute()?1:0,ms:'album',mx:ED.musX||.5,my:ED.musY||.15,marks:ED.marks||[]};
 const {error}=await sb.from('stories').insert({user_id:me.id,media_url:url,meta,is_fav:!!fav});if(error)throw error;
 edClose();await loadStories();loadFavStrip(me.id,'#favs');toast(t('posted'))}
 catch(err){toast((err&&err.message)||String(err));if(ED){ED.busy=false;$$('#sedbar button').forEach(b=>b.disabled=false)}}}
@@ -818,6 +829,7 @@ let closeFriends = JSON.parse(localStorage.getItem('refa_cf')||'[]');
   },{passive:true});
   document.addEventListener('touchmove',e=>{
     if(!dragging||!ED||ED.mode!=='music')return;
+    if(!document.getElementById('sed')||!document.getElementById('sed').classList.contains('on'))return;
     const dy=e.touches[0].clientY-sy;
     if(dy>0){
       e.preventDefault();
