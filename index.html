@@ -296,6 +296,23 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 #app:has(#sed.on),#app:has(#sed.on) .pages{background:#000!important}
 
 .mus-ctrl{display:none!important}
+
+#sed.music-open #sedbar{position:relative;z-index:30;background:#000;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+#sed.music-open #spanel{padding-bottom:70px}
+.gifg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gifg button{aspect-ratio:1;border:0;border-radius:10px;padding:0;overflow:hidden;background:#222;cursor:pointer}
+.gifg button img{width:100%;height:100%;object-fit:cover;display:block}
+.gifsearch{display:flex;gap:8px;margin-bottom:8px}
+.gifsearch input{flex:1;padding:10px 12px;border-radius:12px;border:1px solid #333;background:#1a1a1a;color:#fff;outline:none}
+
+
+#sedbar.sedbtns{position:relative;z-index:30;background:#0a0a0a;flex-shrink:0}
+#sed.music-open #sedbar{display:none!important}
+#sed.music-open #spanel{max-height:42vh}
+.gifg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:28vh;overflow:auto}
+.gifcell{padding:0;border:0;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:1;cursor:pointer}
+.gifcell img{width:100%;height:100%;object-fit:cover;display:block}
+
 </style>
 </head>
 <body>
@@ -654,6 +671,33 @@ function edSel(i){ED.sel=i;$$('#sedmain .it').forEach(e=>e.classList.toggle('sel
 function edUpd(i){const o=ED.o[i],e=$(`#sedmain .it[data-oi="${i}"]`);if(!o||!e)return;e.style.left=o.x*100+'%';e.style.top=o.y*100+'%';e.style.fontSize=`calc(var(--w)*${itSize(o)})`;if(o.t==='t')e.style.color=o.c}
 function edAdd(o){ED.o.push(o);$('#sedmain .stage').insertAdjacentHTML('beforeend',itHTML(o,ED.o.length-1,true));edSel(ED.o.length-1)}
 function edText(){const v=$('#stxt').value.trim();if(!v)return;edAdd({t:'t',v,x:.5,y:.5,k:1,c:'#ffffff'});$('#stxt').value=''}
+
+async function loadGifs(q){
+  const grid=document.getElementById('gifgrid');
+  if(!grid)return;
+  grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:20px;text-align:center">جاري التحميل...</div>';
+  const term=encodeURIComponent(q||'funny');
+  /* Tenor API - animated GIFs */
+  const url='https://tenor.googleapis.com/v2/search?q='+term+'&key=AIzaSyAyimkuZQYF_FXVALexPuGQct3OwSBq7s&client_key=refa_app&limit=30&media_filter=gif,tinygif';
+  fetch(url).then(r=>r.json()).then(d=>{
+    const list=(d.results||[]).filter(x=>x.media_formats&&(x.media_formats.tinygif||x.media_formats.gif));
+    if(!list.length){grid.innerHTML='<div class="note" style="grid-column:1/-1">لا نتائج</div>';return}
+    grid.innerHTML=list.map((g,i)=>{
+      const mf=g.media_formats;
+      const src=(mf.tinygif&&mf.tinygif.url)||(mf.gif&&mf.gif.url);
+      const full=(mf.gif&&mf.gif.url)||src;
+      return '<button type="button" class="gifcell" data-gif="'+full.replace(/"/g,'&quot;')+'"><img src="'+src+'" alt="gif" loading="lazy"></button>';
+    }).join('');
+  }).catch(()=>{
+    grid.innerHTML='<div class="note" style="grid-column:1/-1">تعذر التحميل</div>';
+  });
+}
+
+function addGif(url){
+  if(!ED||!url)return;
+  edAdd({t:'g',v:url,x:.5,y:.5,k:1.2});
+}
+
 function edEmoji(v){if(v==='time'){const d=new Date();edAdd({t:'t',v:'🕒 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),x:.5,y:.2,k:1,c:'#ffffff'})}else edAdd({t:'e',v,x:.5,y:.5,k:1})}
 function edSize(d){const o=ED.o[ED.sel];if(!o)return;o.k=Math.min(4,Math.max(.4,+(o.k+d*.2).toFixed(2)));edUpd(ED.sel)}
 function edColor(){const o=ED.o[ED.sel];if(!o||o.t!=='t')return;o.c=CL[(CL.indexOf(o.c)+1)%CL.length];edUpd(ED.sel)}
@@ -661,17 +705,20 @@ function edDel(){if(ED.sel<0)return;ED.o.splice(ED.sel,1);ED.sel=-1;edRender()}
 function edPanel(m){ED.mode=m;$$('[data-edt]').forEach(b=>b.classList.toggle('on',b.dataset.edt===m));const p=$('#spanel');p.classList.toggle('hide',!m);
 const sed=$('#sed');
 if(sed)sed.classList.toggle('music-open', m==='music');
+const bar=document.getElementById('sedbar');
+if(bar)bar.style.display=(m==='music')?'none':'';
+
 const tools=document.querySelector('.stools');
 const vol=document.getElementById('edvol');
 if(tools)tools.style.display=(m==='music')?'none':'';
 if(vol)vol.style.display=(m==='music')?'none':'';
 let h='';
 if(m==='text')h=`<div class="send"><input id="stxt" maxlength="60" placeholder="${t('typeText')}"><button id="stadd" class="fb">${t('add')}</button></div>`;
-else if(m==='emoji')h=`<div class="emg">${EM.map(e=>`<button data-em="${e}">${e}</button>`).join('')}<button data-em="time">🕒</button></div>`;
+else if(m==='emoji')h=`<div class="chips fchips" style="padding:0 0 8px"><button class="chip on" data-emtab="gif">GIF</button><button class="chip" data-emtab="emoji">Emoji</button></div><div id="emcontent"><div class="gifsearch"><input id="gifq" placeholder="بحث GIF..."><button class="fb" id="gifgo">بحث</button></div><div class="gifg" id="gifgrid">...</div></div>`;
 else if(m==='music')h=musicPanel();
 else if(m==='filter')h=`<div class="chips fchips">${Object.keys(FP).map(k=>`<button class="chip ${ED.fl===k?'on':''}" data-flt="${k}">${fnm(k)}</button>`).join('')}</div>`;
 else if(m==='adjust')h=[['b','bright',.5,1.5],['c','contrast',.5,1.5],['s','saturation',0,2]].map(a=>`<label class="slr"><span>${t(a[1])}</span><input type="range" min="${a[2]}" max="${a[3]}" step=".05" value="${ED[a[0]]}" data-adj="${a[0]}"></label>`).join('');
-p.innerHTML=h;p.classList.toggle('mp',m==='music');if(m==='music')musicLoad();edFit();requestAnimationFrame(edFit)}
+p.innerHTML=h;p.classList.toggle('mp',m==='music');if(m==='music')musicLoad();if(m==='emoji')loadGifs('happy');edFit();requestAnimationFrame(edFit)}
 async function edPublish(fav){if(!ED||ED.busy)return;ED.busy=true;$$('#sedbar button').forEach(b=>b.disabled=true);toast(t('uploading'));
 try{const f=ED.f,ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin',base=`${me.id}/story-${Date.now()}`,pth=`${base}.${ex(f.name)}`;
 const up=await sb.storage.from('media').upload(pth,f,{contentType:f.type});if(up.error)throw up.error;
@@ -981,6 +1028,20 @@ if(box)box.scrollTop=scrollPos;
 else if(c('#mprevx')||c('.mprev')&&!c('.mprev-card')){closeMusicPrev()}
 else if(c('#mhandle')){edPanel('')}
 else if(c('#maddmark')){addMark()}
+else if(c('#gifgo')){loadGifs(document.getElementById('gifq')?.value||'happy')}
+else if(b=c('[data-gif]')){addGif(b.dataset.gif)}
+else if(b=c('[data-emtab]')){
+  document.querySelectorAll('[data-emtab]').forEach(x=>x.classList.toggle('on',x===b));
+  const box=document.getElementById('emcontent');
+  if(!box)return;
+  if(b.dataset.emtab==='emoji'){
+    box.innerHTML='<div class="emg">'+EM.map(e=>'<button data-em="'+e+'">'+e+'</button>').join('')+'<button data-em="time">🕒</button></div>';
+  }else{
+    box.innerHTML='<div class="gifsearch"><input id="gifq" placeholder="بحث GIF..."><button class="fb" id="gifgo">بحث</button></div><div class="gifg" id="gifgrid">...</div>';
+    loadGifs('happy');
+  }
+}
+
 else if(c('#mbest15')){useBest15()}
 else if(b=c('[data-mk]')){jumpToMark(+b.dataset.mk)}
 
