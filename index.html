@@ -759,15 +759,16 @@ const muted=SV._muted!=null?!!SV._muted:(v?v.muted:false);
 b.innerHTML=muted?SPK_OFF:SPK_ON}
 
 function edFit(){const m=$('#sedmain');if(ED&&m&&m.querySelector('.stage'))fitStage(m)}
-window.addEventListener('resize',()=>{edFit();const b=$('#svi');if(b&&b.querySelector('.stage'))fitStage(b)});
-function fitStage(c){const st=c.querySelector('.stage');if(!st)return;
+window.addEventListener('resize',()=>{edFit();const b=$('#svi');if(b&&b.querySelector('.stage'))fitStage(b,true)});
+async function compressImg(f,mw=1080,mh=1920,q=.82){if(f.size<300000)return f;const bm=await createImageBitmap(f,{imageOrientation:'from-image'});const k=Math.min(1,mw/bm.width,mh/bm.height),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);const bl=await new Promise(r=>c.toBlob(r,'image/jpeg',q));return bl&&bl.size<f.size?new File([bl],f.name.replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'}):f}
+function fitStage(c,cover){const st=c.querySelector('.stage');if(!st)return;
 const isEditor=c.id==='sedmain'||c.closest&&c.closest('#sed');
 const pad=isEditor?0:8;
 const maxW=c.clientWidth-pad*2;
 const maxH=c.clientHeight-pad*2;
 /* fill available space while keeping 9:16 */
 let w=maxW, h=w*16/9;
-if(h>maxH){h=maxH;w=h*9/16}
+if(cover){w=Math.max(maxW,maxH*9/16);h=w*16/9;c.style.overflow='hidden'}else if(h>maxH){h=maxH;w=h*9/16}
 w=Math.max(120,w);h=Math.max(180,h);
 st.style.width=w+'px';st.style.height=h+'px';st.style.setProperty('--w',w+'px');
 st.style.borderRadius=isEditor?'0':'14px';
@@ -820,7 +821,7 @@ $('#svb').innerHTML=g.items.map((_,j)=>`<i><b style="width:${j<SV.i?'100%':'0'}"
 $('#svd').classList.toggle('hide',!own);$('#svf').classList.toggle('hide',!own);$('#svf').textContent=s.is_fav?'★':'☆';$('#svc').textContent='';
 const send=$('#sv .send');if(send)send.classList.toggle('hide',own);
 const menu=$('#svmenu');if(menu)menu.classList.add('hide');
-const m=s.meta||{},body=$('#svi');body.innerHTML=stageHTML(s.media_url,m,false);fitStage(body);svSpk();
+const m=s.meta||{},body=$('#svi');body.innerHTML=stageHTML(s.media_url,m,false);fitStage(body,true);svSpk();{const g2=svg(),nx=g2&&g2.items[SV.i+1];if(nx&&nx.media_url){if(/\.(mp4|webm|mov)(\?|$)/i.test(nx.media_url)){const pv=document.createElement('video');pv.preload='auto';pv.src=nx.media_url}else new Image().src=nx.media_url}}
 SV._muted=false;if(m.mu&&m.mu.u){SV.au=clipAudio(m.mu.u,m.mu.s||0,CLIP_LEN);SV.au.muted=false;SV.au.play().catch(()=>{})}
 if(m.v!=null?!!m.v:isVid(s.media_url)){const v=body.querySelector('video');v.muted=(m.vm!=null?!!m.vm:!!m.mu);{const pp=v.play();if(pp&&pp.catch)pp.catch(()=>{v.muted=true;svSpk();v.play().catch(()=>{})})}svSpk();v.onloadedmetadata=()=>svRun(Math.min((v.duration||10)*1000,30000));v.onended=svNext;v.onerror=()=>svRun(STD)}else svRun(STD);
 if(!own&&!seenSt.has(s.id)){seenSt.add(s.id);sb.from('story_views').upsert({story_id:s.id,viewer_id:me.id},{onConflict:'story_id,viewer_id',ignoreDuplicates:true}).then(()=>{})}
@@ -862,18 +863,15 @@ async function loadGifs(q){
   const grid=document.getElementById('gifgrid');
   if(!grid)return;
   grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:20px;text-align:center">جاري التحميل...</div>';
-  const term=encodeURIComponent(q||'funny');
-  /* Tenor API - animated GIFs */
-  const url='https://tenor.googleapis.com/v2/search?q='+term+'&key=AIzaSyAyimkuZQYF_FXVALexPuGQct3OwSBq7s&client_key=refa_app&limit=30&media_filter=gif,tinygif';
+  const GK='6SVH5BNASTGtjSZBAffTJyi6oRyQJ488',term=encodeURIComponent((q||'').trim());
+  const url=term?`https://api.giphy.com/v1/gifs/search?api_key=${GK}&q=${term}&limit=30&rating=pg-13&lang=${L}`:`https://api.giphy.com/v1/gifs/trending?api_key=${GK}&limit=30&rating=pg-13`;
   fetch(url).then(r=>r.json()).then(d=>{
-    const list=(d.results||[]).filter(x=>x.media_formats&&(x.media_formats.tinygif||x.media_formats.gif));
-    if(!list.length){grid.innerHTML='<div class="note" style="grid-column:1/-1">لا نتائج</div>';return}
-    grid.innerHTML=list.map((g,i)=>{
-      const mf=g.media_formats;
-      const src=(mf.tinygif&&mf.tinygif.url)||(mf.gif&&mf.gif.url);
-      const full=(mf.gif&&mf.gif.url)||src;
+    const list=(d.data||[]).filter(x=>x.images&&(x.images.fixed_width_small||x.images.fixed_width));
+    if(!list.length){grid.innerHTML='<div class="note" style="grid-column:1/-1">'+t('noRes')+'</div>';return}
+    grid.innerHTML=list.map(g=>{
+      const im=g.images,src=(im.fixed_width_small||im.fixed_width).url,full=((im.downsized_medium||im.fixed_width||im.fixed_width_small).url)||src;
       return '<button type="button" class="gifcell" data-gif="'+full.replace(/"/g,'&quot;')+'"><img src="'+src+'" alt="gif" loading="lazy"></button>';
-    }).join('');
+    }).join('')+'<div style="grid-column:1/-1;text-align:center;font-size:10px;opacity:.6;padding:4px">Powered by GIPHY</div>';
   }).catch(()=>{
     grid.innerHTML='<div class="note" style="grid-column:1/-1">تعذر التحميل</div>';
   });
@@ -906,7 +904,7 @@ else if(m==='filter')h=`<div class="chips fchips">${Object.keys(FP).map(k=>`<but
 else if(m==='adjust')h=[['b','bright',.5,1.5],['c','contrast',.5,1.5],['s','saturation',0,2]].map(a=>`<label class="slr"><span>${t(a[1])}</span><input type="range" min="${a[2]}" max="${a[3]}" step=".05" value="${ED[a[0]]}" data-adj="${a[0]}"></label>`).join('');
 p.innerHTML=h;p.classList.toggle('mp',m==='music');if(m==='music')musicLoad();if(m==='emoji')loadGifs('happy');edFit();requestAnimationFrame(edFit)}
 async function edPublish(fav){if(!ED||ED.busy)return;ED.busy=true;$$('#sedbar button').forEach(b=>b.disabled=true);toast(t('uploading'));
-try{const f=ED.f,ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin',base=`${me.id}/story-${Date.now()}`,pth=`${base}.${ex(f.name)}`;
+try{let f=ED.f;if(!ED.vid&&/^image\/(jpeg|png|webp|heic)/.test(f.type)){try{f=await compressImg(f)}catch(_){}}const ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin',base=`${me.id}/story-${Date.now()}`,pth=`${base}.${ex(f.name)}`;
 const up=await sb.storage.from('media').upload(pth,f,{contentType:f.type});if(up.error)throw up.error;
 const url=sb.storage.from('media').getPublicUrl(pth).data.publicUrl;
 let mu=ED.mu||null;if(!mu&&ED.mf){const p2=`${base}-music.${ex(ED.mf.name)}`;const u2=await sb.storage.from('media').upload(p2,ED.mf,{contentType:ED.mf.type||'audio/mpeg'});if(u2.error)throw u2.error;mu={u:sb.storage.from('media').getPublicUrl(p2).data.publicUrl,t:ED.mt,s:ED.ms||0}}
