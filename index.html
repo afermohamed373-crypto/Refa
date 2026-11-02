@@ -391,8 +391,13 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 .post-viewer.on{display:flex}
 .post-viewer-card{position:relative;width:min(100%,560px);max-height:92dvh;overflow:auto;background:var(--card,#101b3b);color:var(--tx,#f5f6fb);border:1px solid var(--ln,rgba(255,255,255,.14));border-radius:18px;padding:12px;box-sizing:border-box}
 .post-viewer-close{position:sticky;top:0;float:inline-end;z-index:2;border:0;border-radius:50%;width:38px;height:38px;background:rgba(0,0,0,.65);color:#fff;font-size:24px;cursor:pointer}
-.post-viewer-media{clear:both;width:100%;max-height:72dvh;object-fit:contain;display:block;margin:0 auto;background:#050914;border-radius:10px}
+.post-viewer-media{clear:both;width:100%;max-height:72dvh;object-fit:contain;display:block;margin:0 auto;background:var(--card,#101b3b);border-radius:10px}
 .post-viewer-caption{padding:12px 4px 4px;line-height:1.7;overflow-wrap:anywhere}
+
+
+.gif-open{border:1px solid var(--ln);background:var(--card);color:var(--mid);border-radius:12px;padding:8px 9px;font-weight:800;font-size:11px;cursor:pointer;flex:none}
+.giphy-picker{display:none;position:fixed;z-index:10000;left:50%;bottom:12px;transform:translateX(-50%);width:min(430px,calc(100vw - 20px));max-height:68vh;overflow:hidden;background:var(--card);color:var(--tx);border:1px solid var(--ln);border-radius:20px;padding:12px;box-shadow:0 12px 45px #0004}
+.giphy-picker.on{display:block}.giphy-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.giphy-head button{border:0;background:transparent;font-size:20px;padding:4px 8px}.giphy-tabs{display:flex;gap:8px;margin:8px 0}.giphy-tabs button{border:1px solid var(--ln);border-radius:20px;background:transparent;padding:7px 14px}.giphy-tabs button.on{background:var(--mid);color:white}.giphy-picker .gifg{max-height:38vh;overflow:auto}.giphy-credit{text-align:center;color:var(--mu);font-size:10px;padding-top:8px}.giphy-result{width:100%;height:100%;object-fit:cover}.giphy-inline{display:block;max-width:min(220px,65vw);max-height:220px;border-radius:12px;margin-top:6px}
 
 </style>
 </head>
@@ -469,7 +474,7 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
   <div class="ov" id="chat">
     <div class="top"><button class="back" aria-label="Back">←</button><b id="cn"></b><span></span></div>
     <div class="msgs" id="ml"></div>
-    <div class="send"><input id="mi" data-p="type"><button id="ms" data-i="send"></button></div>
+    <div class="send"><button type="button" class="gif-open" data-gif-open="chat" aria-label="GIF">GIF</button><input id="mi" data-p="type"><button id="ms" data-i="send"></button></div>
   </div>
 
   <div class="ov" id="edit">
@@ -522,7 +527,7 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
   <div class="ov" id="dacc"><div class="top"><button class="back" aria-label="Back">←</button><b data-i="delAcct"></b><span></span></div><div class="form"><b id="daT"></b><p data-i="delAcctAsk" style="color:var(--mu)"></p><button class="pbtn" id="dDel" style="background:#d6264a" data-i="delAcct"></button><button class="pbtn" id="dBan" style="background:#7a1130" data-i="delBan"></button></div></div>
   <div class="ov" id="rep"><div class="top"><button class="back" aria-label="Back">←</button><b data-i="report"></b><span></span></div><div class="form"><label><span data-i="reason"></span><select id="rreason"></select></label><label><span data-i="details"></span><textarea id="rdet" rows="3" maxlength="500"></textarea></label><button class="pbtn" id="repSend" data-i="sendReport"></button></div></div>
   <div class="ov" id="up"><div class="top"><button class="back" aria-label="Back">←</button><b id="upt"></b><span></span></div><div id="upb"></div></div>
-  <div class="ov" id="cm"><div class="top"><button class="back" aria-label="Back">←</button><b data-i="comments"></b><span></span></div><div class="msgs" id="cl"></div><div class="send"><input id="ci" data-p="addCm"><button id="cs" data-i="send"></button></div></div>
+  <div class="ov" id="cm"><div class="top"><button class="back" aria-label="Back">←</button><b data-i="comments"></b><span></span></div><div class="msgs" id="cl"></div><div class="send"><button type="button" class="gif-open" data-gif-open="comment" aria-label="GIF">GIF</button><input id="ci" data-p="addCm"><button id="cs" data-i="send"></button></div></div>
   <div class="ov" id="fl"><div class="top"><button class="back" aria-label="Back">←</button><b id="flt"></b><span></span></div><div id="flb"></div></div>
   <div class="ov" id="cpw"><div class="top"><button class="back" aria-label="Back">←</button><b data-i="changePw"></b><span></span></div><div class="form"><input id="cp1" type="password" data-p="newPw" autocomplete="new-password"><input id="cp2" type="password" data-p="confirm" autocomplete="new-password"><div class="sm" id="cperr" style="color:#d6264a"></div><button class="pbtn" id="cpb" data-i="save"></button></div></div>
   <div id="sv">
@@ -563,6 +568,7 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 <div id="toast" role="status"></div>
 <input type="file" id="sfile" accept="image/*,video/*" hidden>
 <div class="post-viewer" id="postViewer" role="dialog" aria-modal="true" aria-label="Post"><div class="post-viewer-card"><button class="post-viewer-close" id="postViewerClose" aria-label="Close">×</button><div id="postViewerContent"></div></div></div>
+<div id="giphyPicker" class="giphy-picker" aria-hidden="true"><div class="giphy-head"><b>GIPHY · GIF & Stickers</b><button type="button" id="giphyClose" aria-label="Close">✕</button></div><div class="gifsearch"><input id="giphyQuery" placeholder="ابحث عن GIF أو ستيكر..."><button type="button" class="fb" id="giphySearch">بحث</button></div><div class="giphy-tabs"><button type="button" data-giphy-tab="stickers" class="on">ستيكرات</button><button type="button" data-giphy-tab="gifs">GIF</button></div><div class="gifg" id="giphyGrid"><div class="note">جاري التحميل...</div></div><div class="giphy-credit">Powered by GIPHY</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 const sb=supabase.createClient('https://hnpsqjmkyuxrssgmbwad.supabase.co','sb_publishable_4iQYNEKrdE8JkiA0ZdGSgQ_uCcokAzE');let me=null,peopleRes=[],deb;
@@ -722,7 +728,7 @@ async function login(){const e=$('#em').value.trim(),p=$('#pw').value;if(!e||!p)
 async function signup(){const a=$('#se').value.trim(),p=$('#sp').value,q=$('#sq').value;const m=!a||!p?t('errFill'):p.length<6?t('errPw'):p!==q?t('errMatch'):'';$('#serr').textContent=m;if(m)return;const {data,error}=await sb.auth.signUp({email:a,password:p});if(error){$('#serr').textContent=error.message;return}if(!data.session){toast(t('checkMail'));showG('lgp');return}await loadMe(data.user);enter();openEdit()}
 async function renderFl(){const ids=[...(flMode==='followers'?followers:flMode==='blocked'?blocked:following)];$('#flt').textContent=t(flMode);if(!ids.length){$('#flb').innerHTML=`<div class="note">${t('none')}</div>`;return}const {data}=await sb.from('profiles').select('id,username,first_name,last_name,avatar_url,is_verified').in('id',ids);$('#flb').innerHTML=(data||[]).map((u,i)=>`<div class="row" data-uid="${u.id}">${av2(u,i)}<div class="g"><b>${esc(dn(u))}</b>${vbf(u.is_verified)}<small>@${esc(u.username||'')}</small></div>${flMode==='blocked'?`<button class="fb o" data-ub="${u.id}">${t('unblock')}</button>`:`<button class="fb ${fcls(u.id)}" data-f="${u.id}">${ftxt(u.id)}</button><button class="fb o" data-dm="${u.id}" aria-label="Message">${IC.msg}</button>`}</div>`).join('')}
 async function openCm(pid){curPost=pid;$('#cm').classList.add('on');await renderCm()}
-async function renderCm(){const {data}=await sb.from('comments').select('id,body,created_at,user_id,profiles(id,username,first_name,last_name,avatar_url,is_verified)').eq('post_id',curPost).order('created_at',{ascending:true});$('#cl').innerHTML=(data||[]).filter(c=>!blocked.has(c.user_id)).map(c=>{const u=c.profiles||{};return `<div class="m" data-uid="${c.user_id}"><b>${esc(dn(u))}</b>${vbf(u.is_verified)}${(me&&(c.user_id===me.id||S.admin))?` <button data-cdel="${c.id}" style="background:none;border:0;cursor:pointer;margin-inline-start:8px" aria-label="Delete">${IC.trash}</button>`:''}<br>${esc(c.body)}</div>`}).join('')||`<div class="note">${t('noCm')}</div>`;$('#cl').scrollTop=1e5}
+async function renderCm(){const {data}=await sb.from('comments').select('id,body,created_at,user_id,profiles(id,username,first_name,last_name,avatar_url,is_verified)').eq('post_id',curPost).order('created_at',{ascending:true});$('#cl').innerHTML=(data||[]).filter(c=>!blocked.has(c.user_id)).map(c=>{const u=c.profiles||{};return `<div class="m" data-uid="${c.user_id}"><b>${esc(dn(u))}</b>${vbf(u.is_verified)}${(me&&(c.user_id===me.id||S.admin))?` <button data-cdel="${c.id}" style="background:none;border:0;cursor:pointer;margin-inline-start:8px" aria-label="Delete">${IC.trash}</button>`:''}<br>${(()=>{try{const z=JSON.parse(c.body);return z&&z.type==='giphy'?`<img class=\"giphy-inline\" src=\"${esc(z.url)}\" alt=\"GIPHY sticker\" loading=\"lazy\">`:esc(c.body)}catch(_){return esc(c.body)}})()}</div>`}).join('')||`<div class="note">${t('noCm')}</div>`;$('#cl').scrollTop=1e5}
 function bumpCm(d){const p=feedRows.find(r=>r.id===curPost);if(p){const n=Math.max(0,((p.comments&&p.comments[0]&&p.comments[0].count)||0)+d);p.comments=[{count:n}];renderFeed()}}
 async function addCm(){const v=$('#ci').value.trim();if(!v||!curPost||!me)return;$('#ci').value='';const {error}=await sb.from('comments').insert({post_id:curPost,user_id:me.id,body:v});if(error){toast(error.message);$('#ci').value=v;return}bumpCm(1);renderCm()}
 function enter(){$('#login').classList.remove('on');$('#app').classList.add('on');renderStories()}
@@ -759,16 +765,15 @@ const muted=SV._muted!=null?!!SV._muted:(v?v.muted:false);
 b.innerHTML=muted?SPK_OFF:SPK_ON}
 
 function edFit(){const m=$('#sedmain');if(ED&&m&&m.querySelector('.stage'))fitStage(m)}
-window.addEventListener('resize',()=>{edFit();const b=$('#svi');if(b&&b.querySelector('.stage'))fitStage(b,true)});
-async function compressImg(f,mw=1080,mh=1920,q=.82){if(f.size<300000)return f;const bm=await createImageBitmap(f,{imageOrientation:'from-image'});const k=Math.min(1,mw/bm.width,mh/bm.height),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);const bl=await new Promise(r=>c.toBlob(r,'image/jpeg',q));return bl&&bl.size<f.size?new File([bl],f.name.replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'}):f}
-function fitStage(c,cover){const st=c.querySelector('.stage');if(!st)return;
+window.addEventListener('resize',()=>{edFit();const b=$('#svi');if(b&&b.querySelector('.stage'))fitStage(b)});
+function fitStage(c){const st=c.querySelector('.stage');if(!st)return;
 const isEditor=c.id==='sedmain'||c.closest&&c.closest('#sed');
 const pad=isEditor?0:8;
 const maxW=c.clientWidth-pad*2;
 const maxH=c.clientHeight-pad*2;
 /* fill available space while keeping 9:16 */
 let w=maxW, h=w*16/9;
-if(cover){w=Math.max(maxW,maxH*9/16);h=w*16/9;c.style.overflow='hidden'}else if(h>maxH){h=maxH;w=h*9/16}
+if(h>maxH){h=maxH;w=h*9/16}
 w=Math.max(120,w);h=Math.max(180,h);
 st.style.width=w+'px';st.style.height=h+'px';st.style.setProperty('--w',w+'px');
 st.style.borderRadius=isEditor?'0':'14px';
@@ -821,7 +826,7 @@ $('#svb').innerHTML=g.items.map((_,j)=>`<i><b style="width:${j<SV.i?'100%':'0'}"
 $('#svd').classList.toggle('hide',!own);$('#svf').classList.toggle('hide',!own);$('#svf').textContent=s.is_fav?'★':'☆';$('#svc').textContent='';
 const send=$('#sv .send');if(send)send.classList.toggle('hide',own);
 const menu=$('#svmenu');if(menu)menu.classList.add('hide');
-const m=s.meta||{},body=$('#svi');body.innerHTML=stageHTML(s.media_url,m,false);fitStage(body,true);svSpk();{const g2=svg(),nx=g2&&g2.items[SV.i+1];if(nx&&nx.media_url){if(/\.(mp4|webm|mov)(\?|$)/i.test(nx.media_url)){const pv=document.createElement('video');pv.preload='auto';pv.src=nx.media_url}else new Image().src=nx.media_url}}
+const m=s.meta||{},body=$('#svi');body.innerHTML=stageHTML(s.media_url,m,false);fitStage(body);svSpk();
 SV._muted=false;if(m.mu&&m.mu.u){SV.au=clipAudio(m.mu.u,m.mu.s||0,CLIP_LEN);SV.au.muted=false;SV.au.play().catch(()=>{})}
 if(m.v!=null?!!m.v:isVid(s.media_url)){const v=body.querySelector('video');v.muted=(m.vm!=null?!!m.vm:!!m.mu);{const pp=v.play();if(pp&&pp.catch)pp.catch(()=>{v.muted=true;svSpk();v.play().catch(()=>{})})}svSpk();v.onloadedmetadata=()=>svRun(Math.min((v.duration||10)*1000,30000));v.onended=svNext;v.onerror=()=>svRun(STD)}else svRun(STD);
 if(!own&&!seenSt.has(s.id)){seenSt.add(s.id);sb.from('story_views').upsert({story_id:s.id,viewer_id:me.id},{onConflict:'story_id,viewer_id',ignoreDuplicates:true}).then(()=>{})}
@@ -842,6 +847,7 @@ function formatMsgBody(body,senderId){
       return `<div class="msg-story-reply"><div class="msa" style="background-image:url(${esc(av)})"></div><div><div>${esc(j.text||'')}</div><div class="msg-story-card">${j.thumb?`<img src="${esc(j.thumb)}" alt="">`:''}<span>↩ رد على قصة ${esc(who)}</span></div></div></div>`;
     }
   }catch(_){}
+  try{const z=JSON.parse(body);if(z&&z.type==='giphy'&&z.url)return `<img class=\"giphy-inline\" src=\"${esc(z.url)}\" alt=\"GIPHY sticker\" loading=\"lazy\">`}catch(_){}
   if((body||'').startsWith('↩ ')) return esc(body);
   return esc(body||'');
 }
@@ -859,23 +865,14 @@ function edUpd(i){const o=ED.o[i],e=$(`#sedmain .it[data-oi="${i}"]`);if(!o||!e)
 function edAdd(o){ED.o.push(o);$('#sedmain .stage').insertAdjacentHTML('beforeend',itHTML(o,ED.o.length-1,true));edSel(ED.o.length-1)}
 function edText(){const v=$('#stxt').value.trim();if(!v)return;edAdd({t:'t',v,x:.5,y:.5,k:1,c:'#ffffff'});$('#stxt').value=''}
 
-async function loadGifs(q){
-  const grid=document.getElementById('gifgrid');
-  if(!grid)return;
-  grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:20px;text-align:center">جاري التحميل...</div>';
-  const GK='6SVH5BNASTGtjSZBAffTJyi6oRyQJ488',term=encodeURIComponent((q||'').trim());
-  const url=term?`https://api.giphy.com/v1/gifs/search?api_key=${GK}&q=${term}&limit=30&rating=pg-13&lang=${L}`:`https://api.giphy.com/v1/gifs/trending?api_key=${GK}&limit=30&rating=pg-13`;
-  fetch(url).then(r=>r.json()).then(d=>{
-    const list=(d.data||[]).filter(x=>x.images&&(x.images.fixed_width_small||x.images.fixed_width));
-    if(!list.length){grid.innerHTML='<div class="note" style="grid-column:1/-1">'+t('noRes')+'</div>';return}
-    grid.innerHTML=list.map(g=>{
-      const im=g.images,src=(im.fixed_width_small||im.fixed_width).url,full=((im.downsized_medium||im.fixed_width||im.fixed_width_small).url)||src;
-      return '<button type="button" class="gifcell" data-gif="'+full.replace(/"/g,'&quot;')+'"><img src="'+src+'" alt="gif" loading="lazy"></button>';
-    }).join('')+'<div style="grid-column:1/-1;text-align:center;font-size:10px;opacity:.6;padding:4px">Powered by GIPHY</div>';
-  }).catch(()=>{
-    grid.innerHTML='<div class="note" style="grid-column:1/-1">تعذر التحميل</div>';
-  });
-}
+const GIPHY_API_KEY='PASTE_YOUR_GIPHY_API_KEY_HERE';
+let giphyTarget='story',giphyKind='stickers';
+function giphyEndpoint(kind,q){const base=kind==='stickers'?'stickers':'gifs';return `https://api.giphy.com/v1/${base}/${q?'search':'trending'}?api_key=${encodeURIComponent(GIPHY_API_KEY)}&limit=30&rating=g${q?'&q='+encodeURIComponent(q):''}`}
+async function giphyFetch(kind,q,grid){if(!grid)return;grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:20px;text-align:center">جاري التحميل...</div>';if(!GIPHY_API_KEY||GIPHY_API_KEY.includes('PASTE_')){grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:18px;text-align:center">أضف مفتاح GIPHY API في إعداد GIPHY_API_KEY داخل الملف أولاً.</div>';return}try{const r=await fetch(giphyEndpoint(kind,q));if(!r.ok)throw new Error('GIPHY API '+r.status);const d=await r.json();const list=d.data||[];if(!list.length){grid.innerHTML='<div class="note" style="grid-column:1/-1">لا توجد نتائج</div>';return}grid.innerHTML=list.map(g=>{const im=g.images||{},preview=(im.fixed_width_small&&im.fixed_width_small.url)||(im.preview_gif&&im.preview_gif.url)||(im.fixed_width&&im.fixed_width.url),full=(im.original&&im.original.url)||(im.fixed_height&&im.fixed_height.url)||preview;if(!preview||!full)return '';return `<button type="button" class="gifcell" data-gif="${esc(full)}"><img src="${esc(preview)}" alt="GIPHY sticker" loading="lazy"></button>`}).join('')||'<div class="note">لا توجد نتائج</div>'}catch(e){grid.innerHTML='<div class="note" style="grid-column:1/-1">تعذر الاتصال بـ GIPHY. تحقق من المفتاح والاتصال.</div>';console.error(e)}}
+async function loadGifs(q){const grid=document.getElementById('gifgrid');await giphyFetch('stickers',q,grid)}
+function openGiphyPicker(target){giphyTarget=target||'chat';giphyKind='stickers';const box=document.getElementById('giphyPicker');box.classList.add('on');box.setAttribute('aria-hidden','false');document.getElementById('giphyQuery').value='';document.querySelectorAll('[data-giphy-tab]').forEach(b=>b.classList.toggle('on',b.dataset.giphyTab==='stickers'));giphyFetch(giphyKind,'',document.getElementById('giphyGrid'))}
+function closeGiphyPicker(){const box=document.getElementById('giphyPicker');box.classList.remove('on');box.setAttribute('aria-hidden','true')}
+async function sendGiphy(url){if(!url||!me)return;const body=JSON.stringify({type:'giphy',url});if(giphyTarget==='chat'){if(!curChat)return;const {data,error}=await sb.from('messages').insert({sender_id:me.id,receiver_id:curChat,body}).select().single();if(error){toast(error.message);return}if(!msgsAll.some(x=>x.id===data.id))msgsAll.unshift(data);buildConvs();closeGiphyPicker()}else if(giphyTarget==='comment'){if(!curPost)return;const {error}=await sb.from('comments').insert({post_id:curPost,user_id:me.id,body});if(error){toast(error.message);return}bumpCm(1);await renderCm();closeGiphyPicker()}}
 
 function addGif(url){
   if(!ED||!url)return;
@@ -904,7 +901,7 @@ else if(m==='filter')h=`<div class="chips fchips">${Object.keys(FP).map(k=>`<but
 else if(m==='adjust')h=[['b','bright',.5,1.5],['c','contrast',.5,1.5],['s','saturation',0,2]].map(a=>`<label class="slr"><span>${t(a[1])}</span><input type="range" min="${a[2]}" max="${a[3]}" step=".05" value="${ED[a[0]]}" data-adj="${a[0]}"></label>`).join('');
 p.innerHTML=h;p.classList.toggle('mp',m==='music');if(m==='music')musicLoad();if(m==='emoji')loadGifs('happy');edFit();requestAnimationFrame(edFit)}
 async function edPublish(fav){if(!ED||ED.busy)return;ED.busy=true;$$('#sedbar button').forEach(b=>b.disabled=true);toast(t('uploading'));
-try{let f=ED.f;if(!ED.vid&&/^image\/(jpeg|png|webp|heic)/.test(f.type)){try{f=await compressImg(f)}catch(_){}}const ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin',base=`${me.id}/story-${Date.now()}`,pth=`${base}.${ex(f.name)}`;
+try{const f=ED.f,ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'')||'bin',base=`${me.id}/story-${Date.now()}`,pth=`${base}.${ex(f.name)}`;
 const up=await sb.storage.from('media').upload(pth,f,{contentType:f.type});if(up.error)throw up.error;
 const url=sb.storage.from('media').getPublicUrl(pth).data.publicUrl;
 let mu=ED.mu||null;if(!mu&&ED.mf){const p2=`${base}-music.${ex(ED.mf.name)}`;const u2=await sb.storage.from('media').upload(p2,ED.mf,{contentType:ED.mf.type||'audio/mpeg'});if(u2.error)throw u2.error;mu={u:sb.storage.from('media').getPublicUrl(p2).data.publicUrl,t:ED.mt,s:ED.ms||0}}
@@ -1255,6 +1252,11 @@ else if(c('#mprevx')||c('.mprev')&&!c('.mprev-card')){closeMusicPrev()}
 else if(c('#mhandle')){edPanel('')}
 else if(c('#maddmark')){addMark()}
 else if(c('#gifgo')){loadGifs(document.getElementById('gifq')?.value||'happy')}
+else if(b=c('[data-gif-open]'))openGiphyPicker(b.dataset.gifOpen);
+else if(c('#giphyClose'))closeGiphyPicker();
+else if(c('#giphySearch'))giphyFetch(giphyKind,$('#giphyQuery').value,document.getElementById('giphyGrid'));
+else if(b=c('[data-giphy-tab]')){giphyKind=b.dataset.giphyTab;document.querySelectorAll('[data-giphy-tab]').forEach(x=>x.classList.toggle('on',x===b));giphyFetch(giphyKind,$('#giphyQuery').value,document.getElementById('giphyGrid'))}
+else if(b=c('#giphyGrid [data-gif]')){if(giphyTarget==='story'){addGif(b.dataset.gif);closeGiphyPicker()}else await sendGiphy(b.dataset.gif)}
 else if(b=c('[data-gif]')){addGif(b.dataset.gif)}
 else if(b=c('[data-emtab]')){
   document.querySelectorAll('[data-emtab]').forEach(x=>x.classList.toggle('on',x===b));
@@ -1354,6 +1356,7 @@ else if(x.id==='sfile'&&x.files[0]&&me){const f=x.files[0];x.value='';openEditor
 else if(x.id==='nfile'&&x.files[0]){nFile=x.files[0];nImg=URL.createObjectURL(x.files[0]);$('#nAv').style.backgroundImage=`url(${nImg})`;$('#nAv').textContent=''}
 else if(x.dataset.s==='lang')setLang(x.value);
 else if(x.dataset.s){const k=x.dataset.s;S[k]=x.type==='checkbox'?x.checked:x.value;if(k==='theme')applyTheme();if(k==='acct'&&x.value==='private')S.fol='approval';if(k==='rec'&&me)sb.from('profiles').update({read_receipts:x.checked}).eq('id',me.id);if(k==='msg'&&me)sb.from('profiles').update({message_privacy:x.value}).eq('id',me.id);if(k==='acct'&&me)sb.from('profiles').update({account_type:x.value}).eq('id',me.id);renderNotes();renderSet()}});
+$('#giphyQuery').onkeydown=e=>{if(e.key==='Enter')giphyFetch(giphyKind,$('#giphyQuery').value,document.getElementById('giphyGrid'))};
 $('#q').oninput=()=>{clearTimeout(deb);deb=setTimeout(doSearch,300)};$('#vu').oninput=()=>{clearTimeout(deb);deb=setTimeout(renderAdm,300)};$('#ci').onkeydown=e=>{if(e.key==='Enter')addCm()};$('#tm').src=$('.logo img').src;
 $('#mi').onkeydown=e=>{if(e.key==='Enter')sendMsg()};
 $('#svr').onkeydown=e=>{if(e.key==='Enter')svReply()};$('#svr').onfocus=svPause;$('#svr').onblur=()=>{if($('#sv').classList.contains('on'))svShow()};
