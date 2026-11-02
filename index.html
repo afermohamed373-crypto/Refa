@@ -411,6 +411,32 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 .giphy-picker{display:none;position:fixed;z-index:10000;left:50%;bottom:12px;transform:translateX(-50%);width:min(430px,calc(100vw - 20px));max-height:68vh;overflow:hidden;background:var(--card);color:var(--tx);border:1px solid var(--ln);border-radius:20px;padding:12px;box-shadow:0 12px 45px #0004}
 .giphy-picker.on{display:block}.giphy-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.giphy-head button{border:0;background:transparent;font-size:20px;padding:4px 8px}.giphy-tabs{display:flex;gap:8px;margin:8px 0}.giphy-tabs button{border:1px solid var(--ln);border-radius:20px;background:transparent;padding:7px 14px}.giphy-tabs button.on{background:var(--mid);color:white}.giphy-picker .gifg{max-height:38vh;overflow:auto}.giphy-credit{text-align:center;color:var(--mu);font-size:10px;padding-top:8px}.giphy-result{width:100%;height:100%;object-fit:cover}.giphy-inline{display:block;max-width:min(220px,65vw);max-height:220px;border-radius:12px;margin-top:6px}
 
+
+/* Refa post viewer: isolated responsive media stage and compact sticker tray */
+#postViewerContent{height:100%;min-height:0;width:100%;overflow:hidden;contain:layout paint style}
+#postViewerContent .post-viewer-layout{height:100%;min-height:0;overflow:hidden;isolation:isolate}
+#postViewerContent .post-viewer-stage{position:relative;min-width:0;min-height:0;overflow:hidden;contain:layout paint;isolation:isolate}
+#postViewerContent .post-viewer-media{position:relative;inset:auto;flex:0 1 auto;min-width:0;min-height:0;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;background:transparent}
+#postViewerContent .post-viewer-side{min-width:0;min-height:0;overflow:hidden}
+#postViewerContent .post-viewer-comments{min-height:0;overscroll-behavior:contain}
+#postViewerContent .post-viewer-compose{flex:none}
+@media(max-width:700px){
+  #postViewer.post-viewer{padding:0;align-items:flex-end;overflow:hidden}
+  #postViewer .post-viewer-card{width:100%;height:calc(100dvh - env(safe-area-inset-top));max-height:calc(100dvh - env(safe-area-inset-top));border-radius:22px 22px 0 0;overflow:hidden}
+  #postViewerContent .post-viewer-layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,42dvh) minmax(0,1fr);}
+  #postViewerContent .post-viewer-stage{height:auto;min-height:0;padding:10px 12px;overflow:hidden;background:radial-gradient(ellipse at center,rgba(116,151,181,.14),transparent 70%),var(--bg,#0d1734)}
+  #postViewerContent .post-viewer-media{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:12px}
+  #postViewerContent .post-viewer-side{height:auto;min-height:0;display:flex;flex-direction:column;border-inline-start:0;border-top:1px solid var(--ln);overflow:hidden}
+  #postViewerContent .post-viewer-author,#postViewerContent .post-viewer-caption,#postViewerContent .post-viewer-actions,#postViewerContent .post-viewer-compose{flex:none}
+  #postViewerContent .post-viewer-comments{flex:1 1 0;min-height:0;overflow-y:auto}
+  #postViewerContent .post-viewer-compose{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+  #postViewer .post-viewer-close{top:9px;inset-inline-end:10px}
+}
+@media(max-width:380px){#postViewerContent .post-viewer-layout{grid-template-rows:minmax(0,38dvh) minmax(0,1fr)}#postViewerContent .post-viewer-author{padding:9px 12px}#postViewerContent .post-viewer-caption{padding:8px 12px}}
+.giphy-picker{bottom:max(10px,env(safe-area-inset-bottom));max-height:min(62dvh,560px);display:none;box-sizing:border-box}
+.giphy-picker.on{display:flex;flex-direction:column}
+.giphy-picker .gifg{flex:1 1 auto;min-height:90px;max-height:42dvh;overflow:auto}
+@media(max-width:700px){.giphy-picker{width:calc(100vw - 20px);max-height:58dvh;border-radius:20px 20px 14px 14px;padding:12px}.giphy-picker .gifg{max-height:34dvh}}
 </style>
 </head>
 <body>
