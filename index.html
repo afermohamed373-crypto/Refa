@@ -922,7 +922,7 @@ async function svReply(){const v=$('#svr').value.trim(),g=svg();if(!v||!g||!me)r
 
 /* ---------- editor ---------- */
 function stopAud(){if(ED&&ED.au){ED.au.pause();ED.au=null}}
-function openEditor(f){stopAud();ED={f,vid:/^video\//.test(f.type)||/\.(mp4|webm|mov|m4v|3gp)$/i.test(f.name||''),url:URL.createObjectURL(f),fl:'none',b:1,c:1,s:1,o:[],mf:null,mu:null,mr:[],mq:'',mt:'',sel:-1,mode:'',busy:false,au:null,cc:curCC(),mtab:'trend',trend:null,trendCc:null,srch:[],ms:0,md:30,mfUrl:null,vmute:null,musStyle:'album',musX:.5,musY:.15,marks:[],musScale:1,musRot:0};$$('#sedbar button').forEach(b=>b.disabled=false);$('#sed').classList.add('on');edRender();edPanel('')}
+function openEditor(f){stopAud();ED={f,vid:/^video\//.test(f.type)||/\.(mp4|webm|mov|m4v|3gp)$/i.test(f.name||''),url:URL.createObjectURL(f),fl:'none',b:1,c:1,s:1,o:[],mf:null,mu:null,mr:[],mq:'',mt:'',sel:-1,mode:'',busy:false,au:null,cc:curCC(),mtab:'trend',trend:null,trendCc:null,srch:[],ms:0,md:30,mfUrl:null,vmute:null,musStyle:'album',musX:.5,musY:.15,marks:[],musScale:1,musRot:0,reelsMusic:[]};$$('#sedbar button').forEach(b=>b.disabled=false);$('#sed').classList.add('on');edRender();edPanel('')}
 function edClose(){stopAud();if(ED&&ED.url)URL.revokeObjectURL(ED.url);$('#sed').classList.remove('on');$('#sedmain').innerHTML='';ED=null}
 function edRender(){const m=$('#sedmain');m.innerHTML=stageHTML(ED.url,{fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,v:ED.vid,vm:effMute()?1:0},true);fitStage(m);edVidPlay();edSel(ED.sel<ED.o.length?ED.sel:-1);renderMusSticker()}
 function edFilter(){const m=$('#sedmain .stage img,#sedmain .stage video');if(m)m.style.filter=fcss({fl:ED.fl,b:ED.b,c:ED.c,s:ED.s})}
@@ -1065,8 +1065,41 @@ function renderMusSticker(){
 function edPlay(){stopAud();if(!ED)return;edVidPlay();const pi=document.getElementById('mprogi');if(pi)pi.style.width='0';const ct=document.getElementById('mcurtime');if(ct)ct.textContent='0:00';const url=ED.mu?ED.mu.u:ED.mfUrl;if(!url)return;ED.au=clipAudio(url,ED.ms||0,CLIP_LEN,a=>{if(ED&&isFinite(a.duration)&&a.duration>0){ED.md=a.duration;const r=$('#mclip');if(r)r.max=Math.max(0,Math.floor(a.duration-5))}});ED.au.play().catch(()=>{})}
 function mRows(){return ED.mr.map((r,i)=>`<div class="mrw2"><button class="mrw ${ED.mu&&ED.mu.u===r.u?'on':''}" data-mi="${i}"><span class="mic" style="background-image:url(${esc(r.art||'')})"></span><span class="mt2"><b>${esc(r.t)}</b><small>${esc(r.ar)}</small></span></button><button class="madd" data-mi="${i}" title="تشغيل">▶</button><button class="fb o mstar" data-mfav="${i}" aria-label="Favorite">${favSongs.some(x=>x.id===r.id)?'★':'☆'}</button></div>`).join('')}
 function mList(){return ED.mr.length?mRows():(ED.mtab==='fav'?`<div class="note">${t('noFavSongs')}</div>`:'')}
-function musicPanel(){const tab=ED.mtab||'trend';ED.mtab=tab;ED.mr=tab==='trend'?(ED.trend||[]):tab==='fav'?favSongs:(ED.srch||[]);
-const tabs=['trend','fav','search'].map(k=>`<button class="chip ${tab===k?'on':''}" data-mtab="${k}">${t({trend:'mTrend',fav:'mFavs',search:'search'}[k])}</button>`).join('');
+
+async function loadReelsMusic(){
+  if(!ED||!me)return;
+  if(ED.reelsMusic&&ED.reelsMusic.length)return;
+  try{
+    /* 1) music from liked video posts if meta has mu */
+    const liked=await sb.from('likes').select('post_id').eq('user_id',me.id).limit(80);
+    const ids=(liked.data||[]).map(x=>x.post_id).filter(Boolean);
+    let tracks=[];
+    if(ids.length){
+      const posts=await sb.from('posts').select('id,kind,caption,image_url').in('id',ids).eq('kind','video').limit(40);
+      (posts.data||[]).forEach(p=>{
+        /* caption may not have music; skip */
+      });
+    }
+    /* 2) music used in recent stories (content on the app) */
+    const st=await sb.from('stories').select('meta').gt('created_at',new Date(Date.now()-7*864e5).toISOString()).order('created_at',{ascending:false}).limit(100);
+    const seen=new Set();
+    (st.data||[]).forEach(r=>{
+      const mu=r.meta&&r.meta.mu;
+      if(!mu||!mu.u)return;
+      const id=mu.u;
+      if(seen.has(id))return;
+      seen.add(id);
+      const parts=(mu.t||'Music').split(' — ');
+      tracks.push({id:id,t:parts[0]||'Music',ar:parts[1]||'',art:mu.a||'',u:mu.u});
+    });
+    /* 3) fallback: user fav songs */
+    if(!tracks.length&&favSongs.length)tracks=favSongs.slice(0,30);
+    ED.reelsMusic=tracks.slice(0,50);
+  }catch(e){console.error(e);ED.reelsMusic=ED.reelsMusic||[]}
+}
+
+function musicPanel(){const tab=ED.mtab||'trend';ED.mtab=tab;ED.mr=tab==='trend'?(ED.trend||[]):tab==='fav'?favSongs:tab==='reels'?(ED.reelsMusic||[]):(ED.srch||[]);
+const tabs=['trend','fav','reels','search'].map(k=>`<button class="chip ${tab===k?'on':''}" data-mtab="${k}">${({trend:t('mTrend'),fav:t('mFavs'),reels:'من الريلز',search:t('search')})[k]}</button>`).join('');
 const top=tab==='trend'?'':tab==='search'?`<div class="send"><input id="mq" value="${esc(ED.mq)}" placeholder="${t('searchMusic')}"><button id="mgo" class="fb">${t('search')}</button></div><div class="chips fchips" style="padding:8px 0">${['Pop','Raï','Arabic','Hip Hop','Chill','Rock'].map(k=>`<button class="chip" data-mq="${k}">${k}</button>`).join('')}</div>`:'';
 const cur=(ED.mu||ED.mf)?`<div class="mcur" id="mcurbox"><div class="mrow"><span class="mt">♪ ${esc(ED.mt)}</span><button class="fb o" id="mdel">✕</button></div><div class="mprog" id="mprog"><i id="mprogi"></i><div id="mmarks"></div></div><div class="mtime"><span id="mcurtime">0:00</span><span>0:15</span></div><div class="mmark-add"><button id="maddmark">＋ نقطة مفضلة</button><button id="mbest15">أفضل 15 ث</button></div></div>`:''     ;
 return `<div class="mhandle" id="mhandle"></div><div class="mhead"><div class="chips fchips" style="padding:0 0 8px">${tabs}</div>${top}${cur}</div><div id="mres">${mList()}</div><div class="mfoot"><button class="fb o" id="mpick" style="margin-top:8px">${t('pickAudio')}</button><small class="mcr">${t('musicCredit')}</small></div>`}
@@ -1296,7 +1329,12 @@ else if(c('#mpick'))$('#mfile').click();
 else if(c('#mdel')){if(ED){stopAud();ED.mf=null;ED.mu=null;ED.mt='';ED.vmute=null;edVidPlay();const st=document.querySelector('#sedmain .mus-sticker,#sedmain .mus-text');if(st)st.remove();edPanel('music')}}
 else if(c('#mgo')){if(ED)edMusicSearch($('#mq').value)}
 else if(b=c('[data-mq]')){if(ED){$('#mq').value=b.dataset.mq;edMusicSearch(b.dataset.mq)}}
-else if(b=c('[data-mtab]')){if(ED){ED.mtab=b.dataset.mtab;edPanel('music')}}
+else if(b=c('[data-mtab]')){if(ED){(async()=>{
+  ED.mtab=b.dataset.mtab;
+  if(ED.mtab==='reels'){await loadReelsMusic()}
+  if(ED.mtab==='trend')edTrend();
+  edPanel('music');
+})()}}
 else if(b=c('[data-mfav]')){if(ED)edFavSong(+b.dataset.mfav)}
 else if(b=c('[data-mi]')){if(ED){const i=+b.dataset.mi; const r=ED.mr[i]; if(!r)return;
 if(b.classList.contains('madd')){ openMusicPrev(r,i); return; }
