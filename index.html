@@ -184,7 +184,24 @@ button.row{cursor:pointer}
 #sv .who>span:last-child{display:flex;align-items:center;gap:10px;font-size:13px}
 
 .stage{position:relative;overflow:hidden;background:#111;border-radius:0;flex:none;width:100%;height:100%}
-.stage img,.stage video,#sv .body .stage img,#sv .body .stage video{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}
+/* Story media gestures and complete-fit display */
+#sedmain .stage{touch-action:none}
+#sedmain .stage>img,#sedmain .stage>video{touch-action:none;user-select:none;-webkit-user-drag:none}
+#sv .stage>img,#sv .stage>video{object-fit:contain}
+#sv .sv-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 4px 10px}
+#sv .sv-actions button{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.2);border-radius:22px;padding:8px 13px;background:rgba(255,255,255,.1);font-size:13px}
+#sv #svLike.liked{color:#ff6b87;background:rgba(255,80,120,.15);border-color:rgba(255,100,140,.45)}
+#sv #svLike svg,#sv #svViews svg{width:20px;height:20px;display:block}
+#svViewerModal{position:absolute;inset:0;z-index:30;background:rgba(3,7,18,.82);display:none;align-items:flex-end;justify-content:center;padding:12px}
+#svViewerModal.on{display:flex}
+.sv-viewer-card{width:min(100%,480px);max-height:72%;overflow:auto;background:#101b3b;border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:14px;color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.sv-viewer-head{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 12px;font-weight:700}
+.sv-viewer-head button{border:0;background:none;color:#fff;font-size:23px}
+.sv-viewer-row{display:flex;align-items:center;gap:11px;padding:9px 3px;border-top:1px solid rgba(255,255,255,.1)}
+.sv-viewer-avatar-wrap{position:relative;width:40px;height:40px;flex:none}.sv-viewer-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#34435e;display:block}.sv-viewer-heart{position:absolute;left:-4px;bottom:-4px;width:18px;height:18px;border:2px solid #101b3b;border-radius:50%;background:#e94f76;color:#fff;font-size:11px;display:grid;place-items:center;font-style:normal;line-height:1}
+.sv-viewer-name{flex:1;min-width:0;font-size:13px;font-weight:650}
+.story-like-dot{position:absolute;bottom:-4px;left:-4px;width:19px;height:19px;border:2px solid var(--card);border-radius:50%;background:#e94f76;color:#fff;display:grid;place-items:center;font-size:11px;line-height:1}
+.stage img,.stage video,#sv .body .stage img,#sv .body .stage video{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;transform-origin:center center;will-change:transform}
 .it{position:absolute;transform:translate(-50%,-50%);white-space:pre;line-height:1.1;text-shadow:0 1px 6px rgba(0,0,0,.6);touch-action:none;user-select:none;pointer-events:none;color:#fff}
 .it.ed{pointer-events:auto;cursor:grab}
 .it.sel{outline:1.5px dashed #fff;outline-offset:4px}
@@ -620,6 +637,10 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 </div>
 <div class="body" id="svi"></div>
 <div class="sv-foot">
+  <div class="sv-actions">
+    <button id="svLike" type="button" aria-label="Like story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.7c0 5.2-8.8 11-8.8 11S3.2 13.9 3.2 8.7A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.6Z"/></svg><span>أعجبني</span></button>
+    <button id="svViews" type="button" class="hide" aria-label="Viewers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span id="svViewsCount">0</span></button>
+  </div>
   <div class="sv-me" id="svme"><img id="svmeav" class="svav" alt=""><span id="svmeun"></span></div>
   <div class="send">
     <input id="svr" data-p="reply" placeholder="رد على القصة...">
@@ -629,6 +650,7 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
   </div>
 </div>
 </div>
+<div id="svViewerModal" aria-hidden="true"><div class="sv-viewer-card"><div class="sv-viewer-head"><span>مشاهدو القصة</span><button id="svViewersClose" type="button" aria-label="إغلاق">×</button></div><div id="svViewerList"></div></div></div>
 </section>
 
 <div id="toast" role="status"></div>
@@ -708,7 +730,7 @@ function renderStories(){
 const mine=(stGroups[0]&&me&&stGroups[0].uid===me.id)?stGroups[0]:{items:[]};
 const un=g=>g.items.some(x=>!seenSt.has(x.id));
 const ini=((P.fn||P.un||'?')[0]||'?').toUpperCase();
-const meAv=P.ph?`<div class="av" style="background-image:url(${esc(P.ph)})"></div>`:`<div class="av" style="background:${grad(0)}">${esc(ini)}</div>`;
+const myStoryUser=mine.u||{};const myAvatar=P.ph||myStoryUser.avatar_url||'';const meAv=myAvatar?`<div class="av" style="background-image:url(${esc(myAvatar)})"></div>`:`<div class="av" style="background:${grad(0)}">${esc(ini)}</div>`;
 let h=`<button class="st" data-sg="me"><div class="ring ${mine.items.length?'':'me'}">${meAv}<span class="plus" data-addst>+</span></div><span class="lb">${t('story')}</span></button>`;
 h+=stGroups.slice(1).map(g=>`<button class="st" data-sg="${esc(g.uid)}"><div class="ring ${un(g)?'':'me'}">${av2(g.u)}</div><span class="lb">${esc(g.u.first_name||g.u.username||'')}</span></button>`).join('');
 $('#stories').innerHTML=h}
@@ -842,7 +864,7 @@ const EM=['😀','😂','😍','🥰','😎','🤩','😭','😡','🔥','💯',
 const CL=['#ffffff','#000000','#ffd166','#ff4d6d','#00d1ff','#7cfc00'];
 const itSize=o=>(o.t==='e'?.17:.075)*o.k;
 const itHTML=(o,i,ed)=>`<div class="it${ed?' ed':''}" data-oi="${i}" style="left:${o.x*100}%;top:${o.y*100}%;font-size:calc(var(--w)*${itSize(o)});${o.t==='t'?`color:${esc(o.c||'#fff')};`:''}">${esc(o.v)}</div>`;
-function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const media=(m.v!=null?!!m.v:isVid(url))?`<video src="${esc(url)}" autoplay ${ed?'loop':''} ${(m.vm!=null?!!m.vm:!!m.mu)?'muted':''} playsinline style="filter:${f}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f}">`;
+function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const mt=`transform:translate(${Number(m.mxp||0)}px,${Number(m.myp||0)}px) scale(${Math.max(.5,Math.min(4,Number(m.mscale||1)))}) rotate(${Number(m.mrot||0)}deg);`;const media=(m.v!=null?!!m.v:isVid(url))?`<video src="${esc(url)}" autoplay ${ed?'loop':''} ${(m.vm!=null?!!m.vm:!!m.mu)?'muted':''} playsinline style="filter:${f};${mt}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f};${mt}">`;
 let mus='';
 if(m.mu&&!ed){
   const title=((m.mu.t||'Music')+'').split(' — ')[0];
@@ -872,7 +894,7 @@ const maxH=c.clientHeight-pad*2;
 /* fill available space while keeping 9:16 */
 let w=maxW, h=w*16/9;
 if(h>maxH){h=maxH;w=h*9/16}
-w=Math.max(120,w);h=Math.max(180,h);
+w=Math.max(1,w);h=Math.max(1,h);
 st.style.width=w+'px';st.style.height=h+'px';st.style.setProperty('--w',w+'px');
 st.style.borderRadius=isEditor?'0':'14px';
 }
@@ -882,16 +904,20 @@ let stories=[], views=[];
 try{
   const [a,b]=await Promise.all([
     sb.from('stories').select(SCOLS).gt('created_at',new Date(Date.now()-864e5).toISOString()).order('created_at',{ascending:true}),
-    sb.from('story_views').select('story_id').eq('viewer_id',me.id)
+    sb.from('story_views').select('story_id,viewer_id,liked').eq('viewer_id',me.id)
   ]);
   if(a.error){
-    /* fallback without profiles embed */
     const a2=await sb.from('stories').select('id,user_id,media_url,meta,is_fav,created_at').gt('created_at',new Date(Date.now()-864e5).toISOString()).order('created_at',{ascending:true});
     if(a2.error){console.error('stories',a2.error);toast(a2.error.message||'خطأ تحميل القصص');return}
     stories=a2.data||[];
   }else stories=a.data||[];
-  views=b.data||[];
+  if(b.error){const b2=await sb.from('story_views').select('story_id,viewer_id').eq('viewer_id',me.id);views=b2.data||[]}else views=b.data||[];
 }catch(e){console.error(e);return}
+/* Fetch story owners explicitly so avatars still appear when the nested relation is unavailable. */
+const ownerIds=[...new Set(stories.map(r=>r.user_id).filter(Boolean))];
+let owners={};
+if(ownerIds.length){const {data:ps}=await sb.from('profiles').select('id,username,first_name,last_name,avatar_url,is_verified').in('id',ownerIds);(ps||[]).forEach(u=>owners[u.id]=u)}
+stories.forEach(r=>{r.profiles=r.profiles||owners[r.user_id]||{};r.likedByMe=views.some(v=>v.story_id===r.id&&v.liked===true)});
 seenSt=new Set(views.map(x=>x.story_id));
 const m=new Map();
 stories.forEach(r=>{
@@ -903,6 +929,7 @@ const mine=m.get(me.id)||{uid:me.id,u:{},items:[]};m.delete(me.id);
 const others=[...m.values()];const un=g=>g.items.some(x=>!seenSt.has(x.id));
 others.sort((x,y)=>un(y)-un(x));
 stGroups=[mine,...others];renderStories()}
+
 async function loadFavStrip(uid,sel){const el=$(sel);if(!el)return;const {data,error}=await sb.from('stories').select(SCOLS).eq('user_id',uid).eq('is_fav',true).order('created_at',{ascending:true});if(error||!data||!data.length){favRows[uid]=[];el.innerHTML='';return}favRows[uid]=data;const last=data[data.length-1];const bg=((last.meta&&last.meta.v!=null)?!!last.meta.v:isVid(last.media_url))?grad(1):`url(${esc(last.media_url)}) center/cover`;el.innerHTML=`<button class="st" data-fav="${esc(uid)}"><div class="ring"><div class="av" style="background:${bg}"></div><span class="plus" style="background:#f5a623">★</span></div><span class="lb">${t('favs')}</span></button>`}
 
 /* ---------- viewer ---------- */
@@ -911,24 +938,33 @@ function svStopAu(){if(SV.au){SV.au.pause();SV.au=null}}
 function svOpen(gi,ii){const g=stGroups[gi];if(!g||!g.items.length)return;SV.fg=null;SV.gi=gi;SV.i=ii!=null?ii:Math.max(0,g.items.findIndex(x=>!seenSt.has(x.id)));$('#sv').classList.add('on');svShow()}
 function svOpenFav(rows){SV.fg={uid:rows[0].user_id,u:rows[0].profiles||{},items:rows.map(r=>({...r}))};SV.gi=-1;SV.i=0;$('#sv').classList.add('on');svShow()}
 function svRun(ms){const bb=$('#svb').children[SV.i],b=bb&&bb.firstChild;if(b){b.style.transition='none';b.style.width='0';void b.offsetWidth;b.style.transition=`width ${ms}ms linear`;b.style.width='100%'}clearTimeout(svT);svT=setTimeout(svNext,ms+200)}
+async function svToggleLike(){const g=svg(),s=g&&g.items[SV.i];if(!s||!me||g.uid===me.id)return;const nv=!s.likedByMe;const {error}=await sb.from('story_views').upsert({story_id:s.id,viewer_id:me.id,liked:nv},{onConflict:'story_id,viewer_id'});if(error){toast(error.message||'تعذر تسجيل الإعجاب');return}s.likedByMe=nv;$('#svLike').classList.toggle('liked',nv);$('#svLike span').textContent=nv?'أعجبتك':'أعجبني';toast(nv?'أعجبتك القصة':'أزلت إعجابك')}
+async function svShowViewers(){const g=svg(),s=g&&g.items[SV.i];if(!s||g.uid!==me.id)return;const box=$('#svViewerList');box.innerHTML='<div class="note" style="padding:16px;color:#fff">جارٍ التحميل…</div>';$('#svViewerModal').classList.add('on');$('#svViewerModal').setAttribute('aria-hidden','false');
+ const {data,error}=await sb.from('story_views').select('viewer_id,liked').eq('story_id',s.id);
+ if(error){box.innerHTML=`<div class="note" style="padding:16px;color:#fff">${esc(error.message)}</div>`;return}
+ const rows=data||[],ids=[...new Set(rows.map(v=>v.viewer_id).filter(Boolean))];let prof={};if(ids.length){const {data:ps}=await sb.from('profiles').select('id,username,first_name,last_name,avatar_url,is_verified').in('id',ids);(ps||[]).forEach(u=>prof[u.id]=u)}
+ box.innerHTML=rows.length?rows.map(v=>{const u=prof[v.viewer_id]||{},name=dn(u)||u.username||'مستخدم';const avatar=u.avatar_url?`<img class="sv-viewer-avatar" src="${esc(u.avatar_url)}" alt="">`:`<div class="sv-viewer-avatar" style="display:grid;place-items:center">${esc((name[0]||'؟'))}</div>`;return `<div class="sv-viewer-row"><span class="sv-viewer-avatar-wrap">${avatar}${v.liked?'<i class="sv-viewer-heart">♥</i>':''}</span><span class="sv-viewer-name">${esc(name)}${vbf(u.is_verified)}</span></div>`}).join(''):'<div class="note" style="padding:16px;color:#fff">لا توجد مشاهدات بعد</div>';
+}
+function svCloseViewers(){const m=$('#svViewerModal');if(m){m.classList.remove('on');m.setAttribute('aria-hidden','true')}}
 function svShow(){clearTimeout(svT);svStopAu();const g=svg(),s=g&&g.items[SV.i];if(!s){svClose();return}
-const own=g.uid===me.id,u=own?{first_name:P.fn,last_name:P.ln,username:P.un,avatar_url:P.av}:g.u;
+const own=g.uid===me.id,u=own?{first_name:P.fn,last_name:P.ln,username:P.un,avatar_url:P.ph}:g.u;
 const name=esc((u.username||dn(u)||'').replace(/^@/,''));
 $('#svn').innerHTML=name+(own?vb('me'):vbf(u.is_verified));
 const agoEl=$('#svago');if(agoEl)agoEl.textContent=ago(s.created_at);
 const av=$('#svav');if(av){av.src=u.avatar_url||'';av.style.display=u.avatar_url?'block':'none'}
 /* my identity under story when viewing others */
 const svme=$('#svme');
-if(svme){svme.classList.toggle('hide',own);if(!own){$('#svmeav').src=P.av||'';$('#svmeun').textContent=(P.un||'').replace(/^@/,'')}}
+if(svme){svme.classList.toggle('hide',own);if(!own){$('#svmeav').src=P.ph||'';$('#svmeun').textContent=(P.un||'').replace(/^@/,'')}}
 $('#svb').innerHTML=g.items.map((_,j)=>`<i><b style="width:${j<SV.i?'100%':'0'}"></b></i>`).join('');
 $('#svd').classList.toggle('hide',!own);$('#svf').classList.toggle('hide',!own);$('#svf').textContent=s.is_fav?'★':'☆';$('#svc').textContent='';
 const send=$('#sv .send');if(send)send.classList.toggle('hide',own);
 const menu=$('#svmenu');if(menu)menu.classList.add('hide');
 const m=s.meta||{},body=$('#svi');body.innerHTML=stageHTML(s.media_url,m,false);fitStage(body);svSpk();
+const likeBtn=$('#svLike');if(likeBtn){likeBtn.classList.toggle('hide',own);likeBtn.classList.toggle('liked',!!s.likedByMe);const tx=likeBtn.querySelector('span');if(tx)tx.textContent=s.likedByMe?'أعجبتك':'أعجبني'}const viewsBtn=$('#svViews');if(viewsBtn)viewsBtn.classList.toggle('hide',!own);svCloseViewers();
 SV._muted=false;if(m.mu&&m.mu.u){SV.au=clipAudio(m.mu.u,m.mu.s||0,CLIP_LEN);SV.au.muted=false;SV.au.play().catch(()=>{})}
 if(m.v!=null?!!m.v:isVid(s.media_url)){const v=body.querySelector('video');v.muted=(m.vm!=null?!!m.vm:!!m.mu);{const pp=v.play();if(pp&&pp.catch)pp.catch(()=>{v.muted=true;svSpk();v.play().catch(()=>{})})}svSpk();v.onloadedmetadata=()=>svRun(Math.min((v.duration||10)*1000,30000));v.onended=svNext;v.onerror=()=>svRun(STD)}else svRun(STD);
 if(!own&&!seenSt.has(s.id)){seenSt.add(s.id);sb.from('story_views').upsert({story_id:s.id,viewer_id:me.id},{onConflict:'story_id,viewer_id',ignoreDuplicates:true}).then(()=>{})}
-if(own){const id=s.id;sb.from('story_views').select('*',{count:'exact',head:true}).eq('story_id',id).then(r=>{const c=svg()&&svg().items[SV.i];if(c&&c.id===id&&!r.error)$('#svc').textContent='👁 '+(r.count||0)})}}
+if(own){const id=s.id;sb.from('story_views').select('viewer_id',{count:'exact'}).eq('story_id',id).then(r=>{const c=svg()&&svg().items[SV.i];if(c&&c.id===id&&!r.error){$('#svc').textContent='';$('#svViewsCount').textContent=String(r.count||0)}})}else if(!seenSt.has(s.id)){/* seen state was just recorded above */}}
 function svNext(){const g=svg();if(!g)return;if(SV.i<g.items.length-1){SV.i++;svShow()}else if(!SV.fg&&stGroups[SV.gi+1]&&stGroups[SV.gi+1].items.length){SV.gi++;SV.i=0;svShow()}else svClose()}
 function svPrev(){if(SV.i>0)SV.i--;else if(!SV.fg&&SV.gi>0&&stGroups[SV.gi-1].items.length){SV.gi--;SV.i=0}svShow()}
 function svPause(){clearTimeout(svT);const v=$('#svi video');if(v)v.pause();if(SV.au)SV.au.pause();const bb=$('#svb').children[SV.i],b=bb&&bb.firstChild;if(b){b.style.width=getComputedStyle(b).width;b.style.transition='none'}}
@@ -957,13 +993,31 @@ function formatMsgBody(body,senderId,receiverId){
   return esc(body||'');
 }
 
-async function svReply(){const v=$('#svr').value.trim(),g=svg(),s=g&&g.items[SV.i];if(!v||!g||!s||!me)return;const payload={type:'story_reply',text:v,thumb:s.media_url||'',video:isVid(s.media_url),meta:s.meta||{},created_at:s.created_at||new Date().toISOString(),story_id:s.id,story_owner_id:g.uid,story_owner:g.u||{},av:P.av||'',from:P.un||P.fn||'Refa'};const {data,error}=await sb.from('messages').insert({sender_id:me.id,receiver_id:g.uid,body:JSON.stringify(payload)}).select().single();if(error){toast(error.code==='42501'?t('cantMsg'):error.message);return}if(data&&!msgsAll.some(x=>x.id===data.id)){msgsAll.unshift(data);buildConvs()}$('#svr').value='';$('#svr').blur();toast(t('replied'))}
+async function svReply(){const v=$('#svr').value.trim(),g=svg(),s=g&&g.items[SV.i];if(!v||!g||!s||!me)return;const payload={type:'story_reply',text:v,thumb:s.media_url||'',video:isVid(s.media_url),meta:s.meta||{},created_at:s.created_at||new Date().toISOString(),story_id:s.id,story_owner_id:g.uid,story_owner:g.u||{},av:P.ph||'',from:P.un||P.fn||'Refa'};const {data,error}=await sb.from('messages').insert({sender_id:me.id,receiver_id:g.uid,body:JSON.stringify(payload)}).select().single();if(error){toast(error.code==='42501'?t('cantMsg'):error.message);return}if(data&&!msgsAll.some(x=>x.id===data.id)){msgsAll.unshift(data);buildConvs()}$('#svr').value='';$('#svr').blur();toast(t('replied'))}
 
 /* ---------- editor ---------- */
 function stopAud(){if(ED&&ED.au){ED.au.pause();ED.au=null}}
-function openEditor(f){stopAud();ED={f,vid:/^video\//.test(f.type)||/\.(mp4|webm|mov|m4v|3gp)$/i.test(f.name||''),url:URL.createObjectURL(f),fl:'none',b:1,c:1,s:1,o:[],mf:null,mu:null,mr:[],mq:'',mt:'',sel:-1,mode:'',busy:false,au:null,cc:curCC(),mtab:'trend',trend:null,trendCc:null,srch:[],ms:0,md:30,mfUrl:null,vmute:null,musStyle:'album',musX:.5,musY:.15,marks:[],musScale:1,musRot:0};$$('#sedbar button').forEach(b=>b.disabled=false);$('#sed').classList.add('on');edRender();edPanel('')}
+function openEditor(f){stopAud();ED={f,vid:/^video\//.test(f.type)||/\.(mp4|webm|mov|m4v|3gp)$/i.test(f.name||''),url:URL.createObjectURL(f),fl:'none',b:1,c:1,s:1,o:[],mf:null,mu:null,mr:[],mq:'',mt:'',sel:-1,mode:'',busy:false,au:null,cc:curCC(),mtab:'trend',trend:null,trendCc:null,srch:[],ms:0,md:30,mfUrl:null,vmute:null,musStyle:'album',musX:.5,musY:.15,marks:[],musScale:1,musRot:0,mediaScale:1,mediaRot:0,mediaX:0,mediaY:0};$$('#sedbar button').forEach(b=>b.disabled=false);$('#sed').classList.add('on');edRender();edPanel('')}
 function edClose(){stopAud();if(ED&&ED.url)URL.revokeObjectURL(ED.url);$('#sed').classList.remove('on');$('#sedmain').innerHTML='';ED=null}
-function edRender(){const m=$('#sedmain');m.innerHTML=stageHTML(ED.url,{fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,v:ED.vid,vm:effMute()?1:0},true);fitStage(m);edVidPlay();edSel(ED.sel<ED.o.length?ED.sel:-1);renderMusSticker()}
+function bindStoryMediaGestures(){
+  const stage=document.querySelector('#sedmain .stage');if(!stage||stage.dataset.mediaGestures)return;stage.dataset.mediaGestures='1';
+  const media=stage.querySelector('img,video');if(!media)return;
+  const points=new Map();let base=null;
+  const dist=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y);
+  const angle=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+  const mid=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
+  const apply=()=>{media.style.transform=`translate(${ED.mediaX||0}px,${ED.mediaY||0}px) scale(${ED.mediaScale||1}) rotate(${ED.mediaRot||0}deg)`};
+  stage.addEventListener('pointerdown',e=>{if(!e.target.matches('img,video'))return;e.preventDefault();points.set(e.pointerId,{x:e.clientX,y:e.clientY});try{stage.setPointerCapture(e.pointerId)}catch(_){};
+    const pts=[...points.values()];base={scale:ED.mediaScale||1,rot:ED.mediaRot||0,x:ED.mediaX||0,y:ED.mediaY||0,dist:pts.length>1?dist(pts[0],pts[1]):0,angle:pts.length>1?angle(pts[0],pts[1]):0,mid:pts.length>1?mid(pts[0],pts[1]):pts[0]};
+  });
+  stage.addEventListener('pointermove',e=>{if(!points.has(e.pointerId)||!base)return;e.preventDefault();points.set(e.pointerId,{x:e.clientX,y:e.clientY});const pts=[...points.values()];
+    if(pts.length>=2){const d=Math.max(1,dist(pts[0],pts[1]));ED.mediaScale=Math.max(.5,Math.min(4,base.scale*d/Math.max(1,base.dist)));ED.mediaRot=base.rot+angle(pts[0],pts[1])-base.angle;const m=mid(pts[0],pts[1]);ED.mediaX=base.x+(m.x-base.mid.x);ED.mediaY=base.y+(m.y-base.mid.y)}
+    else{ED.mediaX=base.x+(pts[0].x-base.mid.x);ED.mediaY=base.y+(pts[0].y-base.mid.y)}apply();
+  });
+  const end=e=>{points.delete(e.pointerId);if(points.size){const pts=[...points.values()];base={scale:ED.mediaScale||1,rot:ED.mediaRot||0,x:ED.mediaX||0,y:ED.mediaY||0,dist:pts.length>1?dist(pts[0],pts[1]):0,angle:pts.length>1?angle(pts[0],pts[1]):0,mid:pts.length>1?mid(pts[0],pts[1]):pts[0]}}else base=null};
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>stage.addEventListener(ev,end));
+}
+function edRender(){const m=$('#sedmain');m.innerHTML=stageHTML(ED.url,{fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,v:ED.vid,vm:effMute()?1:0,mxp:ED.mediaX,myp:ED.mediaY,mscale:ED.mediaScale,mrot:ED.mediaRot},true);fitStage(m);edVidPlay();edSel(ED.sel<ED.o.length?ED.sel:-1);bindStoryMediaGestures();renderMusSticker()}
 function edFilter(){const m=$('#sedmain .stage img,#sedmain .stage video');if(m)m.style.filter=fcss({fl:ED.fl,b:ED.b,c:ED.c,s:ED.s})}
 function edSel(i){ED.sel=i;$$('#sedmain .it').forEach(e=>e.classList.toggle('sel',+e.dataset.oi===i));$('#sibar').classList.toggle('hide',i<0);$('#sicol').classList.toggle('hide',i<0||!ED.o[i]||ED.o[i].t!=='t');edFit()}
 function edUpd(i){const o=ED.o[i],e=$(`#sedmain .it[data-oi="${i}"]`);if(!o||!e)return;e.style.left=o.x*100+'%';e.style.top=o.y*100+'%';e.style.fontSize=`calc(var(--w)*${itSize(o)})`;if(o.t==='t')e.style.color=o.c}
@@ -1010,7 +1064,7 @@ try{const f=ED.f,ex=n=>(n.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0
 const up=await sb.storage.from('media').upload(pth,f,{contentType:f.type});if(up.error)throw up.error;
 const url=sb.storage.from('media').getPublicUrl(pth).data.publicUrl;
 let mu=ED.mu||null;if(!mu&&ED.mf){const p2=`${base}-music.${ex(ED.mf.name)}`;const u2=await sb.storage.from('media').upload(p2,ED.mf,{contentType:ED.mf.type||'audio/mpeg'});if(u2.error)throw u2.error;mu={u:sb.storage.from('media').getPublicUrl(p2).data.publicUrl,t:ED.mt,s:ED.ms||0}}
-const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu,v:ED.vid?1:0,vm:effMute()?1:0,ms:'album',mx:ED.musX||.5,my:ED.musY||.15,marks:ED.marks||[],msc:ED.musScale||1,mrt:ED.musRot||0};
+const meta={fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,mu,v:ED.vid?1:0,vm:effMute()?1:0,mxp:ED.mediaX||0,myp:ED.mediaY||0,mscale:ED.mediaScale||1,mrot:ED.mediaRot||0,ms:'album',mx:ED.musX||.5,my:ED.musY||.15,marks:ED.marks||[],msc:ED.musScale||1,mrt:ED.musRot||0};
 const {error}=await sb.from('stories').insert({user_id:me.id,media_url:url,meta,is_fav:!!fav});if(error)throw error;
 edClose();await loadStories();loadFavStrip(me.id,'#favs');toast(t('posted'));if(!stGroups[0]||!stGroups[0].items.length)toast('تم الحفظ — حدّث الصفحة إن لم تظهر');}
 catch(err){toast((err&&err.message)||String(err));if(ED){ED.busy=false;$$('#sedbar button').forEach(b=>b.disabled=false)}}}
@@ -1322,6 +1376,9 @@ else if(b=c('[data-story-id]')){const sid=b.dataset.storyId;let snap=null;try{sn
 else if(b=c('.st')){const k=b.dataset.sg;if(k==='me'){const g=stGroups[0];g&&g.items.length?svOpen(0):$('#sfile').click()}else{const i=stGroups.findIndex(g=>g.uid===k);if(i>0)svOpen(i)}}
 else if(c('#svd'))svDelete();
 else if(c('#svf'))svFavToggle();
+else if(c('#svLike')){e.preventDefault();e.stopPropagation();await svToggleLike()}
+else if(c('#svViews')){e.preventDefault();e.stopPropagation();await svShowViewers()}
+else if(c('#svViewersClose')||c('#svViewerModal')&&x.id==='svViewerModal'){svCloseViewers()}
 else if(c('#sedx'))edClose();
 else if(c('#sedShare'))edPublish(false);
 else if(c('#sedFav')){ /* handled by longpress */ }
@@ -1405,7 +1462,7 @@ else if(c('#cfok')){
 else if(c('#mprevadd')){confirmMusicPrev()}
 else if(c('#mprevplay')){if(ED&&ED.au){if(ED.au.paused){ED.au.play().catch(()=>{});document.getElementById('mprevplay').textContent='⏸'}else{ED.au.pause();document.getElementById('mprevplay').textContent='▶'}}}
 else if(c('#mprevfav')){if(ED&&ED.prevIdx!=null)edFavSong(ED.prevIdx);const btn=document.getElementById('mprevfav');if(btn&&ED.prevSong)btn.textContent=favSongs.some(x=>x.id===ED.prevSong.id)?'★':'☆'}
-else if(c('#svi')){const r=$('#sv').getBoundingClientRect(),x=(e.clientX-r.left)/r.width,rtl=document.documentElement.dir==='rtl';(rtl?x>.67:x<.33)?svPrev():svNext()}
+else if(c('#svi')&&!c('#svViewerModal')){const r=$('#sv').getBoundingClientRect(),x=(e.clientX-r.left)/r.width,rtl=document.documentElement.dir==='rtl';(rtl?x>.67:x<.33)?svPrev():svNext()}
 
 else if(c('#svmore')){const m=$('#svmenu');if(m)m.classList.toggle('hide')}
 else if(c('#svrep')){const g=svg(),s=g&&g.items[SV.i];if(s){toast('تم الإبلاغ');$('#svmenu')?.classList.add('hide')} }
