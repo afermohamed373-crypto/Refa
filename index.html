@@ -557,6 +557,7 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 /* Synced chat tools and media */
 .msg-forward-label{font-size:10px;color:var(--mid);font-weight:700;margin-bottom:5px}
 #chatMediaViewer.on{display:flex!important}
+#chatMediaViewer.on{z-index:230!important}
 #chatMediaViewer img{box-shadow:0 8px 36px rgba(0,0,0,.35)}
 
 /* Refa chat motion: subtle send, graceful delete, anchored scroll, story transition */
@@ -1046,6 +1047,8 @@ function showChatMediaViewer(index){
  $('#chatMediaJump').dataset.msgId=item.m.id;
  $('#chatMediaPosition').textContent=`${index+1} / ${chatMediaViewerItems.length}`;
  $('#chatMediaPrev').disabled=index<=0;$('#chatMediaNext').disabled=index>=chatMediaViewerItems.length-1;
+ // Close the shared-media sheet first so the full-screen viewer is never hidden behind it.
+ closeChatMediaCenter();
  $('#chatMediaViewer').classList.add('on');
 }
 function jumpToChatMessage(id){
@@ -1842,6 +1845,10 @@ else if(x.id==='sfile'&&x.files[0]&&me){const f=x.files[0];x.value='';openEditor
 else if(x.id==='nfile'&&x.files[0]){nFile=x.files[0];nImg=URL.createObjectURL(x.files[0]);$('#nAv').style.backgroundImage=`url(${nImg})`;$('#nAv').textContent=''}
 else if(x.dataset.s==='lang')setLang(x.value);
 else if(x.dataset.s){const k=x.dataset.s;S[k]=x.type==='checkbox'?x.checked:x.value;if(k==='theme')applyTheme();if(k==='acct'&&x.value==='private')S.fol='approval';if(k==='rec'&&me)sb.from('profiles').update({read_receipts:x.checked}).eq('id',me.id);if(k==='msg'&&me)sb.from('profiles').update({message_privacy:x.value}).eq('id',me.id);if(k==='acct'&&me)sb.from('profiles').update({account_type:x.value}).eq('id',me.id);renderNotes();renderSet()}});
+const mediaSwipeLayer=$('#chatMediaViewer');
+let mediaTouchStartX=0,mediaTouchStartY=0;
+mediaSwipeLayer?.addEventListener('touchstart',e=>{if(!mediaSwipeLayer.classList.contains('on')||!e.changedTouches?.length)return;mediaTouchStartX=e.changedTouches[0].clientX;mediaTouchStartY=e.changedTouches[0].clientY},{passive:true});
+mediaSwipeLayer?.addEventListener('touchend',e=>{if(!mediaSwipeLayer.classList.contains('on')||!e.changedTouches?.length)return;const dx=e.changedTouches[0].clientX-mediaTouchStartX,dy=e.changedTouches[0].clientY-mediaTouchStartY;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25){const next=chatMediaViewerIndex+(dx<0?1:-1);if(next>=0&&next<chatMediaViewerItems.length)showChatMediaViewer(next)}},{passive:true});
 $('#giphyQuery').onkeydown=e=>{if(e.key==='Enter')giphyFetch(giphyKind,$('#giphyQuery').value,document.getElementById('giphyGrid'))};
 $('#chatSearchInput')?.addEventListener('input',filterChatSearch);$('#mi')?.addEventListener('input',notifyChatTyping);$('#q').oninput=()=>{clearTimeout(deb);deb=setTimeout(doSearch,300)};$('#vu').oninput=()=>{clearTimeout(deb);deb=setTimeout(renderAdm,300)};$('#ci').onkeydown=e=>{if(e.key==='Enter')addCm()};$('#postViewerInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addViewerComment()}});$('#tm').src=$('.logo img').src;const themePreview=$('#chatThemePreview');if(themePreview)themePreview.style.backgroundImage=`url("${CHAT_BOTANICAL_BG}")`;
 $('#mi').onkeydown=e=>{if(e.key==='Enter')sendMsg()};
