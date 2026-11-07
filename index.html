@@ -620,6 +620,13 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 @keyframes cmcMessagePulse{0%,100%{box-shadow:none}35%{box-shadow:0 0 0 4px rgba(113,139,117,.55)}}
 @media(prefers-reduced-motion:reduce){.cmc-message-focus .m{animation:none;outline:2px solid var(--mid)}}
 
+
+/* Network image states: shimmer placeholder and clear failed-image fallback */
+img.refa-img-loading{background:linear-gradient(100deg,rgba(125,139,157,.12) 20%,rgba(160,174,192,.28) 38%,rgba(125,139,157,.12) 56%);background-size:220% 100%;animation:refaImageShimmer 1.25s ease-in-out infinite;min-height:24px}
+@keyframes refaImageShimmer{to{background-position-x:-220%}}
+img.refa-img-loaded{animation:none;background-color:transparent}
+img.refa-img-error{animation:none;object-fit:contain!important;background-color:rgba(125,139,157,.14);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Crect x='7' y='9' width='34' height='30' rx='5'/%3E%3Ccircle cx='18' cy='19' r='3'/%3E%3Cpath d='m10 34 10-10 7 7 5-5 6 7'/%3E%3Cpath d='M24 14v8m0 5v.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;background-size:38px 38px;color:transparent}
+@media(prefers-reduced-motion:reduce){img.refa-img-loading{animation:none}}
 </style>
 </head>
 <body>
@@ -818,6 +825,54 @@ body:has(#sed.on){overflow:hidden;overscroll-behavior:none}
 <script>
 const sb=supabase.createClient('https://hnpsqjmkyuxrssgmbwad.supabase.co','sb_publishable_4iQYNEKrdE8JkiA0ZdGSgQ_uCcokAzE');let me=null,peopleRes=[],deb;
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Refa network-image cache + loading placeholder + graceful error state */
+const REFA_IMAGE_CACHE='refa-network-images-v1';
+const refaImageJobs=new Map();
+const refaImageObjectUrls=new Set();
+function refaImageEligible(url){return /^https?:\/\//i.test(url||'')&&!/^(?:data|blob):/i.test(url||'')}
+async function refaPrepareImage(img){
+ if(!(img instanceof HTMLImageElement))return;
+ const url=img.getAttribute('src')||'';
+ if(!refaImageEligible(url)||url.startsWith(location.origin)&&url.includes('#'))return;
+ if(img.dataset.refaCacheSrc===url||img.dataset.refaWorking==='1')return;
+ img.dataset.refaCacheSrc=url;img.dataset.refaWorking='1';img.classList.add('refa-img-loading');img.classList.remove('refa-img-loaded','refa-img-error');
+ const finish=()=>{img.dataset.refaWorking='0'};
+ const applyBlob=blob=>{const objectUrl=URL.createObjectURL(blob);refaImageObjectUrls.add(objectUrl);img.src=objectUrl};
+ try{
+  if(!('caches' in window)){img.src=url;finish();return}
+  const cache=await caches.open(REFA_IMAGE_CACHE);
+  const cached=await cache.match(url);
+  if(cached){const blob=await cached.blob();if(blob.size){applyBlob(blob);finish();return}}
+  if(!navigator.onLine){img.src=url;finish();return}
+  if(!refaImageJobs.has(url)){
+   const job=fetch(url,{mode:'cors',credentials:'omit'}).then(async response=>{
+    if(!response.ok||response.type==='opaque')throw new Error('image response unavailable');
+    try{await cache.put(url,response.clone())}catch(_){/* cache quota/private mode: still show image */}
+    return response.blob();
+   });
+   refaImageJobs.set(url,job);
+   job.then(()=>refaImageJobs.delete(url),()=>refaImageJobs.delete(url));
+  }
+  const blob=await refaImageJobs.get(url);
+  if(blob&&blob.size)applyBlob(blob);else img.src=url;
+ }catch(_){img.src=url}
+ finally{finish()}
+}
+function refaWatchImages(root=document){
+ if(root instanceof HTMLImageElement)refaPrepareImage(root);
+ root.querySelectorAll?.('img').forEach(refaPrepareImage);
+}
+document.addEventListener('load',e=>{const img=e.target;if(img instanceof HTMLImageElement&&img.dataset.refaCacheSrc){img.classList.remove('refa-img-loading','refa-img-error');img.classList.add('refa-img-loaded')}},true);
+document.addEventListener('error',e=>{const img=e.target;if(img instanceof HTMLImageElement&&img.dataset.refaCacheSrc){img.classList.remove('refa-img-loading','refa-img-loaded');img.classList.add('refa-img-error');img.alt='تعذّر تحميل الصورة';img.title='تعذّر تحميل الصورة'}},true);
+const refaImageObserver=new MutationObserver(records=>records.forEach(record=>{
+ if(record.type==='attributes'&&record.target instanceof HTMLImageElement){refaPrepareImage(record.target);return}
+ record.addedNodes.forEach(node=>{if(node.nodeType===1)refaWatchImages(node)})
+}));
+refaImageObserver.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});
+refaWatchImages();
+window.addEventListener('beforeunload',()=>{refaImageObjectUrls.forEach(url=>URL.revokeObjectURL(url))});
+
 const dn=u=>((u.first_name||'')+' '+(u.last_name||'')).trim()||u.username||'?';
 const T={
 login:"Log in|تسجيل الدخول|Se connecter",noacc:"Don’t have an account?|ليس لديك حساب؟|Pas encore de compte ?",create:"Create account|إنشاء حساب|Créer un compte",or:"or continue with|أو المتابعة عبر|ou continuer avec",email:"Email|البريد الإلكتروني|E-mail",pass:"Password|كلمة المرور|Mot de passe",
