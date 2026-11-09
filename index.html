@@ -53,7 +53,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .pg{display:none;min-height:100%}.pg.on{display:block}
 #reels.on{display:block;height:100%;overflow-y:auto;scroll-snap-type:y mandatory}
 /* Refa · floating glass navigation */
-.nav{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-around;gap:4px;width:calc(100% - 28px);max-width:410px;min-height:68px;margin:0 auto calc(9px + env(safe-area-inset-bottom,0px));padding:7px 8px;border:1px solid rgba(255,255,255,.68);border-radius:25px;background:rgba(255,255,255,.72);box-shadow:0 10px 32px rgba(34,55,43,.12),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%);overflow:visible}
+.nav{position:relative;z-index:4;display:flex;align-items:center;justify-content:space-around;gap:4px;width:calc(100% - 28px);max-width:410px;min-height:68px;margin:0 auto calc(9px + env(safe-area-inset-bottom,0px));padding:7px 8px;border:1px solid rgba(255,255,255,.68);border-radius:25px;background:rgba(255,255,255,.72);box-shadow:0 10px 32px rgba(34,55,43,.12),inset 0 1px 0 rgba(255,255,255,.85);backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%);overflow:visible}
 .nav button{position:relative;isolation:isolate;display:flex;flex:1;min-width:0;min-height:52px;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 2px 3px;border:0;border-radius:18px;background:transparent;color:var(--mu);cursor:pointer;transition:color .25s ease,transform .28s cubic-bezier(.2,.8,.2,1)}
 .nav button svg{display:block;width:22px;height:22px;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;transition:transform .28s cubic-bezier(.2,.8,.2,1),filter .28s ease}
 .nav button span:not(.bd){display:block;font-size:9px;line-height:1.2;font-weight:600;letter-spacing:.05px;margin:0;white-space:nowrap;transition:opacity .2s ease,color .2s ease}
@@ -112,10 +112,11 @@ button.row{cursor:pointer}
 .chat-theme-card{width:min(100%,340px);border:1px solid rgba(255,255,255,.25);border-radius:22px;padding:14px;background:#101c36;color:#fff;box-shadow:0 18px 55px rgba(0,0,0,.35)}
 .chat-theme-preview{height:300px;border-radius:15px;background-position:center;background-size:cover;border:1px solid rgba(255,255,255,.25);margin:12px 0}
 .chat-theme-card button{border:0;border-radius:18px;padding:11px 18px;background:#78927a;color:white;font-weight:700}
-.typing-line{display:flex;align-items:center;gap:8px;flex:none;height:22px;padding:0 4px;color:var(--mid);font-size:11px;opacity:0;visibility:hidden;transition:opacity .2s ease;pointer-events:none;overflow:hidden}
-.typing-line.on{opacity:1;visibility:visible}
+.typing-line{display:flex;align-items:center;align-self:flex-start;gap:9px;flex:none;width:max-content;max-width:85%;height:0;min-height:0;margin:0;padding:0 12px;border:1px solid rgba(255,255,255,.22);border-radius:14px;background:rgba(18,35,27,.88);color:#fff;font-size:12px;font-weight:700;letter-spacing:.1px;line-height:1.35;opacity:0;visibility:hidden;box-shadow:0 4px 16px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(12px) saturate(135%);-webkit-backdrop-filter:blur(12px) saturate(135%);transition:opacity .22s ease,height .22s ease,margin .22s ease,padding .22s ease;pointer-events:none;overflow:hidden;position:relative;z-index:2}
+.typing-line.on{height:34px;min-height:34px;margin:3px 0 5px;padding:0 12px;opacity:1;visibility:visible}
+.typing-line .typing-text{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 .typing-dots{display:inline-flex;align-items:center;gap:3px;height:14px}
-.typing-dots i{width:5px;height:5px;border-radius:50%;background:currentColor;display:block;animation:refaTypingDot 1.2s ease-in-out infinite;animation-play-state:paused}
+.typing-dots i{width:5px;height:5px;border-radius:50%;background:#b9ead7;display:block;box-shadow:0 0 5px rgba(185,234,215,.45);animation:refaTypingDot 1.2s ease-in-out infinite;animation-play-state:paused}
 .typing-line.on .typing-dots i{animation-play-state:running}
 .typing-dots i:nth-child(2){animation-delay:.18s}
 .typing-dots i:nth-child(3){animation-delay:.36s}
@@ -1269,7 +1270,7 @@ const fcss=m=>{m=m||{};return ((FP[m.fl]||'')+` brightness(${m.b??1}) contrast($
 const EM=['😀','😂','😍','🥰','😎','🤩','😭','😡','🔥','💯','❤️','💙','✨','🎉','🎂','🎁','🌹','☀️','🌙','⭐','⚡','👍','👏','🙏','💪','👀','🎵','🎧','📸','✈️','🏖️','🍕','☕','⚽','🚀','🌈','🍀','🦋','🐱','🐶','🇩🇿'];
 const CL=['#ffffff','#000000','#ffd166','#ff4d6d','#00d1ff','#7cfc00'];
 const itSize=o=>(o.t==='e'?.17:.075)*o.k;
-const itHTML=(o,i,ed)=>`<div class="it${ed?' ed':''}" data-oi="${i}" style="left:${o.x*100}%;top:${o.y*100}%;font-size:calc(var(--w)*${itSize(o)});${o.t==='t'?`color:${esc(o.c||'#fff')};`:''}">${o.t==='g'?`<img class="gifit" src="${esc(o.v)}" alt="" draggable="false" style="width:calc(var(--w)*${(.4*o.k).toFixed(3)});display:block;pointer-events:none">`:esc(o.v)}</div>`;
+const itHTML=(o,i,ed)=>`<div class="it${ed?' ed':''}" data-oi="${i}" style="left:${o.x*100}%;top:${o.y*100}%;font-size:calc(var(--w)*${itSize(o)});${o.t==='t'?`color:${esc(o.c||'#fff')};`:''}">${esc(o.v)}</div>`;
 function stageHTML(url,m,ed){m=m||{};const f=fcss(m);const mt=`transform:translate(${Number(m.mxp||0)}px,${Number(m.myp||0)}px) scale(${Math.max(.5,Math.min(4,Number(m.mscale||1)))}) rotate(${Number(m.mrot||0)}deg);`;const media=(m.v!=null?!!m.v:isVid(url))?`<video src="${esc(url)}" autoplay ${ed?'loop':''} ${(m.vm!=null?!!m.vm:!!m.mu)?'muted':''} playsinline style="filter:${f};${mt}"></video>`:`<img src="${esc(url)}" alt="" style="filter:${f};${mt}">`;
 let mus='';
 if(m.mu&&!ed){
@@ -1433,11 +1434,11 @@ function bindStoryMediaGestures(){
 function edRender(){const m=$('#sedmain');m.innerHTML=stageHTML(ED.url,{fl:ED.fl,b:ED.b,c:ED.c,s:ED.s,o:ED.o,v:ED.vid,vm:effMute()?1:0,mxp:ED.mediaX,myp:ED.mediaY,mscale:ED.mediaScale,mrot:ED.mediaRot},true);fitStage(m);edVidPlay();edSel(ED.sel<ED.o.length?ED.sel:-1);bindStoryMediaGestures();renderMusSticker()}
 function edFilter(){const m=$('#sedmain .stage img,#sedmain .stage video');if(m)m.style.filter=fcss({fl:ED.fl,b:ED.b,c:ED.c,s:ED.s})}
 function edSel(i){ED.sel=i;$$('#sedmain .it').forEach(e=>e.classList.toggle('sel',+e.dataset.oi===i));$('#sibar').classList.toggle('hide',i<0);$('#sicol').classList.toggle('hide',i<0||!ED.o[i]||ED.o[i].t!=='t');edFit()}
-function edUpd(i){const o=ED.o[i],e=$(`#sedmain .it[data-oi="${i}"]`);if(!o||!e)return;e.style.left=o.x*100+'%';e.style.top=o.y*100+'%';e.style.fontSize=`calc(var(--w)*${itSize(o)})`;if(o.t==='t')e.style.color=o.c;const gi=e.querySelector('.gifit');if(gi)gi.style.width=`calc(var(--w)*${(.4*o.k).toFixed(3)})`}
+function edUpd(i){const o=ED.o[i],e=$(`#sedmain .it[data-oi="${i}"]`);if(!o||!e)return;e.style.left=o.x*100+'%';e.style.top=o.y*100+'%';e.style.fontSize=`calc(var(--w)*${itSize(o)})`;if(o.t==='t')e.style.color=o.c}
 function edAdd(o){ED.o.push(o);$('#sedmain .stage').insertAdjacentHTML('beforeend',itHTML(o,ED.o.length-1,true));edSel(ED.o.length-1)}
 function edText(){const v=$('#stxt').value.trim();if(!v)return;edAdd({t:'t',v,x:.5,y:.5,k:1,c:'#ffffff'});$('#stxt').value=''}
 
-const GIPHY_API_KEY='6SVH5BNASTGtjSZBAffTJyi6oRyQJ488';
+const GIPHY_API_KEY='PASTE_YOUR_GIPHY_API_KEY_HERE';
 let giphyTarget='story',giphyKind='stickers';
 function giphyEndpoint(kind,q){const base=kind==='stickers'?'stickers':'gifs';return `https://api.giphy.com/v1/${base}/${q?'search':'trending'}?api_key=${encodeURIComponent(GIPHY_API_KEY)}&limit=30&rating=g${q?'&q='+encodeURIComponent(q):''}`}
 async function giphyFetch(kind,q,grid){if(!grid)return;grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:20px;text-align:center">جاري التحميل...</div>';if(!GIPHY_API_KEY||GIPHY_API_KEY.includes('PASTE_')){grid.innerHTML='<div class="note" style="grid-column:1/-1;padding:18px;text-align:center">أضف مفتاح GIPHY API في إعداد GIPHY_API_KEY داخل الملف أولاً.</div>';return}try{const r=await fetch(giphyEndpoint(kind,q));if(!r.ok)throw new Error('GIPHY API '+r.status);const d=await r.json();const list=d.data||[];if(!list.length){grid.innerHTML='<div class="note" style="grid-column:1/-1">لا توجد نتائج</div>';return}grid.innerHTML=list.map(g=>{const im=g.images||{},preview=(im.fixed_width_small&&im.fixed_width_small.url)||(im.preview_gif&&im.preview_gif.url)||(im.fixed_width&&im.fixed_width.url),full=(im.original&&im.original.url)||(im.fixed_height&&im.fixed_height.url)||preview;if(!preview||!full)return '';return `<button type="button" class="gifcell" data-gif="${esc(full)}"><img src="${esc(preview)}" alt="GIPHY sticker" loading="lazy"></button>`}).join('')||'<div class="note">لا توجد نتائج</div>'}catch(e){grid.innerHTML='<div class="note" style="grid-column:1/-1">تعذر الاتصال بـ GIPHY. تحقق من المفتاح والاتصال.</div>';console.error(e)}}
