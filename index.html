@@ -690,6 +690,21 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
 .profile-video-preview{width:100%;height:150px;position:relative;overflow:hidden;border-radius:13px;background:#111;margin-top:6px}
 .profile-video-preview video{width:100%;height:100%;object-fit:cover}
 
+
+/* Profile avatar placement: overlap the cover at the lower-left edge */
+#profile .pf>.big,
+#upb .pf>.big{
+  width:96px;
+  height:96px;
+  margin-top:-48px;
+  margin-left:0!important;
+  margin-right:auto!important;
+  border:4px solid #fff;
+  box-shadow:0 5px 16px rgba(0,0,0,.16);
+  position:relative;
+  z-index:4;
+}
+
 </style>
 </head>
 <body>
