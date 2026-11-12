@@ -691,19 +691,37 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
 .profile-video-preview video{width:100%;height:100%;object-fit:cover}
 
 
-/* Profile avatar placement: overlap the cover at the lower-left edge */
+/* Profile header layout: avatar overlaps the cover at the physical left, like the reference */
+#profile .pf,
+#upb .pf{
+  position:relative;
+  padding-top:clamp(66px, 11vw, 82px)!important;
+}
 #profile .pf>.big,
 #upb .pf>.big{
-  width:96px;
-  height:96px;
-  margin-top:-48px;
-  margin-left:0!important;
-  margin-right:auto!important;
-  border:4px solid #fff;
-  box-shadow:0 5px 16px rgba(0,0,0,.16);
-  position:relative;
-  z-index:4;
+  position:absolute!important;
+  top:clamp(-80px, -11.5vw, -56px);
+  left:clamp(20px, 4.5vw, 34px)!important;
+  right:auto!important;
+  width:clamp(112px, 23vw, 160px)!important;
+  height:clamp(112px, 23vw, 160px)!important;
+  margin:0!important;
+  border:4px solid var(--card)!important;
+  border-radius:50%!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.18)!important;
+  z-index:5!important;
+  display:grid;
+  place-items:center;
 }
+#profile .cover,
+#upb>.cover{
+  height:clamp(112px, 27vw, 190px)!important;
+  position:relative;
+  overflow:hidden;
+}
+#profile .pf h2,
+#upb .pf h2{margin-top:0!important}
+
 
 </style>
 </head>
