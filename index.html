@@ -747,6 +747,12 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
 #upb .pf h2{margin-top:0!important}
 
 
+/* Cover picker/editor reliability and compact corner shortcut */
+.profile-photo-actions{position:relative!important;padding-top:0!important;min-height:126px!important}
+.profile-photo-actions #coverChangeBtn.cover-change-shortcut{position:absolute!important;top:2px!important;left:2px!important;right:auto!important;inset-inline-start:2px!important;inset-inline-end:auto!important;width:42px!important;height:42px!important;min-width:42px!important;padding:0!important;margin:0!important;display:grid!important;place-items:center!important;border:1px solid var(--ln)!important;border-radius:13px!important;background:var(--bg)!important;color:var(--tx)!important;z-index:30!important;cursor:pointer!important}
+.profile-photo-actions #coverChangeBtn svg{width:20px;height:20px;pointer-events:none}
+#coverEditorModal{z-index:2147483000!important}
+#coverEditorModal.on{display:flex!important}
 </style>
 </head>
 <body>
@@ -2143,10 +2149,3 @@ sb.auth.getSession().then(async({data})=>{if(data.session&&!me){await loadMe(dat
 </script>
 </body>
 </html>
-
-/* Cover picker/editor reliability and compact corner shortcut */
-.profile-photo-actions{position:relative!important;padding-top:0!important;min-height:126px!important}
-.profile-photo-actions #coverChangeBtn.cover-change-shortcut{position:absolute!important;top:2px!important;left:2px!important;right:auto!important;inset-inline-start:2px!important;inset-inline-end:auto!important;width:42px!important;height:42px!important;min-width:42px!important;padding:0!important;margin:0!important;display:grid!important;place-items:center!important;border:1px solid var(--ln)!important;border-radius:13px!important;background:var(--bg)!important;color:var(--tx)!important;z-index:30!important;cursor:pointer!important}
-.profile-photo-actions #coverChangeBtn svg{width:20px;height:20px;pointer-events:none}
-#coverEditorModal{z-index:2147483000!important}
-#coverEditorModal.on{display:flex!important}
