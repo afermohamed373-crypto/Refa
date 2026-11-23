@@ -2110,13 +2110,13 @@ else if(b=c('[data-comment-reply]')){e.preventDefault();e.stopPropagation();setC
 else if(b=c('[data-cdel]')){if(confirm('حذف هذا التعليق؟')){const {error}=await sb.from('comments').delete().eq('id',b.dataset.cdel);if(error)toast(error.message);else await renderPostViewerComments(curPost)}}
 else if(c('#postViewerCancelReply'))cancelCommentReply();
 else if(c('#postViewerForm')){e.preventDefault();addViewerComment()}
-else if(c('#postViewer')){if(x.id==='postViewer')closeGridPost()}
-else if(b=c('[data-nt]')){$$('[data-nt]').forEach(x=>x.classList.toggle('on',x===b));$('#ntype').innerHTML='<option value="'+b.dataset.nt+'" selected></option>'}
 else if(b=c('[data-rpst]')){if(!me)return;const id=b.dataset.rpst;if(myReposts.has(id)){await sb.from('reposts').delete().match({user_id:me.id,post_id:id});myReposts.delete(id);toast(t('unreposted'))}else{const {error}=await sb.from('reposts').insert({user_id:me.id,post_id:id});if(error){toast(error.message);return}myReposts.add(id);toast(t('reposted'))}await loadMyPosts();renderFeed()}
 else if(b=c('[data-pvlike]')){if(!me)return;const id=b.dataset.pvlike,on=b.classList.contains('on');const {error}=on?await sb.from('likes').delete().match({post_id:id,user_id:me.id}):await sb.from('likes').insert({post_id:id,user_id:me.id});if(error){toast(error.message);return}b.classList.toggle('on',!on);const n=$('#pvlc');if(n)n.textContent=Math.max(0,(+n.textContent||0)+(on?-1:1));b.firstChild.textContent=on?'♡ ':'♥ '}
 else if(c('[data-pvcm]')){const i=document.querySelector('#postViewer textarea,#postViewer input[type=text],#postViewer input:not([type])');if(i)i.focus()}
 else if(b=c('[data-pvdel]')){if(confirm(t('delAsk'))){const {error}=await sb.from('posts').delete().eq('id',b.dataset.pvdel);if(error){toast(error.message);return}$('#postViewer').classList.remove('on');loadMyPosts();loadFeed()}}
 else if(b=c('[data-sv]')){if(!me)return;const id=b.dataset.sv;if(mySaved.has(id)){await sb.from('saved_posts').delete().match({user_id:me.id,post_id:id});mySaved.delete(id)}else{const {error}=await sb.from('saved_posts').insert({user_id:me.id,post_id:id});if(error){toast(error.message);return}mySaved.add(id)}await loadMyPosts();renderFeed()}
+else if(c('#postViewer')){if(x.id==='postViewer')closeGridPost()}
+else if(b=c('[data-nt]')){$$('[data-nt]').forEach(x=>x.classList.toggle('on',x===b));$('#ntype').innerHTML='<option value="'+b.dataset.nt+'" selected></option>'}
 else if(b=c('[data-dp]')){if(confirm(t('delAsk'))){await sb.from('posts').delete().eq('id',b.dataset.dp);loadMyPosts();loadFeed();if($('#up').classList.contains('on'))$('#up').classList.remove('on');if($('#rpts').classList.contains('on'))renderReports()}}
 else if(b=c('#grid [data-id]')){openGridPost(b.dataset.id)}
 else if(b=c('[data-cdel]')){await sb.from('comments').delete().eq('id',b.dataset.cdel);bumpCm(-1);renderCm()}
