@@ -876,6 +876,59 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
 }
 @media (max-width: 899px){#app.screen{max-width:440px;margin:0 auto}}
 
+
+/* Refa desktop profile refinement - preserve mobile layout */
+@media (min-width:900px){
+  #app>.nav button[data-tab="profile"]{color:var(--tx)!important;background:transparent!important;min-height:56px}
+  #app>.nav button[data-tab="profile"] span[data-i="profile"]{display:block!important;visibility:visible!important;opacity:1!important;color:inherit!important;font-size:13px!important;font-weight:700!important;line-height:1.35!important;text-shadow:none!important;position:relative;z-index:2}
+  #app>.nav button[data-tab="profile"] svg{display:block!important;visibility:visible!important;opacity:1!important;color:inherit!important;stroke:currentColor!important;position:relative;z-index:2}
+  #app>.nav button[data-tab="profile"].on{color:#173f35!important;background:linear-gradient(135deg,#ccebdc,#a8d8c2)!important;box-shadow:0 5px 16px rgba(54,112,88,.18);}
+  #app>.nav button[data-tab="profile"].on:before{display:none!important}
+  #app>.nav button[data-tab="profile"]:not(.on){color:var(--mu)!important}
+
+  #profile{width:min(100%,1160px)!important;margin:0 auto 28px!important;border-radius:24px!important;background:var(--card)!important;box-shadow:0 18px 50px rgba(0,0,0,.12)}
+  #profile .cover{height:clamp(190px,22vw,290px)!important;background-position:center 45%!important}
+  #profile .pf{display:grid!important;grid-template-columns:156px minmax(0,1fr);grid-template-areas:"avatar name" "avatar nick" "avatar bio" "avatar meta" "avatar stats" "avatar edit";column-gap:26px;row-gap:5px;align-items:center;padding:0 38px 24px!important}
+  #profile .pf .big{grid-area:avatar;width:144px!important;height:144px!important;margin-top:-70px!important;align-self:start;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  #profile .pf h2{grid-area:name;font-size:28px!important;line-height:1.25;margin:12px 0 0!important}
+  #profile .pf p:nth-of-type(1){grid-area:nick;font-size:13px!important;margin:0!important}
+  #profile .pf p:nth-of-type(2){grid-area:bio;font-size:14px!important;max-width:760px;margin:3px 0!important}
+  #profile .pf p:nth-of-type(3){grid-area:meta;font-size:12px!important;margin:0!important}
+  #profile .stats{grid-area:stats;display:flex;gap:38px!important;margin:12px 0!important;justify-content:flex-start}
+  #profile .stats>div{min-width:72px}
+  #profile .stats b{font-size:20px!important}
+  #profile .stats span{font-size:12px!important}
+  #profile .pbtn{grid-area:edit;width:min(100%,280px)!important;margin-top:5px;padding:12px 22px!important}
+  #profile .favs{padding-inline:34px}
+  #profile .ptabs{position:relative!important;top:auto!important;display:flex;justify-content:center;gap:10px;padding:12px 24px!important;background:transparent!important;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+  #profile .ptabs button{flex:0 1 210px;max-width:210px;min-height:64px;padding:10px 14px!important;border:1px solid var(--ln)!important;border-bottom:1px solid var(--ln)!important;border-radius:15px;background:var(--bg)!important;color:var(--mu)!important;font-size:15px!important;font-weight:650}
+  #profile .ptabs button.on{background:linear-gradient(135deg,#d9eee3,#b8dfca)!important;color:#214b3b!important;border-color:#a7d4bc!important;box-shadow:0 5px 14px rgba(58,119,91,.12)}
+  #profile .ptabs button span{font-size:11px!important;margin-top:3px}
+  #profile .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;padding:16px 22px!important;margin:0 auto!important;max-width:1120px}
+  #profile .grid>div{border-radius:12px!important;aspect-ratio:1/1;cursor:pointer;transition:transform .18s ease,filter .18s ease}
+  #profile .grid>div:hover{transform:translateY(-2px);filter:brightness(1.06)}
+  #profile .grid .dx{z-index:3}
+  #up{padding:24px!important}
+  #upb{width:min(100%,1160px)!important;margin:0 auto!important;border:1px solid var(--ln);border-radius:22px;overflow:hidden;background:var(--card)}
+  #upb>.cover{height:clamp(190px,22vw,290px)!important}
+  #upb>.pf{padding:0 38px 24px!important;display:grid!important;grid-template-columns:156px minmax(0,1fr);column-gap:26px;align-items:center}
+  #upb>.pf .big{width:144px!important;height:144px!important;margin-top:-70px!important;grid-row:1/8;align-self:start}
+  #upb>.pf h2{font-size:27px!important;margin-top:12px!important}
+  #upb>.pf .stats{gap:38px!important;margin:12px 0!important}
+  #upb .other-profile-act{max-width:620px}
+  #upb .other-profile-tabs{position:relative!important;top:auto!important;justify-content:center;gap:10px;padding:12px 24px!important}
+  #upb .other-profile-tabs button{flex:0 1 210px;max-width:210px;min-height:62px;border:1px solid var(--ln)!important;border-radius:15px;padding:10px 14px!important;background:var(--bg)!important;font-size:14px!important}
+  #upb .other-profile-tabs button.on{background:linear-gradient(135deg,#d9eee3,#b8dfca)!important;color:#214b3b!important;border-color:#a7d4bc!important}
+  #upb .other-profile-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;padding:16px 22px!important}
+  #upb .other-profile-grid>div{border-radius:12px!important;aspect-ratio:1}
+}
+@media (min-width:900px) and (max-width:1150px){
+  #profile .pf,#upb>.pf{grid-template-columns:126px minmax(0,1fr);column-gap:18px;padding-inline:24px!important}
+  #profile .pf .big,#upb>.pf .big{width:116px!important;height:116px!important;margin-top:-56px!important}
+  #profile .grid,#upb .other-profile-grid{gap:7px!important;padding-inline:14px!important}
+  #profile .ptabs button,#upb .other-profile-tabs button{flex-basis:175px}
+}
+
 </style>
 </head>
 <body>
