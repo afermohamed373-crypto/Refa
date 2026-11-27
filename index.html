@@ -1332,6 +1332,91 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
 #ml.chat-themed[data-chat-theme="default"] .m.me{background:rgba(49,93,85,.96);color:#fff}
 @media(max-width:520px){.chat-theme-card{padding:15px!important}.chat-theme-grid{gap:8px}.chat-theme-swatch{height:65px}}
 
+
+/* Refa responsive chat polish — shared mobile and desktop layout */
+#chat.ov{
+  display:none;
+  flex-direction:column;
+  min-width:0;
+  min-height:0;
+  height:100%;
+  max-height:100%;
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+#chat.ov.on{display:flex;min-height:0}
+#chat.ov>.top{
+  flex:0 0 auto;
+  min-width:0;
+  min-height:62px;
+  gap:8px;
+  justify-content:flex-start;
+}
+#chat.ov>.top>div{flex:1 1 auto;min-width:0}
+#chat #cn{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#chat #chatPeerStatus{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#chat>#ml.msgs{
+  flex:1 1 0;
+  min-height:0;
+  width:100%;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:auto;
+}
+#chat>.send.chat-send{
+  flex:0 0 auto;
+  width:100%;
+  min-width:0;
+  position:relative;
+  z-index:5;
+  padding-bottom:calc(9px + env(safe-area-inset-bottom,0px));
+}
+#chat .chat-send input#mi{flex:1 1 0;width:0;min-width:0;font-size:16px}
+#chat .msg-compose-state{flex:0 0 auto;min-width:0}
+#chat .msg-compose-state span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#chat #chatSearchBar{flex:0 0 auto;min-width:0;max-height:min(38dvh,280px)}
+#chat #msgPinBanner{flex:0 0 auto;min-width:0}
+#chat #msgPinText{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#chat #chatThemeChooser{position:absolute;inset:0;z-index:80;overflow-y:auto;overscroll-behavior:contain}
+#chat #chatThemeAction{z-index:70;max-width:calc(100% - 28px)}
+@media(max-width:899px){
+  #chat.ov{position:absolute;inset:0;width:100%;height:100%;max-height:100%;}
+  #chat.ov>.top{min-height:58px;padding:9px 12px;}
+  #chat.ov>.top button{flex:0 0 auto;min-width:36px;min-height:38px;display:grid;place-items:center;}
+  #chat>#ml.msgs{padding:12px 10px calc(14px + env(safe-area-inset-bottom,0px));}
+  #chat .m-wrap{max-width:min(84%,calc(100% - 36px));}
+  #chat .m-wrap .m{font-size:14px;line-height:1.58;}
+  #chat>.send.chat-send{gap:5px;padding:8px 7px calc(8px + env(safe-area-inset-bottom,0px));}
+  #chat .chat-send>button{min-width:36px;width:36px;height:38px;padding:0;}
+  #chat .chat-send>button#ms{min-width:52px;width:auto;padding:0 13px;}
+  #chat .chat-send input#mi{padding:11px 12px;}
+  #chat #chatThemeChooser{padding:12px;}
+  #chat .chat-theme-card{max-height:calc(100% - 12px);}
+}
+@media(max-width:380px){
+  #chat.ov>.top{gap:4px;padding-inline:8px;}
+  #chat.ov>.top button{min-width:32px;padding:4px;}
+  #chat .chat-send{gap:4px;padding-inline:5px;}
+  #chat .chat-send>button{min-width:32px;width:32px;height:35px;}
+  #chat .chat-send>button#ms{min-width:46px;padding-inline:9px;}
+  #chat .chat-send input#mi{padding-inline:9px;}
+}
+@media(min-width:900px){
+  /* Explicit order is essential: the composer must remain below the message list. */
+  #chat.ov>.top{order:0!important;}
+  #chat.ov>#chatSearchBar{order:1!important;}
+  #chat.ov>#msgPinBanner{order:2!important;}
+  #chat.ov>#ml.msgs{order:3!important;}
+  #chat.ov>#msgReplyBar,#chat.ov>#msgEditBar{order:4!important;}
+  #chat.ov>.send.chat-send{order:5!important;}
+  #chat.ov>.send.chat-send{min-height:70px;padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));}
+  #chat.ov>#ml.msgs{padding:22px clamp(28px,5vw,76px)!important;}
+  #chat .m-wrap{max-width:min(72%,760px);}
+  #chat .m-wrap .m{font-size:14px;line-height:1.65;padding:12px 16px;}
+}
+
 </style>
 </head>
 <body>
