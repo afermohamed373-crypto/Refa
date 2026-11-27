@@ -1225,6 +1225,58 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
   #profile>.ptabs>button,#upb .other-profile-tabs button{flex-basis:190px!important}
 }
 
+
+/* Refa desktop chat layout fix: place the conversation above the global
+   desktop header/sidebar and keep the message list independently scrollable. */
+@media (min-width:900px){
+  #chat.ov{
+    position:absolute!important;
+    inset:0!important;
+    z-index:30!important;
+    width:100%!important;
+    height:100%!important;
+    max-height:100%!important;
+    overflow:hidden!important;
+    min-height:0!important;
+  }
+  #chat.ov.on{display:flex!important;flex-direction:column!important}
+  #chat.ov>.top{
+    position:relative!important;
+    z-index:2!important;
+    flex:0 0 auto!important;
+    min-height:66px;
+    padding:12px 28px!important;
+    background:var(--card)!important;
+    border-bottom:1px solid var(--ln)!important;
+  }
+  #chat>#ml.msgs{
+    display:flex!important;
+    flex:1 1 0!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+    padding:20px clamp(22px,4vw,64px)!important;
+  }
+  #chat>.send.chat-send{
+    position:relative!important;
+    z-index:2!important;
+    flex:0 0 auto!important;
+    min-height:66px;
+    padding:12px clamp(18px,3vw,42px)!important;
+    background:var(--card)!important;
+    border-top:1px solid var(--ln)!important;
+  }
+  #chat .typing-line.on{
+    flex:0 0 40px!important;
+    width:max-content!important;
+    max-width:min(85%,520px)!important;
+    margin:8px 0 10px!important;
+  }
+}
+
 </style>
 </head>
 <body>
