@@ -857,6 +857,9 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
   #app>.pages{position:absolute;inset:66px 0 0 0;margin:0;padding:22px 34px 34px 270px;overflow:auto;min-width:0}
   #app>.pages>.pg{width:min(100%,1180px);margin:0 auto;min-height:100%}
   #app>.nav{position:absolute;z-index:7;top:84px;bottom:22px;left:20px;right:auto;width:218px;max-width:none;min-height:0;height:auto;margin:0;padding:16px 12px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:8px;border-radius:24px;background:var(--card);border:1px solid var(--ln);box-shadow:0 12px 36px rgba(0,0,0,.12);overflow:visible}
+  #app>.nav .nav-brand{width:100%;min-height:58px;display:flex;align-items:center;justify-content:flex-start;padding:2px 14px 14px;margin:0 0 4px;border-bottom:1px solid var(--ln);box-sizing:border-box}
+  #app>.nav .nav-brand img{display:block;width:43px;height:43px;max-width:100%;object-fit:contain;object-position:left center}
+  #app>.top>#tm{visibility:hidden}
   #app>.nav button{flex:0 0 54px;min-height:54px;width:100%;padding:0 16px;display:flex;flex-direction:row;justify-content:flex-start;gap:14px;border-radius:15px;text-align:start}
   #app>.nav button svg{width:23px;height:23px;flex:none}
   #app>.nav button span:not(.bd){font-size:13px;letter-spacing:0}
@@ -899,7 +902,7 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
   #app>.nav button{padding-inline:12px}
   #app>.nav button span:not(.bd){font-size:12px}
 }
-@media (max-width: 899px){#app.screen{max-width:440px;margin:0 auto}}
+@media (max-width: 899px){#app.screen{max-width:440px;margin:0 auto}#app>.nav .nav-brand{display:none}}
 
 
 /* Refa desktop profile refinement - preserve mobile layout */
@@ -1019,6 +1022,7 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
     </div>
   </div>
   <nav class="nav" aria-label="التنقّل الرئيسي">
+    <div class="nav-brand" aria-label="Refa"><img id="navBrandLogo" alt="Refa"></div>
     <button type="button" data-tab="home" class="on" aria-label="الرئيسية"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10.8 8.5-7 8.5 7"/><path d="M5.8 9.6v10.1h12.4V9.6M9.3 19.7v-6.1h5.4v6.1"/></svg><span data-i="home"></span></button>
     <button type="button" data-tab="search" aria-label="بحث"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 4.5 4.5"/></svg><span data-i="search"></span></button>
     <button type="button" data-tab="reels" aria-label="ريلز"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="4"/><path d="m10 8.5 5.5 3.5-5.5 3.5z"/></svg><span data-i="reels"></span></button>
@@ -2411,7 +2415,7 @@ let mediaTouchStartX=0,mediaTouchStartY=0;
 mediaSwipeLayer?.addEventListener('touchstart',e=>{if(!mediaSwipeLayer.classList.contains('on')||!e.changedTouches?.length)return;mediaTouchStartX=e.changedTouches[0].clientX;mediaTouchStartY=e.changedTouches[0].clientY},{passive:true});
 mediaSwipeLayer?.addEventListener('touchend',e=>{if(!mediaSwipeLayer.classList.contains('on')||!e.changedTouches?.length)return;const dx=e.changedTouches[0].clientX-mediaTouchStartX,dy=e.changedTouches[0].clientY-mediaTouchStartY;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25){const next=chatMediaViewerIndex+(dx<0?1:-1);if(next>=0&&next<chatMediaViewerItems.length)showChatMediaViewer(next)}},{passive:true});
 $('#giphyQuery').onkeydown=e=>{if(e.key==='Enter')giphyFetch(giphyKind,$('#giphyQuery').value,document.getElementById('giphyGrid'))};
-$('#chatSearchInput')?.addEventListener('input',filterChatSearch);$('#mi')?.addEventListener('input',notifyChatTyping);$('#q').oninput=()=>{clearTimeout(deb);deb=setTimeout(doSearch,300)};$('#vu').oninput=()=>{clearTimeout(deb);deb=setTimeout(renderAdm,300)};$('#ci').onkeydown=e=>{if(e.key==='Enter')addCm()};$('#postViewerInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addViewerComment()}});$('#tm').src=$('.logo img').src;const themePreview=$('#chatThemePreview');if(themePreview)themePreview.style.backgroundImage=`url("${CHAT_BOTANICAL_BG}")`;
+$('#chatSearchInput')?.addEventListener('input',filterChatSearch);$('#mi')?.addEventListener('input',notifyChatTyping);$('#q').oninput=()=>{clearTimeout(deb);deb=setTimeout(doSearch,300)};$('#vu').oninput=()=>{clearTimeout(deb);deb=setTimeout(renderAdm,300)};$('#ci').onkeydown=e=>{if(e.key==='Enter')addCm()};$('#postViewerInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addViewerComment()}});$('#tm').src=$('.logo img').src;const navBrandLogo=$('#navBrandLogo');if(navBrandLogo)navBrandLogo.src=$('.logo img').src;const themePreview=$('#chatThemePreview');if(themePreview)themePreview.style.backgroundImage=`url("${CHAT_BOTANICAL_BG}")`;
 $('#mi').onkeydown=e=>{if(e.key==='Enter')sendMsg()};
 $('#svr').onkeydown=e=>{if(e.key==='Enter')svReply()};$('#svr').onfocus=svPause;$('#svr').onblur=()=>{if($('#sv').classList.contains('on'))svShow()};
 const nl=(navigator.language||'en').slice(0,2);
