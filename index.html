@@ -957,6 +957,273 @@ img.refa-img-error{animation:none;object-fit:contain!important;background-color:
   #profile .ptabs button,#upb .other-profile-tabs button{flex-basis:175px}
 }
 
+
+/* Desktop profile polish: cover, identity, stats, tabs and media grid.
+   Mobile layout is intentionally untouched. */
+@media (min-width:900px){
+  #profile{
+    width:min(100%,1200px)!important;
+    max-width:1200px!important;
+    margin:0 auto 32px!important;
+    border:1px solid color-mix(in srgb,var(--ln) 82%,transparent)!important;
+    border-radius:26px!important;
+    overflow:hidden!important;
+    background:var(--card)!important;
+    box-shadow:0 20px 54px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.035)!important;
+  }
+  #profile>.cover{
+    height:clamp(220px,24vw,310px)!important;
+    position:relative!important;
+    background-position:center 44%!important;
+  }
+  #profile>.cover:after{
+    content:""!important;
+    position:absolute!important;
+    inset:35% 0 0!important;
+    z-index:1!important;
+    pointer-events:none!important;
+    background:linear-gradient(180deg,transparent 0%,rgba(5,12,28,.16) 42%,rgba(5,12,28,.42) 100%)!important;
+  }
+  #profile>.cover #setBtn{
+    top:16px!important;
+    inset-inline-end:18px!important;
+    width:42px!important;
+    height:42px!important;
+    border:1px solid rgba(255,255,255,.3)!important;
+    background:rgba(5,12,28,.48)!important;
+    backdrop-filter:blur(10px)!important;
+  }
+  #profile>.pf{
+    position:relative!important;
+    z-index:2!important;
+    grid-template-columns:164px minmax(0,1fr)!important;
+    grid-template-areas:
+      "avatar name"
+      "avatar nick"
+      "avatar bio"
+      "avatar meta"
+      "avatar stats"
+      "avatar edit"!important;
+    column-gap:30px!important;
+    row-gap:6px!important;
+    align-items:center!important;
+    padding:0 42px 28px!important;
+    background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 94%,var(--bg)))!important;
+  }
+  #profile>.pf>.big{
+    grid-area:avatar!important;
+    width:150px!important;
+    height:150px!important;
+    margin-top:-74px!important;
+    border:5px solid var(--card)!important;
+    box-shadow:0 10px 28px rgba(0,0,0,.24),0 0 0 1px var(--ln)!important;
+    background-color:var(--bg)!important;
+  }
+  #profile>.pf>h2{
+    grid-area:name!important;
+    margin:14px 0 0!important;
+    font-size:29px!important;
+    line-height:1.2!important;
+    letter-spacing:-.35px!important;
+  }
+  #profile>.pf>p:nth-of-type(1){
+    grid-area:nick!important;
+    margin:0!important;
+    color:var(--mid)!important;
+    font-size:13px!important;
+    font-weight:650!important;
+  }
+  #profile>.pf>p:nth-of-type(2){
+    grid-area:bio!important;
+    max-width:780px!important;
+    margin:4px 0!important;
+    font-size:14px!important;
+    line-height:1.75!important;
+    color:var(--tx)!important;
+  }
+  #profile>.pf>p:nth-of-type(3){
+    grid-area:meta!important;
+    margin:0!important;
+    font-size:12px!important;
+  }
+  #profile>.pf>.stats{
+    grid-area:stats!important;
+    display:flex!important;
+    flex-wrap:wrap!important;
+    align-items:center!important;
+    gap:10px!important;
+    margin:14px 0 8px!important;
+  }
+  #profile>.pf>.stats>div{
+    min-width:104px!important;
+    padding:9px 14px!important;
+    border:1px solid var(--ln)!important;
+    border-radius:13px!important;
+    background:var(--bg)!important;
+  }
+  #profile>.pf>.stats b{
+    font-size:18px!important;
+    line-height:1.2!important;
+  }
+  #profile>.pf>.stats span{
+    display:block!important;
+    margin-top:3px!important;
+    font-size:11px!important;
+  }
+  #profile>.pf>#editBtn{
+    grid-area:edit!important;
+    width:min(100%,260px)!important;
+    min-height:43px!important;
+    margin:4px 0 0!important;
+    border-radius:13px!important;
+    font-weight:750!important;
+  }
+  #profile>.favs{
+    padding:0 38px 12px!important;
+  }
+  #profile>.ptabs{
+    position:relative!important;
+    top:auto!important;
+    display:flex!important;
+    justify-content:center!important;
+    align-items:stretch!important;
+    gap:12px!important;
+    margin:0!important;
+    padding:17px 24px!important;
+    border-top:1px solid var(--ln)!important;
+    border-bottom:1px solid var(--ln)!important;
+    background:color-mix(in srgb,var(--bg) 42%,var(--card))!important;
+  }
+  #profile>.ptabs>button{
+    flex:0 1 218px!important;
+    max-width:218px!important;
+    min-height:66px!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:10px!important;
+    padding:12px 16px!important;
+    border:1px solid var(--ln)!important;
+    border-radius:15px!important;
+    background:var(--card)!important;
+    color:var(--mu)!important;
+    font-size:14px!important;
+    font-weight:700!important;
+    transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+  }
+  #profile>.ptabs>button svg{
+    width:22px!important;
+    height:22px!important;
+    flex:none!important;
+  }
+  #profile>.ptabs>button span{
+    display:block!important;
+    margin:0!important;
+    font-size:12px!important;
+    line-height:1.35!important;
+  }
+  #profile>.ptabs>button.on{
+    border-color:rgba(113,170,139,.62)!important;
+    background:linear-gradient(135deg,rgba(198,232,214,.2),rgba(95,145,117,.12)),var(--card)!important;
+    color:var(--mid)!important;
+    box-shadow:0 7px 18px rgba(30,75,52,.12),inset 0 0 0 1px rgba(113,170,139,.12)!important;
+  }
+  #profile>.ptabs>button:hover{transform:translateY(-2px)!important}
+  #profile>.grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:12px!important;
+    max-width:1160px!important;
+    margin:0 auto!important;
+    padding:20px 26px 8px!important;
+  }
+  #profile>.grid>div{
+    aspect-ratio:1/1!important;
+    border-radius:14px!important;
+    overflow:hidden!important;
+    background:var(--bg)!important;
+    outline:1px solid rgba(255,255,255,.035)!important;
+    transition:transform .2s ease,box-shadow .2s ease,filter .2s ease!important;
+  }
+  #profile>.grid>div:hover{
+    transform:translateY(-3px)!important;
+    box-shadow:0 12px 24px rgba(0,0,0,.2)!important;
+    filter:brightness(1.045)!important;
+  }
+  #profile>.grid .reel-count{
+    padding:5px 8px!important;
+    border-radius:8px!important;
+    background:rgba(3,9,20,.76)!important;
+    backdrop-filter:blur(6px)!important;
+    font-size:11px!important;
+  }
+  #profile>#pnote{
+    margin:16px 26px 24px!important;
+    padding:28px!important;
+    border:1px dashed var(--ln)!important;
+    border-radius:16px!important;
+    background:var(--bg)!important;
+    text-align:center!important;
+  }
+
+  /* Match the same visual language on other people's profiles. */
+  #upb>.cover{position:relative!important}
+  #upb>.pf{
+    grid-template-columns:164px minmax(0,1fr)!important;
+    column-gap:30px!important;
+    padding:0 42px 28px!important;
+    background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 94%,var(--bg)))!important;
+  }
+  #upb>.pf .big{
+    width:150px!important;height:150px!important;
+    margin-top:-74px!important;
+    border:5px solid var(--card)!important;
+    box-shadow:0 10px 28px rgba(0,0,0,.24)!important;
+  }
+  #upb>.pf h2{font-size:28px!important;line-height:1.2!important}
+  #upb>.pf .stats{display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin:14px 0!important}
+  #upb>.pf .stats>div{min-width:104px!important;padding:9px 14px!important;border:1px solid var(--ln)!important;border-radius:13px!important;background:var(--bg)!important}
+  #upb>.pf .stats b{font-size:18px!important}
+  #upb .other-profile-tabs{
+    gap:12px!important;
+    padding:17px 24px!important;
+    background:color-mix(in srgb,var(--bg) 42%,var(--card))!important;
+    border-top:1px solid var(--ln)!important;
+    border-bottom:1px solid var(--ln)!important;
+  }
+  #upb .other-profile-tabs button{
+    flex:0 1 218px!important;
+    max-width:218px!important;
+    min-height:66px!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:10px!important;
+    border:1px solid var(--ln)!important;
+    border-radius:15px!important;
+    background:var(--card)!important;
+    font-size:13px!important;
+  }
+  #upb .other-profile-tabs button.on{
+    background:linear-gradient(135deg,rgba(198,232,214,.2),rgba(95,145,117,.12)),var(--card)!important;
+    color:var(--mid)!important;
+    border-color:rgba(113,170,139,.62)!important;
+  }
+  #upb .other-profile-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:12px!important;
+    padding:20px 26px!important;
+  }
+  #upb .other-profile-grid>div{border-radius:14px!important;overflow:hidden!important}
+}
+@media (min-width:900px) and (max-width:1150px){
+  #profile>.pf,#upb>.pf{grid-template-columns:132px minmax(0,1fr)!important;column-gap:20px!important;padding-inline:26px!important}
+  #profile>.pf>.big,#upb>.pf .big{width:122px!important;height:122px!important;margin-top:-60px!important}
+  #profile>.grid,#upb .other-profile-grid{gap:8px!important;padding-inline:16px!important}
+  #profile>.ptabs>button,#upb .other-profile-tabs button{flex-basis:190px!important}
+}
+
 </style>
 </head>
 <body>
